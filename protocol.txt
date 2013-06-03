@@ -1,0 +1,76 @@
+==============================================================================
+Distributed Array Protocol -- v0.0.1
+==============================================================================
+
+This document is a chalkboard to design the distributed array protocol (DAP).
+
+Goal
+-------------------------------------------------------------------------------
+
+To define the core data structures and API for the protocol such that it can be
+implemented by a subscribing package.
+
+Overview
+-------------------------------------------------------------------------------
+
+Usecases
+-------------------------------------------------------------------------------
+
+This list needs to be prioritized and fleshed out -- what follows is not in
+order of importance:
+
+    * Multiple dimensions
+
+    * Structured and unstructured meshes
+
+    * Dense and sparse arrays / matrices
+
+    * Regular and irregular data distributions
+
+    * Overlapping data distributions
+
+    * Ghost vectors / halos
+
+    * Global address space -- global indexing and local indexing
+
+    * Array slicing:
+
+        * Regular slicing -- uniform step, results in a numpy view.
+
+        * Fancy indexing -- results in a numpy copy.
+
+    * Distributed ufunc operations between 2 distributed arrays: c = a *op* b :
+
+        * a & b must be conformable
+
+        * General case: a & b arbitrarily distributed arrays, require
+          communication
+
+        * Who does computation (source or destination) when communication
+          required?  Allow user control with some default?  Allow user to
+          control performance / convenience trade off with decorators / context
+          managers.
+
+    * User-defined kernels that are vectorized in a distributed fashion:
+
+        * `elemental` semantics in Fortran 90 / 95; easy to apply, restricts
+          kernel to functional programming with no side effects.
+
+        * What communication, if any, is allowed in kernels?
+
+
+Sources
+-------------------------------------------------------------------------------
+
+The primary sources and inspiration for the DAP are:
+
+    * Trilinos distributed data structures
+
+    * Global Arrays / Global Arrays in NumPy 
+
+    * The Chapel, X10, HP-Fortran languages
+
+    * Distributed array implementation in the Julia language
+
+
+.. vim:spell:ft=rst
