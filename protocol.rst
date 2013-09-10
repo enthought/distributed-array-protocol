@@ -65,13 +65,13 @@ essential components of the DAP:
   *  WFS and KWS are in agreement that the DAP should build on the existing
     PEP-3118 buffer protocol, as it is supported in Python, NumPy and Cython.
 
-  * Trilinos Tpetra distributed Vectors are the fundamental distributed data
-    structure in Trilinos.  A Vector has three components: an Array to store
-    the local data, a Map, and a communicator.  A Vector's local data is
-    contained in a contiguous Tpetra::Array.  A Vector's Tpetra::Map is
-    responsible for converting local indices to and from global indices.  A
-    Vector's Tpetra::Comm communicator is analogous to an MPI communicator
-    which encapsulates all distributed communication, etc.
+   * Trilinos Tpetra distributed Vectors are the fundamental distributed data
+     structure in Trilinos.  A Vector has three components: an Array to store
+     the local data, a Map, and a communicator.  A Vector's local data is
+     contained in a contiguous Teuchos::Array.  A Vector's Tpetra::Map is
+     responsible for converting local indices to and from global indices.  A
+     Vector's Teuchos::Comm communicator is analogous to an MPI communicator
+     which encapsulates all distributed communication, etc.
 
   * The essential components of the DAP, then, are the local data buffers,
     which are compatible with PEP-3118 buffers, and the index mapping
