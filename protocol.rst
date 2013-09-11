@@ -133,40 +133,104 @@ of this protocol may provide definitions in other languages.
 
 A "producer object" that subscribes to the DAP shall provide a method named
 "__distarray__" that, when called by a consumer, returns a dictionary with two
-keys, "buffer" and "maps".
+keys, "buffer" and "dimdata".
 
 The value associated with the "buffer" key shall be a buffer that is
 compatible with the PEP-3118 buffer protocol and contains the data for a local
 section of a distributed array.
 
-The value for the "maps" key is a tuple of dictionaries, called "dimension
-dictionaries", one dictionary for each dimension of the distributed array,
-with the zeroth dictionary associated with the zeroth dimension of the array,
-etc.  These dictionaries are intended to include all metadata required to
-fully specify the distributed array.
+The value for the "dimdata" key shall be a tuple of dictionaries, called
+"dimension dictionaries", one dictionary for each dimension of the distributed
+array, with the zeroth dictionary associated with the zeroth dimension of the
+array, etc.  These dictionaries are intended to include all metadata required
+to fully specify the array.  There is one dimension dictionary per dimension,
+**whether or not that dimension is distributed**.
 
-All dimension dictionaries shall have the following key-value pairs:
+Each dimension dictionary shall have the following key-value pairs:
 
   * "disttype" : string
 
     The disttype indicates the type of distribution along this dimension of
     the array.  The values can be one of the following:
 
-    'b' block distribution with no padding.
+    'b' block distribution, no padding.
     'c' cyclic distribution.
     'bc' block cyclic.
     'bp' block-padded.
     'u' unstructured.
 
-  * 'gridrank' : integer
+  * 'periodic' : bool
 
-  * 'gridsize' : integer
+    Indicates whether this dimension is periodic.
 
   * 'datasize' : integer
 
-  * 'indices' : 3-element tuple of integers
+    Total number of logical array elements along this dimension.
 
-  * 'blocksize' : 
+  * 'gridrank' : integer
+
+    The rank of this process for this dimension in the process grid.  This
+    information allows the consumer to determine where the neighbor sections
+    of an array are located in relation to this section.
+
+    If this dimension is not distributed, then this value shall be zero.
+
+  * 'gridsize' : integer
+
+    The total number of processes in the process grid in this dimension.
+    Necessary for computing the global / local index mapping, etc.
+
+    If this dimension is not distributed, then this value shall be 1.
+
+  * 'indices' : for 'b', 'c', 'bc', 'bp' disttype, a slice object with start,
+                stop, and step values
+                for 'u' disttype, a 1D buffer of global indices 
+
+    For structured distribution ('b', 'c', 'bc', 'bp' disttype), the indices
+    are a slice object.  Notes for each distribution type:
+
+    'b', 'bp': start and stop shall indicate the contiguous interval of global
+    indices for this block's dimensions.  Start shall be inclusive, stop
+    exclusive, consistent with Python indexing.  Step shall be 1.
+
+    'c': start indicates the smallest-valued global index for this section of
+    the array.  Stop shall be equal to the total number of logical elements in
+    this dimension of the array (i.e., datasize).  Step shall be equal to the
+    number of processors in the process grid in this dimension (i.e.,
+    gridsize).
+
+    'bc': identical to 'c' disttype, except that 'start' and 'step' shall be
+    equal to the product of the blocksize and the 'start' and 'step' values
+    for the cyclic distribution.  See example.
+
+    'u': The 1D buffer of global indices serves to map the local indices of
+    the 'buffer' to their global indices.
+
+  * 'blocksize' : integer
+
+    Shall be equal to 1 for all disttypes except 'bc'.
+
+    For 'bc' disttype, indicates the size of the contiguous blocks on each
+    processor for this dimension.
+
+  * 'padding' : tuple of 2 integers
+
+    Shall be equal to (0,0) For all disttypes except 'bp'.
+
+    For 'bp' disttype, indicates the number of shared indices on the lower and
+    upper range of indices.  See example.
+
+Constraints
+*******************************************************************************
+
+[KWS TODO]
+
+
+
+Examples
+-------------------------------------------------------------------------------
+
+[KWS TODO]
 
 
 .. vim:spell:ft=rst
