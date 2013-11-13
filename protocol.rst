@@ -100,10 +100,10 @@ Distributed Array Protocol v1.0
 
 Definitions:
 
-  * Process: a "process" is the basic unit of execution; each process has an
-    address space, local objects, and is able to communicate with other
-    processes to send and receive data.  Same as an MPI process, an IPython
-    engine, etc.
+  * Process: a "process" is the basic unit of execution and is as defined in
+    MPI.  Analogous with an IPython.parallel engine.  Each process has an
+    address space, one or more namespaces that contain objects, and is able to
+    communicate with other processes to send and receive data.
 
   * A distributed array is a single logical array, of arbitrary
     dimensionality, that is divided among multiple processes.  
@@ -117,25 +117,31 @@ Definitions:
     local index on that process; the second takes a local index and provides
     the global index that corresponds to that local index.
 
-The DAP is a process-local protocol and allows two subscribers, called
-the "producer" and the "consumer", to communicate the essential data and
-metadata necessary to share a distributed array between them.  This allows two
-independently developed components to access, modify, and update a distributed
-array without copying.
+The DAP is a process-local protocol and allows two subscribers, called the
+"producer" and the "consumer" or the "exporter" and the "importer", to
+communicate the essential data and metadata necessary to share a distributed
+array between them.  This allows two independently developed components to
+access, modify, and update a distributed array without copying.
 
 The DAP is intended to build on the concepts and implementation of the
 existing PEP-3118 buffer protocol, and uses PEP-3118 buffers (and subscribing
-Python objects, such as memoryviews and NumPy arrays) as an integral
-component.
+Python objects, such as memoryviews and NumPy arrays) as components.
 
 This version of the DAP is defined for the Python language.  Future versions
 of this protocol may provide definitions in other languages.
 
 A "producer object" that subscribes to the DAP shall provide a method named
-"__distarray__" that, when called by a consumer, returns a dictionary with two
-keys, "buffer" and "dimdata".
+"__distarray__" that, when called by a consumer, returns a dictionary with
+three keys, "buffer", "dimdata", and "__version__".
 
-The value associated with the "buffer" key shall be a buffer that is
+The value associated with the "__version__" key shall be a tuple of two or
+more integers, and this tuple shall be a conventional version tuple, with the
+first integer specifying the major version, the next integer the minor
+version, etc.  Versions of the protocol that differ in the minor version
+number shall be backwards compatible; versions that differ in the major
+version number may break backwards compatibility.
+
+The value associated with the "buffer" key shall be a Python object that is
 compatible with the PEP-3118 buffer protocol and contains the data for a local
 section of a distributed array.
 
@@ -146,18 +152,20 @@ array, etc.  These dictionaries are intended to include all metadata required
 to fully specify the array.  There is one dimension dictionary per dimension,
 **whether or not that dimension is distributed**.
 
-Each dimension dictionary shall have the following key-value pairs:
+The primary key-value pair that all dimension dictionaries shall have
+specifies the type of distribution for this dimension.  The key is the string
+"disttype" and the value is of type string.  The following disttypes are
+currently supported: undistributed, block, cyclic, block cyclic, block padded,
+and unstructured.  Other disttypes may be added in future versions of the
+protocol.
 
-  * "disttype" : string
+All dimension dictionaries (regardless of distribution type) define the
+following key-value pairs:
 
-    The disttype indicates the type of distribution along this dimension of
-    the array.  The values can be one of the following:
+  * 'disttype' : string or None.
 
-    'b' block distribution, no padding.
-    'c' cyclic distribution.
-    'bc' block cyclic.
-    'bp' block-padded.
-    'u' unstructured.
+    The distribution type, the primary way to determine the kind of
+    distribution for this dimension.
 
   * 'periodic' : bool
 
@@ -167,70 +175,149 @@ Each dimension dictionary shall have the following key-value pairs:
 
     Total number of logical array elements along this dimension.
 
-  * 'gridrank' : integer
+All distributed dimensions shall have the following keys in the dictionary,
+with the associated value described:
 
-    The rank of this process for this dimension in the process grid.  This
-    information allows the consumer to determine where the neighbor sections
-    of an array are located in relation to this section.
+   * 'gridsize' : integer, greater than 1.
+ 
+     The total number of processes in the process grid in this dimension.
+     Necessary for computing the global / local index mapping, etc.
 
-    If this dimension is not distributed, then this value shall be zero.
+     [TODO: to confirm: always greater than 1?  Otherwise this dimension is
+     not distributed and we get into degeneracy between distributed /
+     undistributed dimensions that would be cleaner to avoid.]
 
-  * 'gridsize' : integer
+     Constraint: the product of all gridsizes for all distributed dimensions
+     shall equal the total number of processes in the communicator.
 
-    The total number of processes in the process grid in this dimension.
-    Necessary for computing the global / local index mapping, etc.
+   * 'gridrank' : integer
+ 
+     The rank of this process for this dimension in the process grid.  This
+     information allows the consumer to determine where the neighbor sections
+     of an array are located.
 
-    If this dimension is not distributed, then this value shall be 1.
+     [TODO: To be resolved:
+        Question regarding Cart_create, grid_rank, grid_size, etc:
+            What guarantees are there between libraries?  When importing from
+            the protocol, importer sees grid_rank, grid_size for each
+            dimension.  If we do an MPI_Cart_create with reorder=False, what
+            guarantees are there to ensure that the MPI cartesian communicator
+            is consistent with the communicator on the exporting side of the
+            protocol?
+     ]
 
-  * 'indices' : for 'b', 'c', 'bc', 'bp' disttype, a slice object with start,
-                stop, and step values
-                for 'u' disttype, a 1D buffer of global indices 
+The remaining key-value pairs in each dimension dictionary depends on the dist
+type, and are described below:
 
-    For structured distribution ('b', 'c', 'bc', 'bp' disttype), the indices
-    are a slice object.  Notes for each distribution type:
+    * Undistributed, dist type None.
 
-    'b', 'bp': start and stop shall indicate the contiguous interval of global
-    indices for this block's dimensions.  Start shall be inclusive, stop
-    exclusive, consistent with Python indexing.  Step shall be 1.
+      This is here for consistency's sake.
 
-    'c': start indicates the smallest-valued global index for this section of
-    the array.  Stop shall be equal to the total number of logical elements in
-    this dimension of the array (i.e., datasize).  Step shall be equal to the
-    number of processors in the process grid in this dimension (i.e.,
-    gridsize).
+    * block, dist type of "b":
 
-    'bc': identical to 'c' disttype, except that 'start' and 'step' shall be
-    equal to the product of the blocksize and the 'start' and 'step' values
-    for the cyclic distribution.  See example.
+        * 'start' : integer >= 0.
 
-    'u': The 1D buffer of global indices serves to map the local indices of
-    the 'buffer' to their global indices.
+        The start index (inclusive and 0-based) of the global index space for
+        this array.
 
-  * 'blocksize' : integer
+        * 'stop' : integer, > 'start' value.
 
-    Shall be equal to 1 for all disttypes except 'bc'.
+        The stop index (exclusive, as in standard Python indexing) of the
+        global index space for this array.
 
-    For 'bc' disttype, indicates the size of the contiguous blocks on each
-    processor for this dimension.
+        * 'step' : integer, >= 1.
 
-  * 'padding' : tuple of 2 integers
+        [TODO: in what circumstances can step be non unitary?  Should this be
+        supported?  If 'step' is always 1 for block, then it should not be
+        included as a key.]
 
-    Shall be equal to (0,0) For all disttypes except 'bp'.
+        For a block distributed dimension, adjacent processes as determined by
+        the dimension dictionary's 'gridrank' field shall have adjacent global
+        index ranges, i.e., for two processes `a` and `b` with grid ranks `i`
+        and `i+1`, resp., the 'stop' of `a` shall be equal to the 'start' of
+        `b`.
 
-    For 'bp' disttype, indicates the number of shared indices on the lower and
-    upper range of indices.  See example.
+    * cyclic, dist type of "c":
 
-Constraints
-*******************************************************************************
+        * 'start' : integer, >= 0.
 
-[KWS TODO]
+        The start index (inclusive and 0-based) of the global index space.
 
+        * 'stop' : integer, > 'start' value.
+
+        The stop index (exclusive, as in standard Python indexing) of the
+        global index space.
+
+        * 'step' : integer, equal to the 'gridsize' value.
+
+        [TODO: 'step' is not strictly necessary; should this k/v pair be part
+        of the protocol for cyclic?  THere are more constraints on the 'step'
+        value, need to be specified.]
+
+        The cyclic distribution is what results from assigning global indices
+        to the processes in a distributed dimension in round-robin fashion.  A
+        constraint for cyclic is that the Python slice formed from the start,
+        stop, and step values reproduces the local array's indices as in
+        standard NumPy slicing.
+
+    * block cyclic, dist type of "bc":
+
+        * 'start' : integer, >= 0.
+
+        The start index (inclusive and 0-based) of the global index space.
+
+        * 'stop': integer, > 'start' value.
+
+        The stop index (exclusive, as in standard Python indexing) of the
+        global index space.
+
+        * 'step' : integer >= 0.
+
+        * 'blocksize' : integer, >= 1.
+        
+            Indicates the size of the contiguous blocks for this dimension.
+
+            [TODO: what are the bounds on blocksize?]
+
+        Block cyclic can be thought of as analogous to the cyclic
+        distribution, but it distributes contiguous blocks of global indices
+        in round robin fashion rather than single indices.  In this way block
+        cyclic is a generalization of the block and cyclic dist. types for
+        evenly distributed block.  When blocksize == 1, block cyclic is
+        equivalent to cyclic; when blocksize == datasize // gridsize,
+        block cyclic is equivalent to block distribution.
+
+        [TODO: write down equations relating start, stop, step, blocksize,
+        gridsize and gridrank that yield the global indices under block
+        cyclic.  Resolve any ambiguites for ugly combinations of gridsize,
+        blocksize, step, particularly when "extra" elements are involved.]
+
+    * block padded, dist type of "bp":
+
+        Analogous to block dist type, with an extra padding key.
+
+        * 'start', 'stop', 'step' as in block dist type.
+
+        * 'padding' : tuple of 2 integers, each >= 0.
+        
+            Indicates the number of shared indices on the lower and upper
+            range of indices.
+
+            Padded distribution allows adjacent local array sections overlap
+            in index space via the padding parameter.  Whenever an integer in
+            the padding tuple is > 0, then that indicates this array is
+            sharing indices with its neighbor according to gridrank and,
+            further, the neighbor process owns the data.
+
+    * unstructured, dist type of "u":
+
+       * 'indices': list of integers of global indices.
+
+       [TODO: fill in details, constraints.]
 
 
 Examples
 -------------------------------------------------------------------------------
-
-[KWS TODO]
 
 
 .. vim:spell:ft=rst
