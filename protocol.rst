@@ -81,11 +81,14 @@ the essential components of the DAP:
   which are compatible with PEP-3118 buffers, and the index mapping
   infrastructure, which describes the data distribution.
 
-* The Map provides two functions / methods::
+* The Map provides two functions / methods:
 
-    ordinal_t get_gid(ordinal_t lid) -> returns the global ID / index given a local ID / index.
+  * ``ordinal_t get_gid(ordinal_t lid)``:
+    Returns the global ID / index given a local ID / index.
 
-    (process_id, ordinal_t) get_lid(ordinal_t gid) -> returns the (process rank, local index on that process) tuple / structure given a global index.
+  * ``(process_id, ordinal_t) get_lid(ordinal_t gid)``:
+    Returns the (process rank, local index on that process) tuple /
+    structure given a global index.
 
 * To generalize this to multi-dimensional arrays, the global index and
   local index are generalized into tuples of indices into each
