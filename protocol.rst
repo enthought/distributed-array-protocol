@@ -49,13 +49,15 @@ Sources
 
 The primary sources and inspiration for the DAP are:
 
-* Trilinos distributed data structures
+* Trilinos [#trilinos]_ and PyTrilinos [#pytrilinos]_
 
-* Global Arrays / Global Arrays in NumPy
+* Global Arrays [#globalarrays]_ and Global Arrays in NumPy (GAiN) [#gain]_
 
-* The Chapel, X10, HP-Fortran languages
+* The Chapel [#chapel]_, X10 [#x10]_, and HP-Fortran [#hpfortran]_ languages
 
-* Distributed array implementation in the Julia language
+* Distributed array implementation in the Julia [#julia]_ language
+
+* NumPy [#numpy]_ and the Revised Buffer Protocol [#bufferprotocol]_
 
 
 Components
@@ -335,6 +337,16 @@ Examples
 
 References
 ------------------------------------------------------------------------
+.. [#trilinos] Trilinos: http://trilinos.sandia.gov/
+.. [#pytrilinos] PyTrilinos: http://trilinos.sandia.gov/packages/pytrilinos/
+.. [#globalarrays] Global Arrays: http://hpc.pnl.gov/globalarrays/
+.. [#gain] Global Arrays in NumPy: http://www.pnnl.gov/science/highlights/highlight.asp?id=1043
+.. [#chapel] Chapel: http://chapel.cray.com/
+.. [#x10] X10: http://x10-lang.org/
+.. [#hpfortran] High Perfomance Fortran: http://dacnet.rice.edu/
+.. [#julia] Julia: http://docs.julialang.org
+.. [#numpy] NumPy: http://www.numpy.org/
+.. [#bufferprotocol] Revising the Buffer Protocol: http://www.python.org/dev/peps/pep-3118/
 
 
 .. vim:spell:ft=rst
