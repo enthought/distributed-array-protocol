@@ -37,7 +37,7 @@ Supported usecases include:
 
 * Structured and unstructured distributions.
 
-* Dense and sparse 
+* Dense and sparse
 
 * Ghost vectors / halos
 
@@ -51,7 +51,7 @@ The primary sources and inspiration for the DAP are:
 
 * Trilinos distributed data structures
 
-* Global Arrays / Global Arrays in NumPy 
+* Global Arrays / Global Arrays in NumPy
 
 * The Chapel, X10, HP-Fortran languages
 
@@ -115,7 +115,7 @@ Definitions:
   able to communicate with other processes to send and receive data.
 
 * A distributed array is a single logical array, of arbitrary
-  dimensionality, that is divided among multiple processes.  
+  dimensionality, that is divided among multiple processes.
 
 * A distributed array has both a global and a local index space for each
   dimension, and a mapping between the two index spaces.  A local index
@@ -192,7 +192,7 @@ All distributed dimensions shall have the following keys in the
 dictionary, with the associated value described:
 
 * 'gridsize' : integer, greater than 1.
- 
+
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
@@ -205,7 +205,7 @@ dictionary, with the associated value described:
   communicator.
 
 * 'gridrank' : integer
- 
+
   The rank of this process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor
   sections of an array are located.
@@ -287,7 +287,7 @@ the dist type, and are described below:
   * 'step' : integer >= 0.
 
   * 'blocksize' : integer, >= 1.
-        
+
     Indicates the size of the contiguous blocks for this dimension.
 
     [TODO: what are the bounds on blocksize?]
@@ -312,7 +312,7 @@ the dist type, and are described below:
   * 'start', 'stop', 'step' as in block dist type.
 
   * 'padding' : tuple of 2 integers, each >= 0.
-        
+
     Indicates the number of shared indices on the lower and upper range
     of indices.
 
