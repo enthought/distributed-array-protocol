@@ -190,15 +190,14 @@ dimension dictionary, with the associated value described:
   information allows the consumer to determine where the neighbor
   sections of an array are located.
 
-  [TODO: To be resolved:]
-      Question regarding Cart_create, grid_rank, grid_size, etc:
+  [TODO: Question regarding Cart_create, grid_rank, grid_size, etc:
 
-      What guarantees are there between libraries?  When importing from
-      the protocol, importer sees ``gridrank``, ``gridsize`` for each
-      dimension.  If we do an ``MPI_Cart_create`` with
-      ``reorder=False``, what guarantees are there to ensure that the
-      MPI cartesian communicator is consistent with the communicator on
-      the exporting side of the protocol?
+  What guarantees are there between libraries?  When importing from the
+  protocol, importer sees ``gridrank``, ``gridsize`` for each dimension.
+  If we do an ``MPI_Cart_create`` with ``reorder=False``, what
+  guarantees are there to ensure that the MPI cartesian communicator is
+  consistent with the communicator on the exporting side of the
+  protocol?]
 
 The remaining key-value pairs in each dimension dictionary depend on the
 ``disttype`` and are described below:
@@ -286,7 +285,8 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * unstructured (``disttype`` is ``'u'``):
 
-  * ``indices``: list of ``int``,
+  * ``indices``: list of ``int``
+
     Global indices available on this process.
 
   [TODO: fill in details, constraints.]
