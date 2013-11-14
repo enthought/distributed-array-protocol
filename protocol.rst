@@ -137,16 +137,17 @@ disttypes are currently supported:
 ============= ========== ===============
   name         disttype   required keys
 ============= ========== ===============
-undistributed     None    common
-block             'u'     common, 'start', 'stop'
+undistributed     None    'disttype', 'periodic', 'datasize'
+block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'blocksize'
 block-padded      'bp'    common, 'start', 'stop', 'padding'
 unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
-where "common" represents the keys common to all disttypes: 'disttype',
-'periodic', 'datasize', 'gridsize', and 'gridrank'.
+where "common" represents the keys common to all distributed disttypes:
+``'disttype'``, ``'periodic'``, ``'datasize'``, ``'gridsize'``, and
+``'gridrank'``.
 
 Other disttypes may be added in future versions of the protocol.
 
