@@ -332,6 +332,54 @@ the dist type, and are described below:
 Examples
 ------------------------------------------------------------------------
 
+Block, Undistributed
+````````````````````
+
+Assume we have a process grid with 2 rows and 1 column, and we have a
+2x10 array ``a`` distributed over it.  Let ``a`` be a two-dimensional
+array with a block-distributed 0th dimension and an undistributed 1st
+dimension.
+
+In process 0::
+    >>> distbuffer = a0.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dimdata']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([[7, 5, 9, 2, 7, 0, 5, 5, 5, 5]])
+    >>> distbuffer['dimdata']
+    ({'datasize': 2,
+      'disttype': 'b',
+      'gridrank': 0,
+      'gridsize': 2,
+      'start': 0,
+      'stop': 1,
+      'periodic': False},
+     {'datasize': 10,
+      'disttype': None,
+      'periodic': False})
+
+In process 1::
+    >>> distbuffer = a1.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dimdata']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([[0, 8, 9, 9, 1, 4, 1, 2, 9, 6]])
+    >>> distbuffer['dimdata']
+    ({'datasize': 2,
+      'disttype': 'b',
+      'gridrank': 1,
+      'gridsize': 2,
+      'start': 1,
+      'stop': 2,
+      'periodic': False},
+     {'datasize': 10,
+      'disttype': None,
+      'periodic': False})
+
 
 References
 ------------------------------------------------------------------------
