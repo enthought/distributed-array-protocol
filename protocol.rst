@@ -313,7 +313,7 @@ In process 0::
     >>> distbuffer['__version__']
     '1.0.0'
     >>> distbuffer['buffer']
-    array([[7, 5, 9, 2, 7, 0, 5, 5, 5, 5]])
+    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
     >>> distbuffer['dimdata']
     ({'datasize': 2,
       'disttype': 'b',
@@ -334,7 +334,7 @@ In process 1::
     >>> distbuffer['__version__']
     '1.0.0'
     >>> distbuffer['buffer']
-    array([[0, 8, 9, 9, 1, 4, 1, 2, 9, 6]])
+    array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
     >>> distbuffer['dimdata']
     ({'datasize': 2,
       'disttype': 'b',
@@ -346,6 +346,62 @@ In process 1::
      {'datasize': 10,
       'disttype': None,
       'periodic': False})
+
+Unstructured
+````````````
+Assume we have a process grid with 3 rows, and we have a size 30 array
+``a`` distributed over it.  Let ``a`` be a one-dimensional unstructured
+array with 7 elements on process 0, 3 elements on process 1, and 20
+elements on process 2.
+
+
+On all processes::
+
+    >>> distbuffer = local_array.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dimdata']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> len(distbuffer['dimdata']) == 1  # one dimension only
+    True
+
+In process 0::
+
+    >>> distbuffer['buffer']
+    array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
+    >>> distbuffer['dimdata']
+    ({'datasize': 30,
+      'disttype': 'u',
+      'gridrank': 0,
+      'gridsize': 3,
+      'indices': [19, 1, 0, 12, 2, 15, 4],
+      'periodic': False},)
+
+In process 1::
+
+    >>> distbuffer['buffer']
+    array([0.1,  0.5,  0.9])
+    >>> distbuffer['dimdata']
+    ({'datasize': 30,
+      'disttype': 'u',
+      'gridrank': 1,
+      'gridsize': 3,
+      'indices': [6, 13, 3],
+      'periodic': False},)
+
+In process 2::
+
+    >>> distbuffer['buffer']
+    array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
+            0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
+    >>> distbuffer['dimdata']
+    ({'datasize': 30,
+      'disttype': 'u',
+      'gridrank': 2,
+      'gridsize': 3,
+      'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
+                  20,  9, 16, 27,  8, 17, 22]
+      'periodic': False},)
 
 
 References
