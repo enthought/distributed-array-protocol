@@ -341,6 +341,7 @@ array with a block-distributed 0th dimension and an undistributed 1st
 dimension.
 
 In process 0::
+
     >>> distbuffer = a0.__distarray__()
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dimdata']
@@ -361,6 +362,7 @@ In process 0::
       'periodic': False})
 
 In process 1::
+
     >>> distbuffer = a1.__distarray__()
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dimdata']
