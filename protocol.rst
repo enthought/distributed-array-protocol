@@ -2,6 +2,8 @@
 Distributed Array Protocol v1.0.0
 ========================================================================
 
+.. Contents::
+
 Overview
 ------------------------------------------------------------------------
 
@@ -155,23 +157,23 @@ Other disttypes may be added in future versions of the protocol.
 All dimension dictionaries (regardless of distribution type) must define
 the following key-value pairs:
 
-``'disttype'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
+* ``'disttype'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
 
   The distribution type; the primary way to determine the kind of
   distribution for this dimension.
 
-``'periodic'`` : ``bool``
+* ``'periodic'`` : ``bool``
 
   Indicates whether this dimension is periodic.
 
-``'datasize'`` : ``int``
+* ``'datasize'`` : ``int``
 
   Total number of global array elements along this dimension.
 
 All *distributed* dimensions shall have the following keys in their
 dimension dictionary, with the associated value described:
 
-``'gridsize'`` : ``int``, > 1
+* ``'gridsize'`` : ``int``, > 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -184,7 +186,7 @@ dimension dictionary, with the associated value described:
   dimensions shall equal the total number of processes in the
   communicator.
 
-``gridrank`` : ``int``
+* ``gridrank`` : ``int``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor
