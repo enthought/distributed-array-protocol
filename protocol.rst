@@ -29,14 +29,9 @@ Some usecases supported by v1.0 of the protocol include:
 * Block, cyclic, and block-cyclic distributions for structured
   decomposition.
 
-* Padded block-distributed arrays, including
-
-  ghosts
-    boundary cells for physical boundary conditions, and
-
-  halos
-    communication buffers for storing and updating values in
-    finite-differencing applications.
+* Padded block-distributed arrays, including boundary cells for physical
+  boundary conditions, and communication buffers for storing and
+  updating values in finite-differencing applications.
 
 * Unstructured distributions for arbitrary mappings between global
   indices and local data.
@@ -96,6 +91,12 @@ map
     to translate a global index into a process identifier and a local
     index on that process; the second is the ability to provide the
     global index that corresponds to a given local index.
+
+boundary padding
+    [TODO: Add definition]
+
+communication padding
+    [TODO: Add definition]
 
 
 Exporting a Distributed Array
@@ -267,21 +268,21 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * block-padded (``disttype`` is ``'bp'``)
 
-  Analogous to the block distribution type, but with an extra
-  ``padding`` key.
+  Analogous to the block distribution type but with an extra ``padding``
+  key.  This distribution type allows adjacent local array sections to
+  overlap in global index space.  Whenever an element of the ``padding``
+  tuple is > 0, that indicates this array shares indices with its
+  neighbor (as determined by ``gridrank``), and further, that this
+  neighboring process owns the data.
 
   * ``start`` and ``stop`` as in the block distribution type
 
   * ``padding`` : 2-tuple of ``int``, each >= 0.
 
-    Indicates the number of shared indices on the lower and upper range
-    of indices, respectively.
-
-    The block-padded distribution allows adjacent local array sections
-    to overlap in global index space via the padding parameter.
-    Whenever an element of the ``padding`` tuple is > 0, that indicates
-    this array shares indices with its neighbor (as determined by
-    ``gridrank``) and, further, the neighbor process owns the data.
+    Indicates the number of "padding" values at the lower and upper
+    limits (respectively) of the indices available on this process.
+    This padding can be either "boundary padding" or "communication
+    padding".
 
 * unstructured (``disttype`` is ``'u'``):
 
