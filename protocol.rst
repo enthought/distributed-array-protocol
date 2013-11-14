@@ -94,9 +94,8 @@ global index
 map
     A map object provides two functionalities: the first is the ability
     to translate a global index into a process identifier and a local
-    index on that process; the second is the ability to take a local
-    index and provide the global index that corresponds to that local
-    index.
+    index on that process; the second is the ability to provide the
+    global index that corresponds to a given local index.
 
 
 Exporting a Distributed Array
