@@ -24,32 +24,30 @@ versions of this protocol may provide definitions in other languages.
 Usecases
 ------------------------------------------------------------------------
 
-The principal usecases supported by v1.0 of the protocol are as follows:
+Some usecases supported by v1.0 of the protocol include:
 
-* Block, cyclic, block cyclic distributions for structured decomposition
+* Block, cyclic, and block-cyclic distributions for structured
+  decomposition.
 
-* Block distribution can be padded to allow for ghosts (boundary cells
-  for boundary conditions -- part of the physical problem) and halos
-  (communication buffers for storing and updating values in finite
-  differencing applications).
+* Padded block-distributed arrays, including
 
-* Unstructured decomposition -- arbitrary map between local data and
-  global indexes.
+  ghosts
+    boundary cells for physical boundary conditions, and
 
-* Each dimension can have a different distribution
+  halos
+    communication buffers for storing and updating values in
+    finite-differencing applications.
 
+* Unstructured distributions for arbitrary mappings between global
+  indices and local data.
 
-Supported usecases include:
+* Multi-dimensional arrays.
 
-* Multiple dimensions
+* Different distributions for each array dimension.
 
-* Structured and unstructured distributions.
+* Dense and sparse arrays.
 
-* Dense and sparse
-
-* Ghost vectors / halos
-
-* Should work with array views and slices.
+* Compatibility with array views and slices.
 
 
 Sources
