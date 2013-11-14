@@ -361,7 +361,6 @@ References
 .. [#hpfortran] High Perfomance Fortran. http://dacnet.rice.edu/
 .. [#julia] Julia. http://docs.julialang.org
 .. [#numpy] NumPy. http://www.numpy.org/
-.. [#bufferprotocol] Revising the Buffer Protocol.
-                     http://www.python.org/dev/peps/pep-3118/
+
 
 .. vim:spell:ft=rst
