@@ -132,10 +132,11 @@ required to fully specify a distributed array.
 Dimension Dictionaries
 ----------------------
 
-The primary key-value pair that all dimension dictionaries shall have
-specifies the type of distribution for that dimension.  The key is the
-string ``'disttype'`` and the value is of type string.  The following
-disttypes are currently supported:
+All dimension dictionaries shall have a ``'disttype'`` key with a value of
+type string or `None`.  The disttype of a dimension specifies the kind of
+distribution for this dimension, or no distribution for value `None`.
+
+The following disttypes are currently supported:
 
 ============= ========== ===============
   name         disttype   required keys
