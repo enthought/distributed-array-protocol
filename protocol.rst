@@ -141,7 +141,7 @@ The following disttypes are currently supported:
 ============= ========== ===============
   name         disttype   required keys
 ============= ========== ===============
-undistributed     None    'disttype', 'periodic', 'datasize'
+undistributed     None    'disttype', 'datasize'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'blocksize'
@@ -150,10 +150,13 @@ unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
 where "common" represents the keys common to all distributed disttypes:
-``'disttype'``, ``'periodic'``, ``'datasize'``, ``'gridsize'``, and
+``'disttype'``, ``'datasize'``, ``'gridsize'``, and
 ``'gridrank'``.
 
 Other disttypes may be added in future versions of the protocol.
+
+Required key-value pairs
+````````````````````````
 
 All dimension dictionaries (regardless of distribution type) must define
 the following key-value pairs:
@@ -162,10 +165,6 @@ the following key-value pairs:
 
   The distribution type; the primary way to determine the kind of
   distribution for this dimension.
-
-* ``'periodic'`` : ``bool``
-
-  Indicates whether this dimension is periodic.
 
 * ``'datasize'`` : ``int``
 
@@ -201,6 +200,17 @@ dimension dictionary, with the associated value described:
   guarantees are there to ensure that the MPI cartesian communicator is
   consistent with the communicator on the exporting side of the
   protocol?]
+
+Optional key-value pairs
+````````````````````````
+
+* ``'periodic'`` : ``bool``
+
+  Indicates whether this dimension is periodic.  When not present,
+  defaults to `False`.
+
+Distribution-type specific key-value pairs
+``````````````````````````````````````````
 
 The remaining key-value pairs in each dimension dictionary depend on the
 ``disttype`` and are described below:
@@ -321,11 +331,9 @@ In process 0::
       'gridrank': 0,
       'gridsize': 2,
       'start': 0,
-      'stop': 1,
-      'periodic': False},
+      'stop': 1},
      {'datasize': 10,
-      'disttype': None,
-      'periodic': False})
+      'disttype': None})
 
 In process 1::
 
@@ -342,11 +350,9 @@ In process 1::
       'gridrank': 1,
       'gridsize': 2,
       'start': 1,
-      'stop': 2,
-      'periodic': False},
+      'stop': 2},
      {'datasize': 10,
-      'disttype': None,
-      'periodic': False})
+      'disttype': None})
 
 Unstructured
 ````````````
@@ -375,8 +381,7 @@ In process 0::
       'disttype': 'u',
       'gridrank': 0,
       'gridsize': 3,
-      'indices': [19, 1, 0, 12, 2, 15, 4],
-      'periodic': False},)
+      'indices': [19, 1, 0, 12, 2, 15, 4]},)
 
 In process 1::
 
@@ -387,8 +392,7 @@ In process 1::
       'disttype': 'u',
       'gridrank': 1,
       'gridsize': 3,
-      'indices': [6, 13, 3],
-      'periodic': False},)
+      'indices': [6, 13, 3]},)
 
 In process 2::
 
@@ -401,8 +405,7 @@ In process 2::
       'gridrank': 2,
       'gridsize': 3,
       'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
-                  20,  9, 16, 27,  8, 17, 22]
-      'periodic': False},)
+                  20,  9, 16, 27,  8, 17, 22]},)
 
 
 References
