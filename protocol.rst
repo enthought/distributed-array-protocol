@@ -150,8 +150,8 @@ unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
 where "common" represents the keys common to all distributed disttypes:
-``'disttype'``, ``'datasize'``, ``'gridsize'``, and
-``'gridrank'``.
+``'disttype'``, ``'datasize'``, ``'proc_grid_size'``, and
+``'proc_grid_rank'``.
 
 Other disttypes may be added in future versions of the protocol.
 
@@ -173,7 +173,7 @@ the following key-value pairs:
 All *distributed* dimensions shall have the following keys in their
 dimension dictionary, with the associated value described:
 
-* ``'gridsize'`` : ``int``, > 1
+* ``'proc_grid_size'`` : ``int``, > 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -182,11 +182,11 @@ dimension dictionary, with the associated value described:
   not distributed and we get into degeneracy between distributed /
   undistributed dimensions that would be cleaner to avoid.]
 
-  Constraint: the product of all gridsizes for all distributed
+  Constraint: the product of all proc_grid_sizes for all distributed
   dimensions shall equal the total number of processes in the
   communicator.
 
-* ``gridrank`` : ``int``
+* ``proc_grid_rank`` : ``int``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor
@@ -195,7 +195,7 @@ dimension dictionary, with the associated value described:
   [TODO: Question regarding Cart_create, grid_rank, grid_size, etc:
 
   What guarantees are there between libraries?  When importing from the
-  protocol, importer sees ``gridrank``, ``gridsize`` for each dimension.
+  protocol, importer sees ``proc_grid_rank``, ``proc_grid_size`` for each dimension.
   If we do an ``MPI_Cart_create`` with ``reorder=False``, what
   guarantees are there to ensure that the MPI cartesian communicator is
   consistent with the communicator on the exporting side of the
@@ -232,7 +232,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     global index space available on this process.
 
   For a block-distributed dimension, adjacent processes as determined by
-  the dimension dictionary's ``gridrank`` field shall have adjacent
+  the dimension dictionary's ``proc_grid_rank`` field shall have adjacent
   global index ranges, i.e., for two processes ``a`` and ``b`` with grid
   ranks ``i`` and ``i+1`` respectively, the ``stop`` of ``a`` shall be
   equal to the ``start`` of ``b``.  Processes may contain
@@ -248,7 +248,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     The cyclic distribution is what results from assigning global
     indices to the processes in a distributed dimension in round-robin
     fashion.  A constraint for cyclic is that the Python slice formed
-    from the ``start``, ``datasize``, and ``gridsize`` values reproduces
+    from the ``start``, ``datasize``, and ``proc_grid_size`` values reproduces
     the local array's indices as in standard NumPy slicing.
 
 * block-cyclic (``disttype`` is ``'bc'``):
@@ -270,12 +270,12 @@ The remaining key-value pairs in each dimension dictionary depend on the
     block-cyclic is a generalization of the block and cyclic
     distribution types (for an evenly distributed block distribution).
     When blocksize == 1, block-cyclic is equivalent to cyclic; when
-    blocksize == datasize // gridsize, block cyclic is equivalent to
+    blocksize == datasize // proc_grid_size, block cyclic is equivalent to
     block.
 
     [TODO: write down equations relating start, stop, step, blocksize,
-    gridsize and gridrank that yield the global indices under block
-    cyclic.  Resolve any ambiguites for ugly combinations of gridsize,
+    proc_grid_size and proc_grid_rank that yield the global indices under block
+    cyclic.  Resolve any ambiguites for ugly combinations of proc_grid_size,
     blocksize, step, particularly when "extra" elements are involved.]
 
 * block-padded (``disttype`` is ``'bp'``)
@@ -284,7 +284,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
   key.  This distribution type allows adjacent local array sections to
   overlap in global index space.  Whenever an element of the ``padding``
   tuple is > 0, that indicates this array shares indices with its
-  neighbor (as determined by ``gridrank``), and further, that this
+  neighbor (as determined by ``proc_grid_rank``), and further, that this
   neighboring process owns the data.
 
   * ``start`` and ``stop`` as in the block distribution type
@@ -328,8 +328,8 @@ In process 0::
     >>> distbuffer['dimdata']
     ({'datasize': 2,
       'disttype': 'b',
-      'gridrank': 0,
-      'gridsize': 2,
+      'proc_grid_rank': 0,
+      'proc_grid_size': 2,
       'start': 0,
       'stop': 1},
      {'datasize': 10,
@@ -347,8 +347,8 @@ In process 1::
     >>> distbuffer['dimdata']
     ({'datasize': 2,
       'disttype': 'b',
-      'gridrank': 1,
-      'gridsize': 2,
+      'proc_grid_rank': 1,
+      'proc_grid_size': 2,
       'start': 1,
       'stop': 2},
      {'datasize': 10,
@@ -379,8 +379,8 @@ In process 0::
     >>> distbuffer['dimdata']
     ({'datasize': 30,
       'disttype': 'u',
-      'gridrank': 0,
-      'gridsize': 3,
+      'proc_grid_rank': 0,
+      'proc_grid_size': 3,
       'indices': [19, 1, 0, 12, 2, 15, 4]},)
 
 In process 1::
@@ -390,8 +390,8 @@ In process 1::
     >>> distbuffer['dimdata']
     ({'datasize': 30,
       'disttype': 'u',
-      'gridrank': 1,
-      'gridsize': 3,
+      'proc_grid_rank': 1,
+      'proc_grid_size': 3,
       'indices': [6, 13, 3]},)
 
 In process 2::
@@ -402,8 +402,8 @@ In process 2::
     >>> distbuffer['dimdata']
     ({'datasize': 30,
       'disttype': 'u',
-      'gridrank': 2,
-      'gridsize': 3,
+      'proc_grid_rank': 2,
+      'proc_grid_size': 3,
       'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
                   20,  9, 16, 27,  8, 17, 22]},)
 
