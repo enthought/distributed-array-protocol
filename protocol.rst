@@ -107,7 +107,7 @@ Exporting a Distributed Array
 A "producer" object that subscribes to the DAP shall provide a method
 named ``__distarray__`` that, when called by a consumer, returns a
 dictionary with three keys: ``'__version__'``, ``'buffer'``, and
-``'dimdata'``.
+``'dim_data'``.
 
 The value associated with the ``'__version__'`` key shall be a string of
 the form ``'major.minor.patch'``, as described in the Semantic
@@ -120,7 +120,7 @@ The value associated with the ``'buffer'`` key shall be a Python object
 that is compatible with the PEP-3118 buffer protocol and contains the
 data for a local section of a distributed array.
 
-The value for the ``'dimdata'`` key shall be a tuple of dictionaries,
+The value for the ``'dim_data'`` key shall be a tuple of dictionaries,
 called "dimension dictionaries", containing one dictionary for each
 dimension of the distributed array, with the zeroth dictionary
 associated with the zeroth dimension of the array etc.  There is one
@@ -132,28 +132,28 @@ required to fully specify a distributed array.
 Dimension Dictionaries
 ----------------------
 
-All dimension dictionaries shall have a ``'disttype'`` key with a value of
-type string or `None`.  The disttype of a dimension specifies the kind of
+All dimension dictionaries shall have a ``'dist_type'`` key with a value of
+type string or `None`.  The dist_type of a dimension specifies the kind of
 distribution for this dimension, or no distribution for value `None`.
 
-The following disttypes are currently supported:
+The following dist_types are currently supported:
 
 ============= ========== ===============
-  name         disttype   required keys
+  name         dist_type   required keys
 ============= ========== ===============
-undistributed     None    'disttype', 'datasize'
+undistributed     None    'dist_type', 'data_size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
-block-cyclic      'bc'    common, 'start', 'blocksize'
+block-cyclic      'bc'    common, 'start', 'block_size'
 block-padded      'bp'    common, 'start', 'stop', 'padding'
 unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
-where "common" represents the keys common to all distributed disttypes:
-``'disttype'``, ``'datasize'``, ``'proc_grid_size'``, and
+where "common" represents the keys common to all distributed dist_types:
+``'dist_type'``, ``'data_size'``, ``'proc_grid_size'``, and
 ``'proc_grid_rank'``.
 
-Other disttypes may be added in future versions of the protocol.
+Other dist_types may be added in future versions of the protocol.
 
 Required key-value pairs
 ````````````````````````
@@ -161,12 +161,12 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define
 the following key-value pairs:
 
-* ``'disttype'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
+* ``'dist_type'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
 
   The distribution type; the primary way to determine the kind of
   distribution for this dimension.
 
-* ``'datasize'`` : ``int``
+* ``'data_size'`` : ``int``
 
   Total number of global array elements along this dimension.
 
@@ -213,13 +213,13 @@ Distribution-type specific key-value pairs
 ``````````````````````````````````````````
 
 The remaining key-value pairs in each dimension dictionary depend on the
-``disttype`` and are described below:
+``dist_type`` and are described below:
 
-* undistributed (``disttype`` is ``None``):
+* undistributed (``dist_type`` is ``None``):
 
   No additional keys required.
 
-* block (``disttype`` is ``'b'``):
+* block (``dist_type`` is ``'b'``):
 
   * ``start`` : ``int``, >= 0
 
@@ -238,7 +238,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
   equal to the ``start`` of ``b``.  Processes may contain
   differently-sized global index ranges.
 
-* cyclic (``disttype`` is ``'c'``):
+* cyclic (``dist_type`` is ``'c'``):
 
   * ``start`` : ``int``, >= 0
 
@@ -248,37 +248,37 @@ The remaining key-value pairs in each dimension dictionary depend on the
     The cyclic distribution is what results from assigning global
     indices to the processes in a distributed dimension in round-robin
     fashion.  A constraint for cyclic is that the Python slice formed
-    from the ``start``, ``datasize``, and ``proc_grid_size`` values reproduces
+    from the ``start``, ``data_size``, and ``proc_grid_size`` values reproduces
     the local array's indices as in standard NumPy slicing.
 
-* block-cyclic (``disttype`` is ``'bc'``):
+* block-cyclic (``dist_type`` is ``'bc'``):
 
   * ``start`` : ``int``, >= 0
 
     The start index (inclusive and 0-based) of the global index space
     available on this process.
 
-  * ``blocksize`` : ``int``, >= 1
+  * ``block_size`` : ``int``, >= 1
 
     Indicates the size of the contiguous blocks for this dimension.
 
-    [TODO: what are the bounds on blocksize?]
+    [TODO: what are the bounds on block_size?]
 
     Block-cyclic can be thought of as analogous to the cyclic
     distribution, but it distributes contiguous blocks of global indices
     in round robin fashion rather than single indices.  In this way
     block-cyclic is a generalization of the block and cyclic
     distribution types (for an evenly distributed block distribution).
-    When blocksize == 1, block-cyclic is equivalent to cyclic; when
-    blocksize == datasize // proc_grid_size, block cyclic is equivalent to
+    When block_size == 1, block-cyclic is equivalent to cyclic; when
+    block_size == data_size // proc_grid_size, block cyclic is equivalent to
     block.
 
-    [TODO: write down equations relating start, stop, step, blocksize,
+    [TODO: write down equations relating start, stop, step, block_size,
     proc_grid_size and proc_grid_rank that yield the global indices under block
     cyclic.  Resolve any ambiguites for ugly combinations of proc_grid_size,
-    blocksize, step, particularly when "extra" elements are involved.]
+    block_size, step, particularly when "extra" elements are involved.]
 
-* block-padded (``disttype`` is ``'bp'``)
+* block-padded (``dist_type`` is ``'bp'``)
 
   Analogous to the block distribution type but with an extra ``padding``
   key.  This distribution type allows adjacent local array sections to
@@ -296,7 +296,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     This padding can be either "boundary padding" or "communication
     padding".
 
-* unstructured (``disttype`` is ``'u'``):
+* unstructured (``dist_type`` is ``'u'``):
 
   * ``indices``: list of ``int``
 
@@ -320,42 +320,43 @@ In process 0::
 
     >>> distbuffer = a0.__distarray__()
     >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dimdata']
+    ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
     '1.0.0'
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
-    >>> distbuffer['dimdata']
-    ({'datasize': 2,
-      'disttype': 'b',
+    >>> distbuffer['dim_data']
+    ({'data_size': 2,
+      'dist_type': 'b',
       'proc_grid_rank': 0,
       'proc_grid_size': 2,
       'start': 0,
       'stop': 1},
-     {'datasize': 10,
-      'disttype': None})
+     {'data_size': 10,
+      'dist_type': None})
 
 In process 1::
 
     >>> distbuffer = a1.__distarray__()
     >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dimdata']
+    ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
     '1.0.0'
     >>> distbuffer['buffer']
     array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
-    >>> distbuffer['dimdata']
-    ({'datasize': 2,
-      'disttype': 'b',
+    >>> distbuffer['dim_data']
+    ({'data_size': 2,
+      'dist_type': 'b',
       'proc_grid_rank': 1,
       'proc_grid_size': 2,
       'start': 1,
       'stop': 2},
-     {'datasize': 10,
-      'disttype': None})
+     {'data_size': 10,
+      'dist_type': None})
 
 Unstructured
 ````````````
+
 Assume we have a process grid with 3 rows, and we have a size 30 array
 ``a`` distributed over it.  Let ``a`` be a one-dimensional unstructured
 array with 7 elements on process 0, 3 elements on process 1, and 20
@@ -366,19 +367,19 @@ On all processes::
 
     >>> distbuffer = local_array.__distarray__()
     >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dimdata']
+    ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
     '1.0.0'
-    >>> len(distbuffer['dimdata']) == 1  # one dimension only
+    >>> len(distbuffer['dim_data']) == 1  # one dimension only
     True
 
 In process 0::
 
     >>> distbuffer['buffer']
     array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
-    >>> distbuffer['dimdata']
-    ({'datasize': 30,
-      'disttype': 'u',
+    >>> distbuffer['dim_data']
+    ({'data_size': 30,
+      'dist_type': 'u',
       'proc_grid_rank': 0,
       'proc_grid_size': 3,
       'indices': [19, 1, 0, 12, 2, 15, 4]},)
@@ -387,9 +388,9 @@ In process 1::
 
     >>> distbuffer['buffer']
     array([0.1,  0.5,  0.9])
-    >>> distbuffer['dimdata']
-    ({'datasize': 30,
-      'disttype': 'u',
+    >>> distbuffer['dim_data']
+    ({'data_size': 30,
+      'dist_type': 'u',
       'proc_grid_rank': 1,
       'proc_grid_size': 3,
       'indices': [6, 13, 3]},)
@@ -399,9 +400,9 @@ In process 2::
     >>> distbuffer['buffer']
     array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
             0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
-    >>> distbuffer['dimdata']
-    ({'datasize': 30,
-      'disttype': 'u',
+    >>> distbuffer['dim_data']
+    ({'data_size': 30,
+      'dist_type': 'u',
       'proc_grid_rank': 2,
       'proc_grid_size': 3,
       'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
