@@ -318,7 +318,9 @@ Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
 array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
 block-distributed 0th dimension and an undistributed 1st dimension.
 
-In process 0::
+In process 0:
+
+.. code:: python
 
     >>> distbuffer = a0.__distarray__()
     >>> distbuffer.keys()
@@ -337,7 +339,9 @@ In process 0::
      {'data_size': 10,
       'dist_type': None})
 
-In process 1::
+In process 1:
+
+.. code:: python
 
     >>> distbuffer = a1.__distarray__()
     >>> distbuffer.keys()
@@ -364,7 +368,9 @@ distributed over it.  Let ``a`` be a one-dimensional unstructured array with 7
 elements on process 0, 3 elements on process 1, and 20 elements on process 2.
 
 
-On all processes::
+On all processes:
+
+.. code:: python
 
     >>> distbuffer = local_array.__distarray__()
     >>> distbuffer.keys()
@@ -374,7 +380,9 @@ On all processes::
     >>> len(distbuffer['dim_data']) == 1  # one dimension only
     True
 
-In process 0::
+In process 0:
+
+.. code:: python
 
     >>> distbuffer['buffer']
     array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
@@ -385,7 +393,9 @@ In process 0::
       'proc_grid_size': 3,
       'indices': [19, 1, 0, 12, 2, 15, 4]},)
 
-In process 1::
+In process 1:
+
+.. code:: python
 
     >>> distbuffer['buffer']
     array([0.1,  0.5,  0.9])
@@ -396,7 +406,9 @@ In process 1::
       'proc_grid_size': 3,
       'indices': [6, 13, 3]},)
 
-In process 2::
+In process 2:
+
+.. code:: python
 
     >>> distbuffer['buffer']
     array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
