@@ -268,7 +268,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     rather than single indices.  In this way block-cyclic is a generalization
     of the block and cyclic distribution types (for an evenly distributed block
     distribution).  When block_size == 1, block-cyclic is equivalent to cyclic;
-    when block_size == data_size // proc_grid_size, block cyclic is equivalent
+    when block_size == ceil(data_size / proc_grid_size), block cyclic is equivalent
     to block.
 
     [TODO: write down equations relating start, stop, step, block_size,
