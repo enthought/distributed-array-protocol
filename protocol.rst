@@ -180,14 +180,10 @@ following key-value pairs:
 All *distributed* dimensions shall have the following keys in their dimension
 dictionary, with the associated value:
 
-* ``'proc_grid_size'`` : ``int``, > 1
+* ``'proc_grid_size'`` : ``int``, >= 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
-
-  [TODO: to confirm: always greater than 1, never equal to 1?  Otherwise this
-  dimension is not distributed and we get into degeneracy between distributed /
-  undistributed dimensions that would be cleaner to avoid.]
 
   Constraint: the product of all proc_grid_sizes for all distributed dimensions
   shall equal the total number of processes in the communicator.
