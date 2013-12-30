@@ -194,13 +194,8 @@ dictionary, with the associated value:
   information allows the consumer to determine where the neighbor sections of
   an array are located.
 
-  [TODO: Question regarding Cart_create, grid_rank, grid_size, etc:
-
-  What guarantees are there between libraries?  When importing from the
-  protocol, importer sees ``proc_grid_rank``, ``proc_grid_size`` for each
-  dimension.  If we do an ``MPI_Cart_create`` with ``reorder=False``, what
-  guarantees are there to ensure that the MPI cartesian communicator is
-  consistent with the communicator on the exporting side of the protocol?]
+  The MPI standard guarantees that Cartesian process coordinates are always
+  assigned to ranks in the same way [#mpivirtualtopologies]_.
 
 Optional key-value pairs
 ````````````````````````
@@ -419,6 +414,8 @@ In process 2:
 References
 -------------------------------------------------------------------------------
 .. [#mpi] Message Passing Interface.  http://www.open-mpi.org/
+.. [#mpivirtualtopologies] MPI-2.2 Standard: Virtual Topologies
+                           http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node165.htm#Node165
 .. [#ipythonparallel] IPython Parallel.
                       http://ipython.org/ipython-doc/dev/parallel/
 .. [#bufferprotocol] Revising the Buffer Protocol.
