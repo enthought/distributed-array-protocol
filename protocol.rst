@@ -412,7 +412,7 @@ In process 2:
 References
 -------------------------------------------------------------------------------
 .. [#mpi] Message Passing Interface.  http://www.open-mpi.org/
-.. [#mpivirtualtopologies] MPI-2.2 Standard: Virtual Topologies
+.. [#mpivirtualtopologies] MPI-2.2 Standard: Virtual Topologies.
                            http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node165.htm#Node165
 .. [#ipythonparallel] IPython Parallel.
                       http://ipython.org/ipython-doc/dev/parallel/
