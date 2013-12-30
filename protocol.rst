@@ -263,8 +263,6 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
     Indicates the size of the contiguous blocks for this dimension.
 
-    [TODO: what are the bounds on block_size?]
-
     Block-cyclic can be thought of as analogous to the cyclic distribution, but
     it distributes contiguous blocks of global indices in round robin fashion
     rather than single indices.  In this way block-cyclic is a generalization
