@@ -140,15 +140,15 @@ Dimension Dictionaries
 ----------------------
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
-type string or `None`.  The dist_type of a dimension specifies the kind of
-distribution for this dimension, or no distribution for value `None`.
+type string.  The ``dist_type`` of a dimension specifies the kind of
+distribution for that dimension (or no distribution for value ``'n'``).
 
 The following dist_types are currently supported:
 
 ============= ========== ===============
   name         dist_type   required keys
 ============= ========== ===============
-undistributed     None    'dist_type', 'data_size'
+undistributed     'n'    'dist_type', 'data_size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'block_size'
@@ -168,7 +168,7 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
+* ``'dist_type'`` : ``{'n', 'b', 'c', 'bc', 'bp', 'u'}``
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
@@ -211,7 +211,7 @@ Distribution-type specific key-value pairs
 The remaining key-value pairs in each dimension dictionary depend on the
 ``dist_type`` and are described below:
 
-* undistributed (``dist_type`` is ``None``):
+* undistributed (``dist_type`` is ``'n'``):
 
   No additional keys required.
 
@@ -324,7 +324,7 @@ In process 0:
       'start': 0,
       'stop': 1},
      {'data_size': 10,
-      'dist_type': None})
+      'dist_type': 'n'})
 
 In process 1:
 
@@ -345,7 +345,7 @@ In process 1:
       'start': 1,
       'stop': 2},
      {'data_size': 10,
-      'dist_type': None})
+      'dist_type': 'n'})
 
 Unstructured
 ````````````
