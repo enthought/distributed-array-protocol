@@ -148,7 +148,7 @@ The following dist_types are currently supported:
 ============= ========== ===============
   name         dist_type   required keys
 ============= ========== ===============
-undistributed     'n'    'dist_type', 'data_size'
+undistributed     'n'    'dist_type', 'size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'block_size'
@@ -157,7 +157,7 @@ unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
 where "common" represents the keys common to all distributed dist_types:
-``'dist_type'``, ``'data_size'``, ``'proc_grid_size'``, and
+``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
 ``'proc_grid_rank'``.
 
 Other dist_types may be added in future versions of the protocol.
@@ -173,7 +173,7 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'data_size'`` : ``int``
+* ``'size'`` : ``int``
 
   Total number of global array elements along this dimension.
 
@@ -244,7 +244,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     The cyclic distribution is what results from assigning global indices to
     the processes in a distributed dimension in round-robin fashion.  A
     constraint for cyclic is that the Python slice formed from the ``start``,
-    ``data_size``, and ``proc_grid_size`` values reproduces the local array's
+    ``size``, and ``proc_grid_size`` values reproduces the local array's
     indices as in standard NumPy slicing.
 
 * block-cyclic (``dist_type`` is ``'bc'``):
@@ -263,7 +263,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     rather than single indices.  In this way block-cyclic is a generalization
     of the block and cyclic distribution types (for an evenly distributed block
     distribution).  When block_size == 1, block-cyclic is equivalent to cyclic;
-    when block_size == ceil(data_size / proc_grid_size), block cyclic is equivalent
+    when block_size == ceil(size / proc_grid_size), block cyclic is equivalent
     to block.
 
     The block-cyclic distribution is discussed at length elsewhere
@@ -317,13 +317,13 @@ In process 0:
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
     >>> distbuffer['dim_data']
-    ({'data_size': 2,
+    ({'size': 2,
       'dist_type': 'b',
       'proc_grid_rank': 0,
       'proc_grid_size': 2,
       'start': 0,
       'stop': 1},
-     {'data_size': 10,
+     {'size': 10,
       'dist_type': 'n'})
 
 In process 1:
@@ -338,13 +338,13 @@ In process 1:
     >>> distbuffer['buffer']
     array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
     >>> distbuffer['dim_data']
-    ({'data_size': 2,
+    ({'size': 2,
       'dist_type': 'b',
       'proc_grid_rank': 1,
       'proc_grid_size': 2,
       'start': 1,
       'stop': 2},
-     {'data_size': 10,
+     {'size': 10,
       'dist_type': 'n'})
 
 Unstructured
@@ -374,7 +374,7 @@ In process 0:
     >>> distbuffer['buffer']
     array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 0,
       'proc_grid_size': 3,
@@ -387,7 +387,7 @@ In process 1:
     >>> distbuffer['buffer']
     array([0.1,  0.5,  0.9])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 1,
       'proc_grid_size': 3,
@@ -401,7 +401,7 @@ In process 2:
     array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
             0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 2,
       'proc_grid_size': 3,
