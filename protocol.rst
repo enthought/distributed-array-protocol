@@ -173,7 +173,7 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``
+* ``'size'`` : ``int``, >= 0
 
   Total number of global array elements along this dimension.
 
