@@ -266,10 +266,8 @@ The remaining key-value pairs in each dimension dictionary depend on the
     when block_size == ceil(data_size / proc_grid_size), block cyclic is equivalent
     to block.
 
-    [TODO: write down equations relating start, stop, step, block_size,
-    proc_grid_size and proc_grid_rank that yield the global indices under block
-    cyclic.  Resolve any ambiguites for ugly combinations of proc_grid_size,
-    block_size, step, particularly when "extra" elements are involved.]
+    The block-cyclic distribution is discussed at length elsewhere
+    ([#bcnetlib]_, [#bcibm]_).
 
 * block-padded (``dist_type`` is ``'bp'``)
 
@@ -434,6 +432,10 @@ References
 .. [#hpfortran] High Perfomance Fortran. http://dacnet.rice.edu/
 .. [#julia] Julia. http://docs.julialang.org
 .. [#numpy] NumPy. http://www.numpy.org/
+.. [#bcnetlib] ScaLAPACK Users' Guide: The Two-dimensional Block-Cyclic Distribution.
+               http://netlib.org/scalapack/slug/node75.html
+.. [#bcibm] Parallel ESSL Guide and Reference: Block-Cyclic Distribution over Two-Dimensional Process Grids.
+            http://publib.boulder.ibm.com/infocenter/clresctr/vxrx/index.jsp?topic=%2Fcom.ibm.cluster.pessl.v4r2.pssl100.doc%2Fam6gr_dvtdpg.htm
 
 
 .. vim:spell:ft=rst:tw=79
