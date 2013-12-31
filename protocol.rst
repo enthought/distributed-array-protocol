@@ -140,15 +140,15 @@ Dimension Dictionaries
 ----------------------
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
-type string or `None`.  The dist_type of a dimension specifies the kind of
-distribution for this dimension, or no distribution for value `None`.
+type string.  The ``dist_type`` of a dimension specifies the kind of
+distribution for that dimension (or no distribution for value ``'n'``).
 
 The following dist_types are currently supported:
 
 ============= ========== ===============
   name         dist_type   required keys
 ============= ========== ===============
-undistributed     None    'dist_type', 'data_size'
+undistributed     'n'    'dist_type', 'size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'block_size'
@@ -157,7 +157,7 @@ unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
 where "common" represents the keys common to all distributed dist_types:
-``'dist_type'``, ``'data_size'``, ``'proc_grid_size'``, and
+``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
 ``'proc_grid_rank'``.
 
 Other dist_types may be added in future versions of the protocol.
@@ -168,26 +168,22 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{None, 'b', 'c', 'bc', 'bp', 'u'}``
+* ``'dist_type'`` : ``{'n', 'b', 'c', 'bc', 'bp', 'u'}``
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'data_size'`` : ``int``
+* ``'size'`` : ``int``, >= 0
 
   Total number of global array elements along this dimension.
 
 All *distributed* dimensions shall have the following keys in their dimension
 dictionary, with the associated value:
 
-* ``'proc_grid_size'`` : ``int``, > 1
+* ``'proc_grid_size'`` : ``int``, >= 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
-
-  [TODO: to confirm: always greater than 1, never equal to 1?  Otherwise this
-  dimension is not distributed and we get into degeneracy between distributed /
-  undistributed dimensions that would be cleaner to avoid.]
 
   Constraint: the product of all proc_grid_sizes for all distributed dimensions
   shall equal the total number of processes in the communicator.
@@ -198,13 +194,8 @@ dictionary, with the associated value:
   information allows the consumer to determine where the neighbor sections of
   an array are located.
 
-  [TODO: Question regarding Cart_create, grid_rank, grid_size, etc:
-
-  What guarantees are there between libraries?  When importing from the
-  protocol, importer sees ``proc_grid_rank``, ``proc_grid_size`` for each
-  dimension.  If we do an ``MPI_Cart_create`` with ``reorder=False``, what
-  guarantees are there to ensure that the MPI cartesian communicator is
-  consistent with the communicator on the exporting side of the protocol?]
+  The MPI standard guarantees that Cartesian process coordinates are always
+  assigned to ranks in the same way [#mpivirtualtopologies]_.
 
 Optional key-value pairs
 ````````````````````````
@@ -220,7 +211,7 @@ Distribution-type specific key-value pairs
 The remaining key-value pairs in each dimension dictionary depend on the
 ``dist_type`` and are described below:
 
-* undistributed (``dist_type`` is ``None``):
+* undistributed (``dist_type`` is ``'n'``):
 
   No additional keys required.
 
@@ -253,7 +244,7 @@ The remaining key-value pairs in each dimension dictionary depend on the
     The cyclic distribution is what results from assigning global indices to
     the processes in a distributed dimension in round-robin fashion.  A
     constraint for cyclic is that the Python slice formed from the ``start``,
-    ``data_size``, and ``proc_grid_size`` values reproduces the local array's
+    ``size``, and ``proc_grid_size`` values reproduces the local array's
     indices as in standard NumPy slicing.
 
 * block-cyclic (``dist_type`` is ``'bc'``):
@@ -267,20 +258,16 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
     Indicates the size of the contiguous blocks for this dimension.
 
-    [TODO: what are the bounds on block_size?]
-
     Block-cyclic can be thought of as analogous to the cyclic distribution, but
     it distributes contiguous blocks of global indices in round robin fashion
     rather than single indices.  In this way block-cyclic is a generalization
     of the block and cyclic distribution types (for an evenly distributed block
     distribution).  When block_size == 1, block-cyclic is equivalent to cyclic;
-    when block_size == data_size // proc_grid_size, block cyclic is equivalent
+    when block_size == ceil(size / proc_grid_size), block cyclic is equivalent
     to block.
 
-    [TODO: write down equations relating start, stop, step, block_size,
-    proc_grid_size and proc_grid_rank that yield the global indices under block
-    cyclic.  Resolve any ambiguites for ugly combinations of proc_grid_size,
-    block_size, step, particularly when "extra" elements are involved.]
+    The block-cyclic distribution is discussed at length elsewhere
+    ([#bcnetlib]_, [#bcibm]_).
 
 * block-padded (``dist_type`` is ``'bp'``)
 
@@ -330,14 +317,14 @@ In process 0:
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
     >>> distbuffer['dim_data']
-    ({'data_size': 2,
+    ({'size': 2,
       'dist_type': 'b',
       'proc_grid_rank': 0,
       'proc_grid_size': 2,
       'start': 0,
       'stop': 1},
-     {'data_size': 10,
-      'dist_type': None})
+     {'size': 10,
+      'dist_type': 'n'})
 
 In process 1:
 
@@ -351,14 +338,14 @@ In process 1:
     >>> distbuffer['buffer']
     array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
     >>> distbuffer['dim_data']
-    ({'data_size': 2,
+    ({'size': 2,
       'dist_type': 'b',
       'proc_grid_rank': 1,
       'proc_grid_size': 2,
       'start': 1,
       'stop': 2},
-     {'data_size': 10,
-      'dist_type': None})
+     {'size': 10,
+      'dist_type': 'n'})
 
 Unstructured
 ````````````
@@ -387,7 +374,7 @@ In process 0:
     >>> distbuffer['buffer']
     array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 0,
       'proc_grid_size': 3,
@@ -400,7 +387,7 @@ In process 1:
     >>> distbuffer['buffer']
     array([0.1,  0.5,  0.9])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 1,
       'proc_grid_size': 3,
@@ -414,7 +401,7 @@ In process 2:
     array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
             0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
     >>> distbuffer['dim_data']
-    ({'data_size': 30,
+    ({'size': 30,
       'dist_type': 'u',
       'proc_grid_rank': 2,
       'proc_grid_size': 3,
@@ -425,6 +412,8 @@ In process 2:
 References
 -------------------------------------------------------------------------------
 .. [#mpi] Message Passing Interface.  http://www.open-mpi.org/
+.. [#mpivirtualtopologies] MPI-2.2 Standard: Virtual Topologies.
+                           http://www.mpi-forum.org/docs/mpi-2.2/mpi22-report/node165.htm#Node165
 .. [#ipythonparallel] IPython Parallel.
                       http://ipython.org/ipython-doc/dev/parallel/
 .. [#bufferprotocol] Revising the Buffer Protocol.
@@ -443,6 +432,10 @@ References
 .. [#hpfortran] High Perfomance Fortran. http://dacnet.rice.edu/
 .. [#julia] Julia. http://docs.julialang.org
 .. [#numpy] NumPy. http://www.numpy.org/
+.. [#bcnetlib] ScaLAPACK Users' Guide: The Two-dimensional Block-Cyclic Distribution.
+               http://netlib.org/scalapack/slug/node75.html
+.. [#bcibm] Parallel ESSL Guide and Reference: Block-Cyclic Distribution over Two-Dimensional Process Grids.
+            http://publib.boulder.ibm.com/infocenter/clresctr/vxrx/index.jsp?topic=%2Fcom.ibm.cluster.pessl.v4r2.pssl100.doc%2Fam6gr_dvtdpg.htm
 
 
 .. vim:spell:ft=rst:tw=79
