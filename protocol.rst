@@ -355,15 +355,15 @@ Assume we have a process grid with 2 processes, and we have an 18-element array
 ``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
 block-padded distribution for its 0th (and only) dimension.
 
-Since the `'padding'` for each process is (1, 1), the local array on each
+Since the ``'padding'`` for each process is ``(1, 1)``, the local array on each
 process has one element of padding on the left and one element of padding on
 the right.  Since each of these processes is at one edge of the process grid
-(and the array has no `'periodic'` dimensions), the "outside" element on each
+(and the array has no ``'periodic'`` dimensions), the "outside" element on each
 local array is an example of "boundary padding", and the "inside" element on
 each local array is an example of "communication padding".  Note that the
-`'size'` of the distributed array is not equal to the combined buffer sizes of
-`a0` and `a1` , since the communication padding is not counted toward the size
-(though the boundary padding is).
+``'size'`` of the distributed array is not equal to the combined buffer sizes
+of `a0` and `a1` , since the communication padding is not counted toward the
+size (though the boundary padding is).
 
 In process 0:
 
