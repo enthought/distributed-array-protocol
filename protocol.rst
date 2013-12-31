@@ -347,6 +347,65 @@ In process 1:
      {'size': 10,
       'dist_type': 'n'})
 
+
+Block-Padded
+````````````
+
+Assume we have a process grid with 2 processes, and we have an 18-element array
+``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
+block-padded distribution for its 0th (and only) dimension.
+
+Since the `'padding'` for each process is (1, 1), the local array on each
+process has one element of padding on the left and one element of padding on
+the right.  Since each of these processes is at one edge of the process grid
+(and the array has no `'periodic'` dimensions), the "outside" element on each
+local array is an example of "boundary padding", and the "inside" element on
+each local array is an example of "communication padding".  Note that the
+`'size'` of the distributed array is not equal to the combined buffer sizes of
+`a0` and `a1` , since the communication padding is not counted toward the size
+(though the boundary padding is).
+
+In process 0:
+
+.. code:: python
+
+    >>> distbuffer = a0.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dim_data']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
+    >>> distbuffer['dim_data']
+    ({'size': 18,
+      'dist_type': 'bp',
+      'proc_grid_rank': 0,
+      'proc_grid_size': 2,
+      'start': 0,
+      'stop': 9,
+      'padding': (1, 1)})
+
+In process 1:
+
+.. code:: python
+
+    >>> distbuffer = a1.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dim_data']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
+    >>> distbuffer['dim_data']
+    ({'size': 18,
+      'dist_type': 'bp',
+      'proc_grid_rank': 1,
+      'proc_grid_size': 2,
+      'start': 9,
+      'stop': 18,
+      'padding': (1, 1)})
+
+
 Unstructured
 ````````````
 
