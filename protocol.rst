@@ -32,7 +32,7 @@ Some usecases supported by v1.0 of the protocol include:
 
 * Block, cyclic, and block-cyclic distributions for structured decomposition.
 
-* Padded block-distributed arrays, including boundary cells for physical
+* Padded block-distributed arrays, including boundary elements for physical
   boundary conditions, and communication buffers for storing and updating
   values in finite-differencing applications.
 
@@ -97,16 +97,20 @@ map
 boundary padding
     Padding indices in a local array that indicate which indices are part of
     the logical *boundary* of the entire domain.  These are physical or real
-    boundaries and correspond to the cells or indices that are involved with
+    boundaries and correspond to the elements or indices that are involved with
     the physical system's boundary conditions in a PDE application, for
-    example.  These boundary padding cells would exist even if the array were
-    not distributed. 
+    example.  These boundary padding elements would exist even if the array
+    were not distributed.  These elements are included in a distributed
+    dimension's ``'size'``.
     
 communication padding
     Padding indices that are shared logically with a neighboring local array.
     These padding regions are used often in finite differencing applications
     and reserve room for communication with neighboring arrays when data
-    updates are required.
+    updates are required.  Each of these shared elements are only counted once
+    toward the ``'size'`` of each distributed dimension, so the total
+    ``'size'`` of a dimension will less than or equal to the sum of the sizes
+    all local buffers.
 
 
 Exporting a Distributed Array
@@ -271,12 +275,16 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * block-padded (``dist_type`` is ``'bp'``)
 
-  Analogous to the block distribution type but with an extra ``padding`` key.
-  This distribution type allows adjacent local array sections to overlap in
-  global index space.  Whenever an element of the ``padding`` tuple is > 0,
-  that indicates this array shares indices with its neighbor (as determined by
-  ``proc_grid_rank``), and further, that this neighboring process owns the
-  data.
+  Analogous to the block distribution type but with an extra ``padding`` key,
+  which indicates communication or boundary padding.  Whenever an element of
+  the ``padding`` tuple is > 0 and the padding is on an internal edge of the
+  process grid (or the dimension is periodic), that indicates this is
+  "communication padding".  In other words, the array shares the indicated
+  number of indices with its neighbor (as determined by ``proc_grid_rank``),
+  and further, this neighboring process owns the data.  When an element of the
+  `padding`` tuple is > 0 and the padding is on an external edge of the process
+  grid (and the dimension is not periodic), that indicates that this is
+  "boundary padding".
 
   * ``start`` and ``stop`` as in the block distribution type
 
@@ -346,6 +354,79 @@ In process 1:
       'stop': 2},
      {'size': 10,
       'dist_type': 'n'})
+
+
+Block-Padded
+````````````
+
+Assume we have a process grid with 2 processes, and we have an 18-element array
+``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
+block-padded distribution for its 0th (and only) dimension.
+
+Since the ``'padding'`` for each process is ``(1, 1)``, the local array on each
+process has one element of padding on the left and one element of padding on
+the right.  Since each of these processes is at one edge of the process grid
+(and the array has no ``'periodic'`` dimensions), the "outside" element on each
+local array is an example of "boundary padding", and the "inside" element on
+each local array is an example of "communication padding".  Note that the
+``'size'`` of the distributed array is not equal to the combined buffer sizes
+of `a0` and `a1` , since the communication padding is not counted toward the
+size (though the boundary padding is).
+
+For this example, the global index arrangement on each processor, with 'B' for
+boundary and 'C' for communication elements, are arranged as follows::
+
+    Process 0: B 1 2 3 4 5 6 7 8 C
+    Process 1:                 C 9 10 11 12 13 14 15 16 B
+
+The 'B' element on process 0 occupies global index 0, and the 'B' element on
+process 1 occupies global index 17.  Each 'B' element counts towards the
+array's `size`.  The communication elements on each process overlap with a data
+element on the other process to indicate which data elements these
+communication elements are meant to communicate with.
+
+The protocol data structure on each process is as follows.
+
+In process 0:
+
+.. code:: python
+
+    >>> distbuffer = a0.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dim_data']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
+    >>> distbuffer['dim_data']
+    ({'size': 18,
+      'dist_type': 'bp',
+      'proc_grid_rank': 0,
+      'proc_grid_size': 2,
+      'start': 0,
+      'stop': 9,
+      'padding': (1, 1)})
+
+In process 1:
+
+.. code:: python
+
+    >>> distbuffer = a1.__distarray__()
+    >>> distbuffer.keys()
+    ['__version__', 'buffer', 'dim_data']
+    >>> distbuffer['__version__']
+    '1.0.0'
+    >>> distbuffer['buffer']
+    array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
+    >>> distbuffer['dim_data']
+    ({'size': 18,
+      'dist_type': 'bp',
+      'proc_grid_rank': 1,
+      'proc_grid_size': 2,
+      'start': 9,
+      'stop': 18,
+      'padding': (1, 1)})
+
 
 Unstructured
 ````````````
