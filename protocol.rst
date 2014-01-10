@@ -28,13 +28,13 @@ this protocol may provide definitions in other languages.
 Usecases
 -------------------------------------------------------------------------------
 
-Some usecases supported by v1.0 of the protocol include:
+Major usecases supported by v1.0 of the protocol include:
 
-* Block, cyclic, and block-cyclic distributions for structured decomposition.
+* Sharing large amounts of array data without copying.
 
-* Padded block-distributed arrays, including boundary elements for physical
-  boundary conditions, and communication buffers for storing and updating
-  values in finite-differencing applications.
+* Block, cyclic, and block-cyclic distributions for structured arrays.
+
+* Padded block distributed arrays for finite differencing applications.  
 
 * Unstructured distributions for arbitrary mappings between global indices and
   local data.
@@ -43,7 +43,7 @@ Some usecases supported by v1.0 of the protocol include:
 
 * Different distributions for each array dimension.
 
-* Dense and sparse (or structured and unstructured) arrays.
+* Dense (structured) and sparse (unstructured) arrays.
 
 * Compatibility with array views and slices.
 
@@ -53,6 +53,8 @@ Sources
 
 The primary sources and inspiration for the DAP are:
 
+* NumPy [#numpy]_ and the Revised Buffer Protocol [#bufferprotocol]_
+
 * Trilinos [#trilinos]_ and PyTrilinos [#pytrilinos]_
 
 * Global Arrays [#globalarrays]_ and Global Arrays in NumPy (GAiN) [#gain]_
@@ -60,8 +62,6 @@ The primary sources and inspiration for the DAP are:
 * The Chapel [#chapel]_, X10 [#x10]_, and HP-Fortran [#hpfortran]_ languages
 
 * Distributed array implementation in the Julia [#julia]_ language
-
-* NumPy [#numpy]_ and the Revised Buffer Protocol [#bufferprotocol]_
 
 
 Definitions
@@ -156,7 +156,6 @@ undistributed     'n'    'dist_type', 'size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 block-cyclic      'bc'    common, 'start', 'block_size'
-block-padded      'bp'    common, 'start', 'stop', 'padding'
 unstructured      'u'     common, 'indices'
 ============= ========== ===============
 
@@ -209,6 +208,7 @@ Optional key-value pairs
   Indicates whether this dimension is periodic.  When not present, indicates
   this dimension is not periodic, equivalent to a value of `False`.
 
+
 Distribution-type specific key-value pairs
 ``````````````````````````````````````````
 
@@ -217,19 +217,19 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * undistributed (``dist_type`` is ``'n'``):
 
-  No additional keys required.
+  * ``padding`` : optional. see same key under block distribution.
 
 * block (``dist_type`` is ``'b'``):
 
-  * ``start`` : ``int``, >= 0
+  * ``start`` : ``int``, greater than or equal to zero.
 
-    The start index (inclusive and 0-based) of the global index space available
-    on this process.
+  The start index (inclusive and 0-based) of the global index space available
+  on this process.
 
-  * ``stop`` : ``int``, > ``start`` value
+  * ``stop`` : ``int``, greater than the ``start`` value
 
-    The stop index (exclusive, as in standard Python indexing) of the global
-    index space available on this process.
+  The stop index (exclusive, as in standard Python indexing) of the global
+  index space available on this process.
 
   For a block-distributed dimension, adjacent processes as determined by the
   dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
@@ -238,9 +238,35 @@ The remaining key-value pairs in each dimension dictionary depend on the
   ``start`` of ``b``.  Processes may contain differently-sized global index
   ranges.
 
+  * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
+    Optional.
+
+  When present, indicates the number of "padding" values at the lower and upper
+  limits (respectively) of the indices available on this process.  This padding
+  can be either "boundary padding" or "communication padding".  When not
+  present, indicates that the distributed array is not padded in this dimension
+  on any process.
+
+  Whenever an element of the ``padding`` tuple is > 0 and the padding is on an
+  internal edge of the process grid (or the dimension is periodic), that
+  indicates this is "communication padding", and the communication padding
+  elements do not count towards the ``size`` of the array in this dimension.
+  In other words, the array shares the indicated number of indices with its
+  neighbor (as determined by ``proc_grid_rank``), and further, this neighboring
+  process owns the data.  When an element of the ``padding`` tuple is > 0 and
+  the padding is on an external edge of the process grid (and the dimension is
+  not periodic), that indicates that this is "boundary padding".
+
+  Padding is an all-or-nothing attribute: if the ``padding`` keyword is present
+  in any dimension dictionary for a dimension of the distributed array, then
+  the ``padding`` keyword shall be present on *all* processes for the same
+  dimension dictionary.  The value associated with ``padding`` can be the tuple
+  ``(0,0)`` indicating that this local array is not padded in this dimension,
+  but other local arrays may be padded in this dimension.
+
 * cyclic (``dist_type`` is ``'c'``):
 
-  * ``start`` : ``int``, >= 0
+  * ``start`` : ``int``, greater than or equal to zero.
 
     The start index (inclusive and 0-based) of the global index space available
     on this process.
@@ -253,12 +279,12 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * block-cyclic (``dist_type`` is ``'bc'``):
 
-  * ``start`` : ``int``, >= 0
+  * ``start`` : ``int``, greater than or equal to zero.
 
     The start index (inclusive and 0-based) of the global index space available
     on this process.
 
-  * ``block_size`` : ``int``, >= 1
+  * ``block_size`` : ``int``, greater than or equal to one.
 
     Indicates the size of the contiguous blocks for this dimension.
 
@@ -272,27 +298,6 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
     The block-cyclic distribution is discussed at length elsewhere
     ([#bcnetlib]_, [#bcibm]_).
-
-* block-padded (``dist_type`` is ``'bp'``)
-
-  Analogous to the block distribution type but with an extra ``padding`` key,
-  which indicates communication or boundary padding.  Whenever an element of
-  the ``padding`` tuple is > 0 and the padding is on an internal edge of the
-  process grid (or the dimension is periodic), that indicates this is
-  "communication padding".  In other words, the array shares the indicated
-  number of indices with its neighbor (as determined by ``proc_grid_rank``),
-  and further, this neighboring process owns the data.  When an element of the
-  `padding`` tuple is > 0 and the padding is on an external edge of the process
-  grid (and the dimension is not periodic), that indicates that this is
-  "boundary padding".
-
-  * ``start`` and ``stop`` as in the block distribution type
-
-  * ``padding`` : 2-tuple of ``int``, each >= 0.
-
-    Indicates the number of "padding" values at the lower and upper limits
-    (respectively) of the indices available on this process.  This padding can
-    be either "boundary padding" or "communication padding".
 
 * unstructured (``dist_type`` is ``'u'``):
 
@@ -356,8 +361,8 @@ In process 1:
       'dist_type': 'n'})
 
 
-Block-Padded
-````````````
+Block with padding
+``````````````````
 
 Assume we have a process grid with 2 processes, and we have an 18-element array
 ``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
@@ -400,7 +405,7 @@ In process 0:
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
     >>> distbuffer['dim_data']
     ({'size': 18,
-      'dist_type': 'bp',
+      'dist_type': 'b',
       'proc_grid_rank': 0,
       'proc_grid_size': 2,
       'start': 0,
@@ -420,7 +425,7 @@ In process 1:
     array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
     >>> distbuffer['dim_data']
     ({'size': 18,
-      'dist_type': 'bp',
+      'dist_type': 'b',
       'proc_grid_rank': 1,
       'proc_grid_size': 2,
       'start': 9,
