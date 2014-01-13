@@ -170,7 +170,7 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{'n', 'b', 'c', 'bc', 'bp', 'u'}``
+* ``'dist_type'`` : ``{'n', 'b', 'c', 'u'}``
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
@@ -222,46 +222,47 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
   * ``start`` : ``int``, greater than or equal to zero.
 
-  The start index (inclusive and 0-based) of the global index space available
-  on this process.
+    The start index (inclusive and 0-based) of the global index space available
+    on this process.
 
   * ``stop`` : ``int``, greater than the ``start`` value
 
-  The stop index (exclusive, as in standard Python indexing) of the global
-  index space available on this process.
+    The stop index (exclusive, as in standard Python indexing) of the global
+    index space available on this process.
 
-  For a block-distributed dimension, adjacent processes as determined by the
-  dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
-  index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
-  and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
-  ``start`` of ``b``.  Processes may contain differently-sized global index
-  ranges.
+    For a block-distributed dimension, adjacent processes as determined by the
+    dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
+    index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
+    and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
+    ``start`` of ``b``.  Processes may contain differently-sized global index
+    ranges.
 
   * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
     Optional.
 
-  When present, indicates the number of "padding" values at the lower and upper
-  limits (respectively) of the indices available on this process.  This padding
-  can be either "boundary padding" or "communication padding".  When not
-  present, indicates that the distributed array is not padded in this dimension
-  on any process.
+    When present, indicates the number of "padding" values at the lower and
+    upper limits (respectively) of the indices available on this process.  This
+    padding can be either "boundary padding" or "communication padding".  When
+    not present, indicates that the distributed array is not padded in this
+    dimension on any process.
 
-  Whenever an element of the ``padding`` tuple is > 0 and the padding is on an
-  internal edge of the process grid (or the dimension is periodic), that
-  indicates this is "communication padding", and the communication padding
-  elements do not count towards the ``size`` of the array in this dimension.
-  In other words, the array shares the indicated number of indices with its
-  neighbor (as determined by ``proc_grid_rank``), and further, this neighboring
-  process owns the data.  When an element of the ``padding`` tuple is > 0 and
-  the padding is on an external edge of the process grid (and the dimension is
-  not periodic), that indicates that this is "boundary padding".
+    Whenever an element of the ``padding`` tuple is > 0 and the padding is on
+    an internal edge of the process grid (or the dimension is periodic), that
+    indicates this is "communication padding", and the communication padding
+    elements do not count towards the ``size`` of the array in this dimension.
+    In other words, the array shares the indicated number of indices with its
+    neighbor (as determined by ``proc_grid_rank``), and further, this
+    neighboring process owns the data.  When an element of the ``padding``
+    tuple is > 0 and the padding is on an external edge of the process grid
+    (and the dimension is not periodic), that indicates that this is "boundary
+    padding".
 
-  Padding is an all-or-nothing attribute: if the ``padding`` keyword is present
-  in any dimension dictionary for a dimension of the distributed array, then
-  the ``padding`` keyword shall be present on *all* processes for the same
-  dimension dictionary.  The value associated with ``padding`` can be the tuple
-  ``(0,0)`` indicating that this local array is not padded in this dimension,
-  but other local arrays may be padded in this dimension.
+    Padding is an all-or-nothing attribute: if the ``padding`` keyword is
+    present in any dimension dictionary for a dimension of the distributed
+    array, then the ``padding`` keyword shall be present on *all* processes for
+    the same dimension dictionary.  The value associated with ``padding`` can
+    be the tuple ``(0,0)`` indicating that this local array is not padded in
+    this dimension, but other local arrays may be padded in this dimension.
 
 * cyclic (``dist_type`` is ``'c'``):
 
@@ -433,7 +434,6 @@ Unstructured
 Assume we have a process grid with 3 rows, and we have a size 30 array ``a``
 distributed over it.  Let ``a`` be a one-dimensional unstructured array with 7
 elements on process 0, 3 elements on process 1, and 20 elements on process 2.
-
 
 On all processes:
 
