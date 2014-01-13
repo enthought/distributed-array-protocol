@@ -1,5 +1,5 @@
 ===============================================================================
-Distributed Array Protocol v1.0.0
+Distributed Array Protocol v0.9.0
 ===============================================================================
 
 .. Contents::
@@ -28,7 +28,7 @@ this protocol may provide definitions in other languages.
 Usecases
 -------------------------------------------------------------------------------
 
-Major usecases supported by v1.0 of the protocol include:
+Major usecases supported by the protocol include:
 
 * Sharing large amounts of array data without copying.
 
@@ -321,7 +321,7 @@ In process 0:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '1.0.0'
+    '0.9.0'
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
     >>> distbuffer['dim_data']
@@ -342,7 +342,7 @@ In process 1:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '1.0.0'
+    '0.9.0'
     >>> distbuffer['buffer']
     array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
     >>> distbuffer['dim_data']
@@ -395,7 +395,7 @@ In process 0:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '1.0.0'
+    '0.9.0'
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
     >>> distbuffer['dim_data']
@@ -415,7 +415,7 @@ In process 1:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '1.0.0'
+    '0.9.0'
     >>> distbuffer['buffer']
     array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
     >>> distbuffer['dim_data']
@@ -443,7 +443,7 @@ On all processes:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '1.0.0'
+    '0.9.0'
     >>> len(distbuffer['dim_data']) == 1  # one dimension only
     True
 
