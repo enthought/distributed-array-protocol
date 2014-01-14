@@ -296,11 +296,23 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * unstructured (``dist_type`` is ``'u'``):
 
-  * ``indices``: list of ``int``
+  * ``indices``: buffer (or buffer-compatible) of ``int``
 
     Global indices available on this process.
 
-  [TODO: fill in details, constraints.]
+    The only constraint that applies to the ``indices`` buffer is that the
+    values are locally unique.  The indices values are otherwise unconstrained:
+    they can be negative, unordered, and non-contiguous.
+
+  * ``one_to_one`` : bool, optional.
+
+    If not present, shall be equivalent to being present with a `False` value.
+
+    If `False`, indicates that some global indices may be duplicated in two or
+    more local ``indices`` buffers.
+
+    If `True`, a global index shall be located in exactly one local ``indices``
+    buffer.
 
 
 Examples
