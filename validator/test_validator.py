@@ -1,9 +1,9 @@
 import unittest
 import numpy as np
 
-import checker
+import validator
 
-class TestChecker(unittest.TestCase):
+class TestValidator(unittest.TestCase):
 
     def test_block(self):
         dim_data = ({'dist_type': 'b',
@@ -16,7 +16,7 @@ class TestChecker(unittest.TestCase):
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
-        is_valid, msg = checker.validate(distbuffer)
+        is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
 
     def test_cyclic(self):
@@ -29,7 +29,7 @@ class TestChecker(unittest.TestCase):
                 'buffer': np.ones(50),
                 'dim_data': dim_data}
 
-        is_valid, msg = checker.validate(distbuffer)
+        is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
 
     def test_block_cyclic(self):
@@ -43,7 +43,7 @@ class TestChecker(unittest.TestCase):
                 'buffer': np.ones(50),
                 'dim_data': dim_data}
 
-        is_valid, msg = checker.validate(distbuffer)
+        is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
 
 
@@ -58,12 +58,12 @@ class TestChecker(unittest.TestCase):
                 'buffer': np.ones(len(dim_data[0]['indices'])),
                 'dim_data': dim_data}
 
-        is_valid, msg = checker.validate(distbuffer)
+        is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
 
     def test_not_distributed(self):
         distbuffer = {'__version__': '1.0.0',
                 'buffer': 'blonk',
                 'dim_data': ({'dist_type': 'n', 'size': 5},)}
-        is_valid, msg = checker.validate(distbuffer)
+        is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
