@@ -137,7 +137,7 @@ distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
 one dimension dictionary per dimension, **whether or not that dimension is
 distributed**.  These dictionaries are intended to include all metadata
-required to fully specify a distributed array's distribution information.
+required to fully specify a distributed array's dimension information.
 
 
 Dimension Dictionaries
@@ -187,8 +187,8 @@ dictionary, with the associated value:
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all proc_grid_sizes for all distributed dimensions
-  shall equal the total number of processes in the communicator.
+  Constraint: the product of all ``'proc_grid_size'`` s for all distributed
+  dimensions shall equal the total number of processes in the communicator.
 
 * ``proc_grid_rank`` : ``int``
 
