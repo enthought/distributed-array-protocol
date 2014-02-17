@@ -67,3 +67,31 @@ class TestValidator(unittest.TestCase):
                 'dim_data': ({'dist_type': 'n', 'size': 5},)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
+
+    def test_extra_process(self):
+        dimdata = {
+            'dist_type':'c',
+            'size':3,
+            'proc_grid_size':4,
+            'proc_grid_rank':0,
+            'start' : 0,
+            }
+        distbuffer = {'__version__': '1.0.0',
+                'buffer' : 'a',
+                'dim_data' : (dimdata,)}
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertTrue(is_valid, msg)
+
+    def test_empty_process(self):
+        dimdata = {
+            'dist_type':'c',
+            'size':3,
+            'proc_grid_size':4,
+            'proc_grid_rank':3,
+            'start' : 3,
+            }
+        distbuffer = {'__version__': '1.0.0',
+                'buffer' : '',
+                'dim_data' : (dimdata,)}
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertTrue(is_valid, msg)
