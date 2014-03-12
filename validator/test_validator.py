@@ -63,7 +63,7 @@ class TestValidator(unittest.TestCase):
 
     def test_not_distributed(self):
         distbuffer = {'__version__': '1.0.0',
-                'buffer': 'blonk',
+                'buffer': b'blonk',
                 'dim_data': ({'dist_type': 'n', 'size': 5},)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
@@ -77,7 +77,7 @@ class TestValidator(unittest.TestCase):
             'start' : 0,
             }
         distbuffer = {'__version__': '1.0.0',
-                'buffer' : 'a',
+                'buffer' : b'a',
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
@@ -91,7 +91,7 @@ class TestValidator(unittest.TestCase):
             'start' : 3,
             }
         distbuffer = {'__version__': '1.0.0',
-                'buffer' : '',
+                'buffer' : b'',
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
