@@ -367,6 +367,8 @@ In process 1:
      {'size': 10,
       'dist_type': 'n'})
 
+.. image:: ../images/plot_block_nondist.png
+
 
 Block with padding
 ``````````````````
