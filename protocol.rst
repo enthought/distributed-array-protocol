@@ -152,7 +152,7 @@ The following dist_types are currently supported:
 ============= ========== ===============
   name         dist_type   required keys
 ============= ========== ===============
-undistributed     'n'    'dist_type', 'size'
+no-distribution   'n'    'dist_type', 'size'
 block             'b'     common, 'start', 'stop'
 cyclic            'c'     common, 'start'
 unstructured      'u'     common, 'indices'
@@ -214,7 +214,7 @@ Distribution-type specific key-value pairs
 The remaining key-value pairs in each dimension dictionary depend on the
 ``dist_type`` and are described below:
 
-* undistributed (``dist_type`` is ``'n'``):
+* no-distribution (``dist_type`` is ``'n'``):
 
   * ``padding`` : optional. see same key under block distribution.
 
@@ -332,12 +332,12 @@ is a necessary condition that ``start == stop`` also.
 Examples
 -------------------------------------------------------------------------------
 
-Block, Undistributed
-````````````````````
+Block, No-distribution
+``````````````````````
 
 Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
 array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
-block-distributed 0th dimension and an undistributed 1st dimension.
+block-distributed 0th dimension and no distribution for the 1st dimension.
 
 In process 0:
 
