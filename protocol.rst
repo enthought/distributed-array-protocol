@@ -149,14 +149,14 @@ distribution for that dimension (or no distribution for value ``'n'``).
 
 The following dist_types are currently supported:
 
-============= ========== ===============
-  name         dist_type   required keys
-============= ========== ===============
-no-distribution   'n'    'dist_type', 'size'
-block             'b'     common, 'start', 'stop'
-cyclic            'c'     common, 'start'
-unstructured      'u'     common, 'indices'
-============= ========== ===============
+=============== =========== ========================
+  name           dist_type   required keys
+=============== =========== ========================
+no-distribution     'n'      'dist_type', 'size'
+block               'b'       common, 'start', 'stop'
+cyclic              'c'       common, 'start'
+unstructured        'u'       common, 'indices'
+=============== =========== ========================
 
 where "common" represents the keys common to all distributed dist_types:
 ``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
