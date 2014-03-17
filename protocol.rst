@@ -137,7 +137,10 @@ distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
 one dimension dictionary per dimension, **whether or not that dimension is
 distributed**.  These dictionaries are intended to include all metadata
-required to fully specify a distributed array's dimension information.
+required to fully specify a distributed array's dimension information.  This
+tuple may be empty, indicating a zero-dimensional array.  The number of
+elements in the ``'dim_data'`` tuple must match the number of dimensions of the
+value of ``'buffer'``.
 
 
 Dimension Dictionaries
