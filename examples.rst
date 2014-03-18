@@ -1,186 +1,487 @@
 Automatically Generated Examples
--------------------------------------------------------------------------------
+--------------------------------
 
-Block, Undistributed
-````````````````````
+Block, Nondistributed
+`````````````````````
 
-Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
-array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
-block-distributed 0th dimension and an undistributed 1st dimension.
+Engine properties for: Block, Nondistributed
 
 In process 0:
 
-.. code:: python
-
-    >>> distbuffer = a0.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
-    >>> distbuffer['dim_data']
-    ({'size': 2,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 2,
-      'start': 0,
-      'stop': 1},
-     {'size': 10,
-      'dist_type': 'n'})
+>>> distbuffer = a0.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 4,
+  'size': 4,
+  'start': 0,
+  'stop': 1},
+ {'dist_type': 'n', 'size': 8})
 
 In process 1:
 
-.. code:: python
+>>> distbuffer = a1.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 4,
+  'size': 4,
+  'start': 1,
+  'stop': 2},
+ {'dist_type': 'n', 'size': 8})
 
-    >>> distbuffer = a1.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
-    >>> distbuffer['dim_data']
-    ({'size': 2,
-      'dist_type': 'b',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 2,
-      'start': 1,
-      'stop': 2},
-     {'size': 10,
-      'dist_type': 'n'})
+In process 2:
+
+>>> distbuffer = a2.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 2,
+  'proc_grid_size': 4,
+  'size': 4,
+  'start': 2,
+  'stop': 3},
+ {'dist_type': 'n', 'size': 8})
+
+In process 3:
+
+>>> distbuffer = a3.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 3,
+  'proc_grid_size': 4,
+  'size': 4,
+  'start': 3,
+  'stop': 4},
+ {'dist_type': 'n', 'size': 8})
 
 .. image:: ../images/plot_block_nondist.png
 
 
-Block with padding
-``````````````````
+Nondistributed, Block
+`````````````````````
 
-Assume we have a process grid with 2 processes, and we have an 18-element array
-``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
-block-padded distribution for its 0th (and only) dimension.
-
-Since the ``'padding'`` for each process is ``(1, 1)``, the local array on each
-process has one element of padding on the left and one element of padding on
-the right.  Since each of these processes is at one edge of the process grid
-(and the array has no ``'periodic'`` dimensions), the "outside" element on each
-local array is an example of "boundary padding", and the "inside" element on
-each local array is an example of "communication padding".  Note that the
-``'size'`` of the distributed array is not equal to the combined buffer sizes
-of `a0` and `a1` , since the communication padding is not counted toward the
-size (though the boundary padding is).
-
-For this example, the global index arrangement on each processor, with 'B' for
-boundary and 'C' for communication elements, are arranged as follows::
-
-    Process 0: B 1 2 3 4 5 6 7 8 C
-    Process 1:                 C 9 10 11 12 13 14 15 16 B
-
-The 'B' element on process 0 occupies global index 0, and the 'B' element on
-process 1 occupies global index 17.  Each 'B' element counts towards the
-array's `size`.  The communication elements on each process overlap with a data
-element on the other process to indicate which data elements these
-communication elements are meant to communicate with.
-
-The protocol data structure on each process is as follows.
+Engine properties for: Nondistributed, Block
 
 In process 0:
 
-.. code:: python
-
-    >>> distbuffer = a0.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
-    >>> distbuffer['dim_data']
-    ({'size': 18,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 2,
-      'start': 0,
-      'stop': 9,
-      'padding': (1, 1)})
-
-In process 1:
-
-.. code:: python
-
-    >>> distbuffer = a1.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
-    >>> distbuffer['dim_data']
-    ({'size': 18,
-      'dist_type': 'b',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 2,
-      'start': 9,
-      'stop': 18,
-      'padding': (1, 1)})
-
-
-Unstructured
-````````````
-
-Assume we have a process grid with 3 rows, and we have a size 30 array ``a``
-distributed over it.  Let ``a`` be a one-dimensional unstructured array with 7
-elements on process 0, 3 elements on process 1, and 20 elements on process 2.
-
-On all processes:
-
-.. code:: python
-
-    >>> distbuffer = local_array.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> len(distbuffer['dim_data']) == 1  # one dimension only
-    True
-
-In process 0:
-
-.. code:: python
-
-    >>> distbuffer['buffer']
-    array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 3,
-      'indices': [19, 1, 0, 12, 2, 15, 4]},)
+>>> distbuffer = a0.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  1.,   2.],
+       [  9.,  10.],
+       [ 17.,  18.],
+       [ 25.,  26.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'n', 'size': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 4,
+  'size': 8,
+  'start': 0,
+  'stop': 2})
 
 In process 1:
 
-.. code:: python
-
-    >>> distbuffer['buffer']
-    array([0.1,  0.5,  0.9])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 3,
-      'indices': [6, 13, 3]},)
+>>> distbuffer = a1.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  3.,   4.],
+       [ 11.,  12.],
+       [ 19.,  20.],
+       [ 27.,  28.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'n', 'size': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 4,
+  'size': 8,
+  'start': 2,
+  'stop': 4})
 
 In process 2:
 
-.. code:: python
+>>> distbuffer = a2.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  5.,   6.],
+       [ 13.,  14.],
+       [ 21.,  22.],
+       [ 29.,  30.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'n', 'size': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 2,
+  'proc_grid_size': 4,
+  'size': 8,
+  'start': 4,
+  'stop': 6})
 
-    >>> distbuffer['buffer']
-    array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
-            0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 2,
-      'proc_grid_size': 3,
-      'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
-                  20,  9, 16, 27,  8, 17, 22]},)
+In process 3:
+
+>>> distbuffer = a3.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  7.,   8.],
+       [ 15.,  16.],
+       [ 23.,  24.],
+       [ 31.,  32.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'n', 'size': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 3,
+  'proc_grid_size': 4,
+  'size': 8,
+  'start': 6,
+  'stop': 8})
+
+.. image:: ../images/plot_nondist_block.png
+
+
+Block, Block
+````````````
+
+Engine properties for: Block, Block
+
+In process 0:
+
+>>> distbuffer = a0.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  1.,   2.,   3.,   4.],
+       [  9.,  10.,  11.,  12.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0,
+  'stop': 2},
+ {'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0,
+  'stop': 4})
+
+In process 1:
+
+>>> distbuffer = a1.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  5.,   6.,   7.,   8.],
+       [ 13.,  14.,  15.,  16.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0,
+  'stop': 2},
+ {'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 4,
+  'stop': 8})
+
+In process 2:
+
+>>> distbuffer = a2.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 17.,  18.,  19.,  20.],
+       [ 25.,  26.,  27.,  28.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0,
+  'stop': 4})
+
+In process 3:
+
+>>> distbuffer = a3.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 21.,  22.,  23.,  24.],
+       [ 29.,  30.,  31.,  32.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 4,
+  'stop': 8})
+
+.. image:: ../images/plot_block_block.png
+
+
+Block, Cyclic
+`````````````
+
+Engine properties for: Block, Cyclic
+
+In process 0:
+
+>>> distbuffer = a0.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  1.,   3.,   5.,   7.],
+       [  9.,  11.,  13.,  15.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0,
+  'stop': 2},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0})
+
+In process 1:
+
+>>> distbuffer = a1.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  2.,   4.,   6.,   8.],
+       [ 10.,  12.,  14.,  16.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0,
+  'stop': 2},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 1})
+
+In process 2:
+
+>>> distbuffer = a2.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 17.,  19.,  21.,  23.],
+       [ 25.,  27.,  29.,  31.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0})
+
+In process 3:
+
+>>> distbuffer = a3.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 18.,  20.,  22.,  24.],
+       [ 26.,  28.,  30.,  32.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 1})
+
+.. image:: ../images/plot_block_cyclic.png
+
+
+Cyclic, Cyclic
+``````````````
+
+Engine properties for: Cyclic, Cyclic
+
+In process 0:
+
+>>> distbuffer = a0.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  1.,   3.,   5.,   7.],
+       [ 17.,  19.,  21.,  23.]])
+>>> distbuffer['dim_data']
+({'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0})
+
+In process 1:
+
+>>> distbuffer = a1.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  2.,   4.,   6.,   8.],
+       [ 18.,  20.,  22.,  24.]])
+>>> distbuffer['dim_data']
+({'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 1})
+
+In process 2:
+
+>>> distbuffer = a2.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[  9.,  11.,  13.,  15.],
+       [ 25.,  27.,  29.,  31.]])
+>>> distbuffer['dim_data']
+({'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 1},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0})
+
+In process 3:
+
+>>> distbuffer = a3.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+>>> distbuffer['buffer']
+array([[ 10.,  12.,  14.,  16.],
+       [ 26.,  28.,  30.,  32.]])
+>>> distbuffer['dim_data']
+({'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 1},
+ {'block_size': 1,
+  'dist_type': 'c',
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 1})
+
+.. image:: ../images/plot_cyclic_cyclic.png
+
+
