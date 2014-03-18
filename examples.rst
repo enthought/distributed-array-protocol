@@ -4,15 +4,26 @@ Automatically Generated Examples
 Block, Nondistributed
 `````````````````````
 
-Engine properties for: Block, Nondistributed
+Some description of Block, Nondistributed.
 
-In process 0:
+The full (undistributed) array:
 
->>> distbuffer = a0.__distarray__()
+>>> full_array
+array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.],
+       [ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.],
+       [ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
 >>> distbuffer.keys()
 ['buffer', 'dim_data', '__version__']
 >>> distbuffer['__version__']
 '1.0.0'
+
+In process 0:
+
 >>> distbuffer['buffer']
 array([[ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.]])
 >>> distbuffer['dim_data']
@@ -26,11 +37,6 @@ array([[ 1.,  2.,  3.,  4.,  5.,  6.,  7.,  8.]])
 
 In process 1:
 
->>> distbuffer = a1.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.]])
 >>> distbuffer['dim_data']
@@ -44,11 +50,6 @@ array([[  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.]])
 
 In process 2:
 
->>> distbuffer = a2.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.]])
 >>> distbuffer['dim_data']
@@ -62,11 +63,6 @@ array([[ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.]])
 
 In process 3:
 
->>> distbuffer = a3.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
 >>> distbuffer['dim_data']
@@ -84,15 +80,26 @@ array([[ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
 Nondistributed, Block
 `````````````````````
 
-Engine properties for: Nondistributed, Block
+Engine properties for: Nondistributed, Block.
 
-In process 0:
+The full (undistributed) array:
 
->>> distbuffer = a0.__distarray__()
+>>> full_array
+array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.],
+       [ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.],
+       [ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
 >>> distbuffer.keys()
 ['buffer', 'dim_data', '__version__']
 >>> distbuffer['__version__']
 '1.0.0'
+
+In process 0:
+
 >>> distbuffer['buffer']
 array([[  1.,   2.],
        [  9.,  10.],
@@ -109,11 +116,6 @@ array([[  1.,   2.],
 
 In process 1:
 
->>> distbuffer = a1.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  3.,   4.],
        [ 11.,  12.],
@@ -130,11 +132,6 @@ array([[  3.,   4.],
 
 In process 2:
 
->>> distbuffer = a2.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  5.,   6.],
        [ 13.,  14.],
@@ -151,11 +148,6 @@ array([[  5.,   6.],
 
 In process 3:
 
->>> distbuffer = a3.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  7.,   8.],
        [ 15.,  16.],
@@ -176,15 +168,26 @@ array([[  7.,   8.],
 Block, Block
 ````````````
 
-Engine properties for: Block, Block
+Engine properties for: Block, Block.
 
-In process 0:
+The full (undistributed) array:
 
->>> distbuffer = a0.__distarray__()
+>>> full_array
+array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.],
+       [ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.],
+       [ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
 >>> distbuffer.keys()
 ['buffer', 'dim_data', '__version__']
 >>> distbuffer['__version__']
 '1.0.0'
+
+In process 0:
+
 >>> distbuffer['buffer']
 array([[  1.,   2.,   3.,   4.],
        [  9.,  10.,  11.,  12.]])
@@ -204,11 +207,6 @@ array([[  1.,   2.,   3.,   4.],
 
 In process 1:
 
->>> distbuffer = a1.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  5.,   6.,   7.,   8.],
        [ 13.,  14.,  15.,  16.]])
@@ -228,11 +226,6 @@ array([[  5.,   6.,   7.,   8.],
 
 In process 2:
 
->>> distbuffer = a2.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 17.,  18.,  19.,  20.],
        [ 25.,  26.,  27.,  28.]])
@@ -252,11 +245,6 @@ array([[ 17.,  18.,  19.,  20.],
 
 In process 3:
 
->>> distbuffer = a3.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 21.,  22.,  23.,  24.],
        [ 29.,  30.,  31.,  32.]])
@@ -280,15 +268,26 @@ array([[ 21.,  22.,  23.,  24.],
 Block, Cyclic
 `````````````
 
-Engine properties for: Block, Cyclic
+Engine properties for: Block, Cyclic.
 
-In process 0:
+The full (undistributed) array:
 
->>> distbuffer = a0.__distarray__()
+>>> full_array
+array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.],
+       [ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.],
+       [ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
 >>> distbuffer.keys()
 ['buffer', 'dim_data', '__version__']
 >>> distbuffer['__version__']
 '1.0.0'
+
+In process 0:
+
 >>> distbuffer['buffer']
 array([[  1.,   3.,   5.,   7.],
        [  9.,  11.,  13.,  15.]])
@@ -308,11 +307,6 @@ array([[  1.,   3.,   5.,   7.],
 
 In process 1:
 
->>> distbuffer = a1.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  2.,   4.,   6.,   8.],
        [ 10.,  12.,  14.,  16.]])
@@ -332,11 +326,6 @@ array([[  2.,   4.,   6.,   8.],
 
 In process 2:
 
->>> distbuffer = a2.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 17.,  19.,  21.,  23.],
        [ 25.,  27.,  29.,  31.]])
@@ -356,11 +345,6 @@ array([[ 17.,  19.,  21.,  23.],
 
 In process 3:
 
->>> distbuffer = a3.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 18.,  20.,  22.,  24.],
        [ 26.,  28.,  30.,  32.]])
@@ -384,15 +368,26 @@ array([[ 18.,  20.,  22.,  24.],
 Cyclic, Cyclic
 ``````````````
 
-Engine properties for: Cyclic, Cyclic
+Engine properties for: Cyclic, Cyclic.
 
-In process 0:
+The full (undistributed) array:
 
->>> distbuffer = a0.__distarray__()
+>>> full_array
+array([[  1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.],
+       [ 17.,  18.,  19.,  20.,  21.,  22.,  23.,  24.],
+       [ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
 >>> distbuffer.keys()
 ['buffer', 'dim_data', '__version__']
 >>> distbuffer['__version__']
 '1.0.0'
+
+In process 0:
+
 >>> distbuffer['buffer']
 array([[  1.,   3.,   5.,   7.],
        [ 17.,  19.,  21.,  23.]])
@@ -412,11 +407,6 @@ array([[  1.,   3.,   5.,   7.],
 
 In process 1:
 
->>> distbuffer = a1.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  2.,   4.,   6.,   8.],
        [ 18.,  20.,  22.,  24.]])
@@ -436,11 +426,6 @@ array([[  2.,   4.,   6.,   8.],
 
 In process 2:
 
->>> distbuffer = a2.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[  9.,  11.,  13.,  15.],
        [ 25.,  27.,  29.,  31.]])
@@ -460,11 +445,6 @@ array([[  9.,  11.,  13.,  15.],
 
 In process 3:
 
->>> distbuffer = a3.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
 >>> distbuffer['buffer']
 array([[ 10.,  12.,  14.,  16.],
        [ 26.,  28.,  30.,  32.]])
