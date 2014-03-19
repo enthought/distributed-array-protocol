@@ -4,7 +4,11 @@ Automatically Generated Examples
 Block, Nondistributed
 `````````````````````
 
+4 X 8 array, Block, Nondistributed distribution, distributed over a 2 X 2 process grid.
+
 Some description of Block, Nondistributed.
+
+.. image:: ../images/plot_block_nondist.png
 
 The full (undistributed) array:
 
@@ -74,13 +78,12 @@ array([[ 25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.]])
   'stop': 4},
  {'dist_type': 'n', 'size': 8})
 
-.. image:: ../images/plot_block_nondist.png
-
-
 Nondistributed, Block
 `````````````````````
 
-Engine properties for: Nondistributed, Block.
+4 X 8 array, Nondistributed, Block distribution, distributed over a 2 X 2 process grid.
+
+.. image:: ../images/plot_nondist_block.png
 
 The full (undistributed) array:
 
@@ -162,13 +165,12 @@ array([[  7.,   8.],
   'start': 6,
   'stop': 8})
 
-.. image:: ../images/plot_nondist_block.png
-
-
 Block, Block
 ````````````
 
-Engine properties for: Block, Block.
+4 X 8 array, Block, Block distribution, distributed over a 2 X 2 process grid.
+
+.. image:: ../images/plot_block_block.png
 
 The full (undistributed) array:
 
@@ -262,13 +264,12 @@ array([[ 21.,  22.,  23.,  24.],
   'start': 4,
   'stop': 8})
 
-.. image:: ../images/plot_block_block.png
-
-
 Block, Cyclic
 `````````````
 
-Engine properties for: Block, Cyclic.
+4 X 8 array, Block, Cyclic distribution, distributed over a 2 X 2 process grid.
+
+.. image:: ../images/plot_block_cyclic.png
 
 The full (undistributed) array:
 
@@ -362,13 +363,12 @@ array([[ 18.,  20.,  22.,  24.],
   'size': 8,
   'start': 1})
 
-.. image:: ../images/plot_block_cyclic.png
-
-
 Cyclic, Cyclic
 ``````````````
 
-Engine properties for: Cyclic, Cyclic.
+4 X 8 array, Cyclic, Cyclic distribution, distributed over a 2 X 2 process grid.
+
+.. image:: ../images/plot_cyclic_cyclic.png
 
 The full (undistributed) array:
 
@@ -461,7 +461,4 @@ array([[ 10.,  12.,  14.,  16.],
   'proc_grid_size': 2,
   'size': 8,
   'start': 1})
-
-.. image:: ../images/plot_cyclic_cyclic.png
-
 
