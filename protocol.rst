@@ -68,11 +68,12 @@ Definitions
 -----------
 
 process
-    A "process" is the basic unit of execution and is as defined in MPI
-    [#mpi]_.  It is also analogous to an IPython.parallel [#ipythonparallel]_
-    engine.  Each process has an address space, has one or more namespaces that
-    contain objects, and is able to communicate with other processes to send
-    and receive data.
+    A "process" is the basic unit of execution and is equivalent to a
+    conventional OS process.  Each process has an address space, has one or
+    more namespaces that contain objects, and is able to communicate with other
+    processes to send and receive data.  Note that the protocol does not
+    require any inter-process communication and makes no assumptions regarding
+    communication libraries.
 
 distributed array
     A single logical array of arbitrary dimensionality that is divided among
@@ -199,8 +200,14 @@ dictionary, with the associated value:
   information allows the consumer to determine where the neighbor sections of
   an array are located.
 
-  The MPI standard guarantees that Cartesian process coordinates are always
-  assigned to ranks in the same way [#mpivirtualtopologies]_.
+  The mapping of process rank to process grid coordinates is assumed to be row
+  major.  For an ``N`` by ``M`` process grid over ``N * M`` processes with
+  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
+  to the process with rank ``i*M + j``.  This generalizes in the conventional
+  row-major way.
+
+  (The MPI standard guarantees that Cartesian process coordinates are always
+  assigned to ranks in the same way [#mpivirtualtopologies]_.)
 
 Optional key-value pairs
 ````````````````````````
