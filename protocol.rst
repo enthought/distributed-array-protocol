@@ -140,7 +140,7 @@ distributed**.  These dictionaries are intended to include all metadata
 required to fully specify a distributed array's dimension information.  This
 tuple may be empty, indicating a zero-dimensional array.  The number of
 elements in the ``'dim_data'`` tuple must match the number of dimensions of the
-value of ``'buffer'``.
+associated buffer object.
 
 
 Dimension Dictionaries
