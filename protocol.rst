@@ -68,11 +68,36 @@ Definitions
 -----------
 
 process
-    A "process" is the basic unit of execution and is as defined in MPI
-    [#mpi]_.  It is also analogous to an IPython.parallel [#ipythonparallel]_
-    engine.  Each process has an address space, has one or more namespaces that
-    contain objects, and is able to communicate with other processes to send
-    and receive data.
+    A **process** is the basic unit of execution and is equivalent to a
+    conventional OS process.  Each process has an address space, has one or
+    more namespaces that contain objects, and is able to communicate with other
+    processes to send and receive data.  Note that the protocol does not
+    require any inter-process communication and makes no assumptions regarding
+    communication libraries.
+
+process rank
+    An integer label that uniquely identifies a process.  Ranks are assigned
+    contiguously from the range ``0 ... N-1`` for ``N`` processes.
+
+process grid
+  The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
+  uniquely identifies a process, and the process grid maps process ranks to
+  grid coordinates.  Process ranks are assigned to their corresponding grid
+  coordinate in "C-order", i.e., the last index varies fastest when iterating
+  through coordinates in rank order.  The product of the number of processes in
+  each dimension in the process grid shall be equal to the total number of
+  processes.
+  
+  For example, for an ``N`` by ``M`` process grid over ``N * M`` processes with
+  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
+  to the process with rank ``i*M + j``.  
+
+  (Note that the protocol's *process grid* is compatible with MPI's
+  ``MPI_Cart_create()`` command, and the MPI standard guarantees that Cartesian
+  process coordinates are always assigned to ranks in the same way and are
+  "C-order" by default [#mpivirtualtopologies]_.  The protocol makes no
+  assumption about which underlying communication library is being used, nor
+  does it require subscribing packages to implement a communication layer.)
 
 distributed array
     A single logical array of arbitrary dimensionality that is divided among
@@ -137,7 +162,10 @@ distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
 one dimension dictionary per dimension, **whether or not that dimension is
 distributed**.  These dictionaries are intended to include all metadata
-required to fully specify a distributed array's dimension information.
+required to fully specify a distributed array's dimension information.  This
+tuple may be empty, indicating a zero-dimensional array.  The number of
+elements in the ``'dim_data'`` tuple must match the number of dimensions of the
+associated buffer object.
 
 
 Dimension Dictionaries
@@ -149,14 +177,14 @@ distribution for that dimension (or no distribution for value ``'n'``).
 
 The following dist_types are currently supported:
 
-============= ========== ===============
-  name         dist_type   required keys
-============= ========== ===============
-undistributed     'n'    'dist_type', 'size'
-block             'b'     common, 'start', 'stop'
-cyclic            'c'     common, 'start'
-unstructured      'u'     common, 'indices'
-============= ========== ===============
+=============== =========== ========================
+  name           dist_type   required keys
+=============== =========== ========================
+no-distribution     'n'      'dist_type', 'size'
+block               'b'       common, 'start', 'stop'
+cyclic              'c'       common, 'start'
+unstructured        'u'       common, 'indices'
+=============== =========== ========================
 
 where "common" represents the keys common to all distributed dist_types:
 ``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
@@ -196,8 +224,12 @@ dictionary, with the associated value:
   information allows the consumer to determine where the neighbor sections of
   an array are located.
 
-  The MPI standard guarantees that Cartesian process coordinates are always
-  assigned to ranks in the same way [#mpivirtualtopologies]_.
+  The mapping of process rank to process grid coordinates is assumed to be row
+  major.  For an ``N`` by ``M`` process grid over ``N * M`` processes with
+  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
+  to the process with rank ``i*M + j``.  This generalizes in the conventional
+  row-major way.
+
 
 Optional key-value pairs
 ````````````````````````
@@ -214,7 +246,7 @@ Distribution-type specific key-value pairs
 The remaining key-value pairs in each dimension dictionary depend on the
 ``dist_type`` and are described below:
 
-* undistributed (``dist_type`` is ``'n'``):
+* no-distribution (``dist_type`` is ``'n'``):
 
   * ``padding`` : optional. see same key under block distribution.
 
@@ -332,12 +364,12 @@ is a necessary condition that ``start == stop`` also.
 Examples
 -------------------------------------------------------------------------------
 
-Block, Undistributed
-````````````````````
+Block, No-distribution
+``````````````````````
 
 Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
 array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
-block-distributed 0th dimension and an undistributed 1st dimension.
+block-distributed 0th dimension and no distribution for the 1st dimension.
 
 In process 0:
 
