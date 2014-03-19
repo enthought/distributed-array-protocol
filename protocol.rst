@@ -197,10 +197,10 @@ dictionary, with the associated value:
   information allows the consumer to determine where the neighbor sections of
   an array are located.
 
-  The mapping of process IDs (i.e., ranks) to process grid location is assumed
-  to be row major.  For an `N` by `M` process grid over `N * M` processes with
-  ranks `0, 1, ..., (N*M)-1`, process grid coordinate `(i,j)` corresponds to
-  the process with rank `i*M + j`.  This generalizes in the conventional
+  The mapping of process rank to process grid coordinates is assumed to be row
+  major.  For an ``N`` by ``M`` process grid over ``N * M`` processes with
+  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
+  to the process with rank ``i*M + j``.  This generalizes in the conventional
   row-major way.
 
   (The MPI standard guarantees that Cartesian process coordinates are always
