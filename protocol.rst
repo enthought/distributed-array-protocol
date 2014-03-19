@@ -68,7 +68,7 @@ Definitions
 -----------
 
 process
-    A "process" is the basic unit of execution and is equivalent to a
+    A **process** is the basic unit of execution and is equivalent to a
     conventional OS process.  Each process has an address space, has one or
     more namespaces that contain objects, and is able to communicate with other
     processes to send and receive data.  Note that the protocol does not
@@ -77,10 +77,10 @@ process
 
 process rank
     An integer label that uniquely identifies a process.  Ranks are assigned
-    contiguously from the range `0 ... N-1` for `N` processes.
+    contiguously from the range ``0 ... N-1`` for ``N`` processes.
 
 process grid
-  The _process grid_ is an N-dimensional Cartesian grid.  Each coordinate
+  The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
   uniquely identifies a process, and the process grid maps process ranks to
   grid coordinates.  Process ranks are assigned to their corresponding grid
   coordinate in "C-order", i.e., the last index varies fastest when iterating
@@ -88,12 +88,12 @@ process grid
   each dimension in the process grid shall be equal to the total number of
   processes.
   
-  For example, for an `N` by `M` process grid over `N * M` processes with ranks
-  `0, 1, ..., (N*M)-1`, process grid coordinate `(i,j)` corresponds to the
-  process with rank `i*M + j`.  
+  For example, for an ``N`` by ``M`` process grid over ``N * M`` processes with
+  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
+  to the process with rank ``i*M + j``.  
 
   (Note that the protocol's *process grid* is compatible with MPI's
-  `MPI_Cart_create()` command, and the MPI standard guarantees that Cartesian
+  ``MPI_Cart_create()`` command, and the MPI standard guarantees that Cartesian
   process coordinates are always assigned to ranks in the same way and are
   "C-order" by default [#mpivirtualtopologies]_.  The protocol makes no
   assumption about which underlying communication library is being used, nor
