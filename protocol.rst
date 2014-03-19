@@ -75,6 +75,30 @@ process
     require any inter-process communication and makes no assumptions regarding
     communication libraries.
 
+process rank
+    An integer label that uniquely identifies a process.  Ranks are assigned
+    contiguously from the range `0 ... N-1` for `N` processes.
+
+process grid
+  The _process grid_ is an N-dimensional Cartesian grid.  Each coordinate
+  uniquely identifies a process, and the process grid maps process ranks to
+  grid coordinates.  Process ranks are assigned to their corresponding grid
+  coordinate in "C-order", i.e., the last index varies fastest when iterating
+  through coordinates in rank order.  The product of the number of processes in
+  each dimension in the process grid shall be equal to the total number of
+  processes.
+  
+  For example, for an `N` by `M` process grid over `N * M` processes with ranks
+  `0, 1, ..., (N*M)-1`, process grid coordinate `(i,j)` corresponds to the
+  process with rank `i*M + j`.  
+
+  (Note that the protocol's *process grid* is compatible with MPI's
+  `MPI_Cart_create()` command, and the MPI standard guarantees that Cartesian
+  process coordinates are always assigned to ranks in the same way and are
+  "C-order" by default [#mpivirtualtopologies]_.  The protocol makes no
+  assumption about which underlying communication library is being used, nor
+  does it require subscribing packages to implement a communication layer.)
+
 distributed array
     A single logical array of arbitrary dimensionality that is divided among
     multiple processes.
@@ -203,8 +227,6 @@ dictionary, with the associated value:
   to the process with rank ``i*M + j``.  This generalizes in the conventional
   row-major way.
 
-  (The MPI standard guarantees that Cartesian process coordinates are always
-  assigned to ranks in the same way [#mpivirtualtopologies]_.)
 
 Optional key-value pairs
 ````````````````````````
