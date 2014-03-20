@@ -231,15 +231,6 @@ dictionary, with the associated value:
   row-major way.
 
 
-Optional key-value pairs
-````````````````````````
-
-* ``'periodic'`` : ``bool``
-
-  Indicates whether this dimension is periodic.  When not present, indicates
-  this dimension is not periodic, equivalent to a value of `False`.
-
-
 Distribution-type specific key-value pairs
 ``````````````````````````````````````````
 
@@ -248,7 +239,9 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
 * no-distribution (``dist_type`` is ``'n'``):
 
-  * ``padding`` : optional. see same key under block distribution.
+  * ``padding`` : optional. See same key under block distribution.
+  * ``periodic`` : optional. See same key under block distribution.
+
 
 * block (``dist_type`` is ``'b'``):
 
@@ -295,6 +288,11 @@ The remaining key-value pairs in each dimension dictionary depend on the
     the same dimension dictionary.  The value associated with ``padding`` can
     be the tuple ``(0,0)`` indicating that this local array is not padded in
     this dimension, but other local arrays may be padded in this dimension.
+
+  * ``periodic`` : ``bool``, optional
+
+    Indicates whether this dimension is periodic.  When not present, indicates
+    this dimension is not periodic, equivalent to a value of ``False``.
 
 * cyclic (``dist_type`` is ``'c'``):
 
