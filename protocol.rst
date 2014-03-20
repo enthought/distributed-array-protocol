@@ -298,31 +298,37 @@ The remaining key-value pairs in each dimension dictionary depend on the
 
   * ``start`` : ``int``, greater than or equal to zero.
 
-    The start index (inclusive, 0-based, and in the global index space)
-    available on this process.
+    The start index (inclusive, 0-based) of the global index space available on
+    this process.
 
     The cyclic distribution is what results from assigning global indices--or
     contiguous blocks of indices, in the case when ``block_size`` is greater
     than one--to processes in round-robin fashion.  When ``block_size`` equals
-    one, a constraint for cyclic is that the Python slice formed from the
-    ``start``, ``size``, and ``proc_grid_size`` values reproduces the local
-    array's indices as in standard NumPy slicing.
+    one, a Python slice formed from the ``start``, ``size``, and
+    ``proc_grid_size`` values would reproduce the local array's indices.
 
   * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
-    Indicates the size of the contiguous blocks for this dimension.  If absent,
-    equivalent to the case when ``block_size`` is present and equal to one.
+    Indicates the size of contiguous blocks of indices for this dimension.  If
+    absent, equivalent to the case when ``block_size`` is present and equal to
+    one.
 
-    If ``block_size == 1``, then this is the "true" cyclic distribution as
-    specified by ScaLAPACK [#bcnetlib]_; if ``1 < block_size < size //
-    proc_grid_size``, then this dist type specifies the block-cyclic
-    distribution [#bcnetlib]_ [#bcibm]_. Block-cyclic can be thought of as
-    analogous to the cyclic distribution, but it distributes contiguous blocks
-    of global indices in round robin fashion rather than single indices.  In
-    this way block-cyclic is a generalization of the block and cyclic
-    distribution types (for an evenly distributed block distribution).  When
-    ``block_size == ceil(size / proc_grid_size)``, block cyclic is equivalent
-    to block.
+    If ``block_size == 1`` (the default), this specifies the "true" cyclic
+    distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
+    ``block_size == ceil(size / proc_grid_size)``, this distribution is
+    equivalent to an evenly-distributed block distribution.  If ``1 <
+    block_size < size // proc_grid_size``, then this specifies a distribution
+    sometimes called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
+
+    Block-cyclic is a generalization of (evenly-distributed) block and cyclic
+    distribution types.  It can be thought of as as a cyclic distribution with
+    contiguous blocks of global indices (rather than single indices)
+    distributed in a round robin fashion.
+
+    Note that since this protocol allows for block-distributed dimensions with
+    irregular numbers of indices on each process, not all 'block'-distributed
+    dimensions describable by this protocol can be represented as 'cyclic' with
+    the 'block-size' key.
 
 * unstructured (``dist_type`` is ``'u'``):
 
