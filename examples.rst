@@ -4,7 +4,7 @@ Automatically Generated Examples
 Block, Nondistributed
 `````````````````````
 
-4 X 8 array, Block, Nondistributed distribution, distributed over 4 process grid.
+4 X 8 array, Block, Nondistributed distribution, over 1 X 4 process grid.
 
 Some description of Block, Nondistributed.
 
@@ -17,14 +17,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[ 0.  1.  2.  3.  4.  5.  6.  7.]],
- [[  8.   9.  10.  11.  12.  13.  14.  15.]],
- [[ 16.  17.  18.  19.  20.  21.  22.  23.]],
- [[ 24.  25.  26.  27.  28.  29.  30.  31.]]]
 
 In all processes:
 
@@ -89,7 +81,7 @@ array([[ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
 Nondistributed, Block
 `````````````````````
 
-4 X 8 array, Nondistributed, Block distribution, distributed over 4 process grid.
+4 X 8 array, Nondistributed, Block distribution, over 1 X 4 process grid.
 
 .. image:: ../images/plot_nondist_block.png
 
@@ -100,26 +92,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[  0.   1.]
- [  8.   9.]
- [ 16.  17.]
- [ 24.  25.]],
- [[  2.   3.]
- [ 10.  11.]
- [ 18.  19.]
- [ 26.  27.]],
- [[  4.   5.]
- [ 12.  13.]
- [ 20.  21.]
- [ 28.  29.]],
- [[  6.   7.]
- [ 14.  15.]
- [ 22.  23.]
- [ 30.  31.]]]
 
 In all processes:
 
@@ -196,7 +168,7 @@ array([[  6.,   7.],
 Block, Block
 ````````````
 
-4 X 8 array, Block, Block distribution, distributed over 2 X 2 process grid.
+4 X 8 array, Block, Block distribution, over 2 X 2 process grid.
 
 .. image:: ../images/plot_block_block.png
 
@@ -207,18 +179,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[  0.   1.   2.   3.]
- [  8.   9.  10.  11.]],
- [[  4.   5.   6.   7.]
- [ 12.  13.  14.  15.]],
- [[ 16.  17.  18.  19.]
- [ 24.  25.  26.  27.]],
- [[ 20.  21.  22.  23.]
- [ 28.  29.  30.  31.]]]
 
 In all processes:
 
@@ -307,7 +267,7 @@ array([[ 20.,  21.,  22.,  23.],
 Block, Cyclic
 `````````````
 
-4 X 8 array, Block, Cyclic distribution, distributed over 2 X 2 process grid.
+4 X 8 array, Block, Cyclic distribution, over 2 X 2 process grid.
 
 .. image:: ../images/plot_block_cyclic.png
 
@@ -318,18 +278,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[  0.   2.   4.   6.]
- [  8.  10.  12.  14.]],
- [[  1.   3.   5.   7.]
- [  9.  11.  13.  15.]],
- [[ 16.  18.  20.  22.]
- [ 24.  26.  28.  30.]],
- [[ 17.  19.  21.  23.]
- [ 25.  27.  29.  31.]]]
 
 In all processes:
 
@@ -418,7 +366,7 @@ array([[ 17.,  19.,  21.,  23.],
 Cyclic, Cyclic
 ``````````````
 
-4 X 8 array, Cyclic, Cyclic distribution, distributed over 2 X 2 process grid.
+4 X 8 array, Cyclic, Cyclic distribution, over 2 X 2 process grid.
 
 .. image:: ../images/plot_cyclic_cyclic.png
 
@@ -429,18 +377,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[  0.   2.   4.   6.]
- [ 16.  18.  20.  22.]],
- [[  1.   3.   5.   7.]
- [ 17.  19.  21.  23.]],
- [[  8.  10.  12.  14.]
- [ 24.  26.  28.  30.]],
- [[  9.  11.  13.  15.]
- [ 25.  27.  29.  31.]]]
 
 In all processes:
 
@@ -526,10 +462,10 @@ array([[  9.,  11.,  13.,  15.],
   'size': 8,
   'start': 1})
 
-BlockCyclic[2], BlockCyclic[2]
-``````````````````````````````
+BlockCyclic, BlockCyclic
+````````````````````````
 
-4 X 8 array, BlockCyclic[2], BlockCyclic[2] distribution, distributed over 2 X 2 process grid.
+4 X 8 array, BlockCyclic, BlockCyclic distribution, over 2 X 2 process grid.
 
 .. image:: ../images/plot_blockcyclic_blockcyclic.png
 
@@ -540,18 +476,6 @@ array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
        [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
        [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
        [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
-
-get_localarrays():
-
->>> get_localarrays()
-[[[  0.   1.   4.   5.]
- [  8.   9.  12.  13.]],
- [[  2.   3.   6.   7.]
- [ 10.  11.  14.  15.]],
- [[ 16.  17.  20.  21.]
- [ 24.  25.  28.  29.]],
- [[ 18.  19.  22.  23.]
- [ 26.  27.  30.  31.]]]
 
 In all processes:
 
@@ -636,4 +560,144 @@ array([[ 18.,  19.,  22.,  23.],
   'proc_grid_size': 2,
   'size': 8,
   'start': 2})
+
+Unstructured
+````````````
+
+1 X 40 array, Unstructured distribution, over 1 X 4 process grid.
+
+.. image:: ../images/plot_unstructured.png
+
+The full (undistributed) array:
+
+>>> full_array
+array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
+        11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,  20.,  21.,
+        22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.,
+        33.,  34.,  35.,  36.,  37.,  38.,  39.])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+
+In process 0:
+
+>>> distbuffer['buffer']
+array([ 29.,  38.,  18.,  19.,  11.,  33.,  10.,   1.,  22.,  25.])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': [29, 38, 18, 19, 11, 33, 10, 1, 22, 25],
+  'proc_grid_rank': 0,
+  'proc_grid_size': 4,
+  'size': 40},)
+
+In process 1:
+
+>>> distbuffer['buffer']
+array([  5.,  15.,  34.,  12.,  16.,  24.,  23.,  39.,   6.,  36.])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': [5, 15, 34, 12, 16, 24, 23, 39, 6, 36],
+  'proc_grid_rank': 1,
+  'proc_grid_size': 4,
+  'size': 40},)
+
+In process 2:
+
+>>> distbuffer['buffer']
+array([  0.,   7.,  27.,   4.,  32.,  37.,  21.,  26.,   9.,  17.])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': [0, 7, 27, 4, 32, 37, 21, 26, 9, 17],
+  'proc_grid_rank': 2,
+  'proc_grid_size': 4,
+  'size': 40},)
+
+In process 3:
+
+>>> distbuffer['buffer']
+array([ 35.,  14.,  20.,  13.,   3.,  30.,   2.,   8.,  28.,  31.])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': [35, 14, 20, 13, 3, 30, 2, 8, 28, 31],
+  'proc_grid_rank': 3,
+  'proc_grid_size': 4,
+  'size': 40},)
+
+Padded
+``````
+
+1 X 20 array, Padded distribution, over 1 X 4 process grid.
+
+.. image:: ../images/plot_padded.png
+
+The full (undistributed) array:
+
+>>> full_array
+array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
+        11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+
+In process 0:
+
+>>> distbuffer['buffer']
+array([ 0.,  1.,  2.,  3.,  4.])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 4,
+  'size': 20,
+  'start': 0,
+  'stop': 5},)
+
+In process 1:
+
+>>> distbuffer['buffer']
+array([ 5.,  6.,  7.,  8.,  9.])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 4,
+  'size': 20,
+  'start': 5,
+  'stop': 10},)
+
+In process 2:
+
+>>> distbuffer['buffer']
+array([ 10.,  11.,  12.,  13.,  14.])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 2,
+  'proc_grid_size': 4,
+  'size': 20,
+  'start': 10,
+  'stop': 15},)
+
+In process 3:
+
+>>> distbuffer['buffer']
+array([ 15.,  16.,  17.,  18.,  19.])
+>>> distbuffer['dim_data']
+({'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 3,
+  'proc_grid_size': 4,
+  'size': 20,
+  'start': 15,
+  'stop': 20},)
 
