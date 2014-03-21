@@ -1,12 +1,7 @@
-Automatically Generated Examples
---------------------------------
-
 Block, Nondistributed
 `````````````````````
 
-4 X 8 array, Block, Nondistributed distribution, over 1 X 4 process grid.
-
-Some description of Block, Nondistributed.
+4 X 8 array, Block, Nondistributed distribution, over 4 X 1 process grid.
 
 .. image:: ../images/plot_block_nondist.png
 
@@ -37,7 +32,7 @@ array([[ 0.,  1.,  2.,  3.,  4.,  5.,  6.,  7.]])
   'size': 4,
   'start': 0,
   'stop': 1},
- {'dist_type': 'n', 'size': 8})
+ {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 8})
 
 In process 1:
 
@@ -50,7 +45,7 @@ array([[  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.]])
   'size': 4,
   'start': 1,
   'stop': 2},
- {'dist_type': 'n', 'size': 8})
+ {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 8})
 
 In process 2:
 
@@ -63,7 +58,7 @@ array([[ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.]])
   'size': 4,
   'start': 2,
   'stop': 3},
- {'dist_type': 'n', 'size': 8})
+ {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 8})
 
 In process 3:
 
@@ -76,7 +71,7 @@ array([[ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
   'size': 4,
   'start': 3,
   'stop': 4},
- {'dist_type': 'n', 'size': 8})
+ {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 8})
 
 Nondistributed, Block
 `````````````````````
@@ -109,7 +104,7 @@ array([[  0.,   1.],
        [ 16.,  17.],
        [ 24.,  25.]])
 >>> distbuffer['dim_data']
-({'dist_type': 'n', 'size': 4},
+({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 4},
  {'dist_type': 'b',
   'proc_grid_rank': 0,
   'proc_grid_size': 4,
@@ -125,7 +120,7 @@ array([[  2.,   3.],
        [ 18.,  19.],
        [ 26.,  27.]])
 >>> distbuffer['dim_data']
-({'dist_type': 'n', 'size': 4},
+({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 4},
  {'dist_type': 'b',
   'proc_grid_rank': 1,
   'proc_grid_size': 4,
@@ -141,7 +136,7 @@ array([[  4.,   5.],
        [ 20.,  21.],
        [ 28.,  29.]])
 >>> distbuffer['dim_data']
-({'dist_type': 'n', 'size': 4},
+({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 4},
  {'dist_type': 'b',
   'proc_grid_rank': 2,
   'proc_grid_size': 4,
@@ -157,7 +152,7 @@ array([[  6.,   7.],
        [ 22.,  23.],
        [ 30.,  31.]])
 >>> distbuffer['dim_data']
-({'dist_type': 'n', 'size': 4},
+({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 4},
  {'dist_type': 'b',
   'proc_grid_rank': 3,
   'proc_grid_size': 4,
@@ -561,20 +556,20 @@ array([[ 18.,  19.,  22.,  23.],
   'size': 8,
   'start': 2})
 
-Unstructured
-````````````
+BlockPadded, BlockPadded
+````````````````````````
 
-1 X 40 array, Unstructured distribution, over 1 X 4 process grid.
+4 X 8 array, BlockPadded, BlockPadded distribution, over 2 X 2 process grid.
 
-.. image:: ../images/plot_unstructured.png
+.. image:: ../images/plot_blockpad_blockpad.png
 
 The full (undistributed) array:
 
 >>> full_array
-array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
-        11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,  20.,  21.,
-        22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.,
-        33.,  34.,  35.,  36.,  37.,  38.,  39.])
+array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
+       [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
+       [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
 
 In all processes:
 
@@ -587,117 +582,175 @@ In all processes:
 In process 0:
 
 >>> distbuffer['buffer']
-array([ 29.,  38.,  18.,  19.,  11.,  33.,  10.,   1.,  22.,  25.])
->>> distbuffer['dim_data']
-({'dist_type': 'u',
-  'indices': [29, 38, 18, 19, 11, 33, 10, 1, 22, 25],
-  'proc_grid_rank': 0,
-  'proc_grid_size': 4,
-  'size': 40},)
-
-In process 1:
-
->>> distbuffer['buffer']
-array([  5.,  15.,  34.,  12.,  16.,  24.,  23.,  39.,   6.,  36.])
->>> distbuffer['dim_data']
-({'dist_type': 'u',
-  'indices': [5, 15, 34, 12, 16, 24, 23, 39, 6, 36],
-  'proc_grid_rank': 1,
-  'proc_grid_size': 4,
-  'size': 40},)
-
-In process 2:
-
->>> distbuffer['buffer']
-array([  0.,   7.,  27.,   4.,  32.,  37.,  21.,  26.,   9.,  17.])
->>> distbuffer['dim_data']
-({'dist_type': 'u',
-  'indices': [0, 7, 27, 4, 32, 37, 21, 26, 9, 17],
-  'proc_grid_rank': 2,
-  'proc_grid_size': 4,
-  'size': 40},)
-
-In process 3:
-
->>> distbuffer['buffer']
-array([ 35.,  14.,  20.,  13.,   3.,  30.,   2.,   8.,  28.,  31.])
->>> distbuffer['dim_data']
-({'dist_type': 'u',
-  'indices': [35, 14, 20, 13, 3, 30, 2, 8, 28, 31],
-  'proc_grid_rank': 3,
-  'proc_grid_size': 4,
-  'size': 40},)
-
-Padded
-``````
-
-1 X 20 array, Padded distribution, over 1 X 4 process grid.
-
-.. image:: ../images/plot_padded.png
-
-The full (undistributed) array:
-
->>> full_array
-array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
-        11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.])
-
-In all processes:
-
->>> distbuffer = local_array.__distarray__()
->>> distbuffer.keys()
-['buffer', 'dim_data', '__version__']
->>> distbuffer['__version__']
-'1.0.0'
-
-In process 0:
-
->>> distbuffer['buffer']
-array([ 0.,  1.,  2.,  3.,  4.])
+array([[  0.,   1.,   2.,   3.],
+       [  8.,   9.,  10.,  11.]])
 >>> distbuffer['dim_data']
 ({'dist_type': 'b',
   'padding': (1, 1),
   'proc_grid_rank': 0,
-  'proc_grid_size': 4,
-  'size': 20,
+  'proc_grid_size': 2,
+  'size': 4,
   'start': 0,
-  'stop': 5},)
+  'stop': 2},
+ {'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0,
+  'stop': 4})
 
 In process 1:
 
 >>> distbuffer['buffer']
-array([ 5.,  6.,  7.,  8.,  9.])
+array([[  4.,   5.,   6.,   7.],
+       [ 12.,  13.,  14.,  15.]])
 >>> distbuffer['dim_data']
 ({'dist_type': 'b',
   'padding': (1, 1),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 0,
+  'stop': 2},
+ {'dist_type': 'b',
+  'padding': (1, 1),
   'proc_grid_rank': 1,
-  'proc_grid_size': 4,
-  'size': 20,
-  'start': 5,
-  'stop': 10},)
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 4,
+  'stop': 8})
 
 In process 2:
 
 >>> distbuffer['buffer']
-array([ 10.,  11.,  12.,  13.,  14.])
+array([[ 16.,  17.,  18.,  19.],
+       [ 24.,  25.,  26.,  27.]])
 >>> distbuffer['dim_data']
 ({'dist_type': 'b',
   'padding': (1, 1),
-  'proc_grid_rank': 2,
-  'proc_grid_size': 4,
-  'size': 20,
-  'start': 10,
-  'stop': 15},)
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 0,
+  'stop': 4})
 
 In process 3:
 
 >>> distbuffer['buffer']
-array([ 15.,  16.,  17.,  18.,  19.])
+array([[ 20.,  21.,  22.,  23.],
+       [ 28.,  29.,  30.,  31.]])
 >>> distbuffer['dim_data']
 ({'dist_type': 'b',
   'padding': (1, 1),
-  'proc_grid_rank': 3,
-  'proc_grid_size': 4,
-  'size': 20,
-  'start': 15,
-  'stop': 20},)
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4,
+  'start': 2,
+  'stop': 4},
+ {'dist_type': 'b',
+  'padding': (1, 1),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8,
+  'start': 4,
+  'stop': 8})
+
+Unstructured, Unstructured
+``````````````````````````
+
+4 X 8 array, Unstructured, Unstructured distribution, over 2 X 2 process grid.
+
+.. image:: ../images/plot_unstruct_unstruct.png
+
+The full (undistributed) array:
+
+>>> full_array
+array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.],
+       [  8.,   9.,  10.,  11.,  12.,  13.,  14.,  15.],
+       [ 16.,  17.,  18.,  19.,  20.,  21.,  22.,  23.],
+       [ 24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.]])
+
+In all processes:
+
+>>> distbuffer = local_array.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+
+In process 0:
+
+>>> distbuffer['buffer']
+array([[ 18.,  16.,  19.,  23.],
+       [  2.,   0.,   3.,   7.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': array([2, 0]),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4},
+ {'dist_type': 'u',
+  'indices': array([2, 0, 3, 7]),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8})
+
+In process 1:
+
+>>> distbuffer['buffer']
+array([[ 20.,  17.,  22.,  21.],
+       [  4.,   1.,   6.,   5.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': array([2, 0]),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 4},
+ {'dist_type': 'u',
+  'indices': array([4, 1, 6, 5]),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8})
+
+In process 2:
+
+>>> distbuffer['buffer']
+array([[ 26.,  24.,  27.,  31.],
+       [ 10.,   8.,  11.,  15.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': array([3, 1]),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4},
+ {'dist_type': 'u',
+  'indices': array([2, 0, 3, 7]),
+  'proc_grid_rank': 0,
+  'proc_grid_size': 2,
+  'size': 8})
+
+In process 3:
+
+>>> distbuffer['buffer']
+array([[ 28.,  25.,  30.,  29.],
+       [ 12.,   9.,  14.,  13.]])
+>>> distbuffer['dim_data']
+({'dist_type': 'u',
+  'indices': array([3, 1]),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 4},
+ {'dist_type': 'u',
+  'indices': array([4, 1, 6, 5]),
+  'proc_grid_rank': 1,
+  'proc_grid_size': 2,
+  'size': 8})
 
