@@ -262,6 +262,9 @@ The remaining key-value pairs in each dimension dictionary depend on the
     ``start`` of ``b``.  Processes may contain differently-sized global index
     ranges.
 
+    For every block-distributed dimension ``i``, ``stop - start`` must be equal
+    to ``buffer.shape[i]``.
+
   * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
     Optional.
 
