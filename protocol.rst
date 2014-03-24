@@ -207,6 +207,26 @@ following key-value pairs:
 
   Total number of global array elements along this dimension.
 
+  Indices considered "communication padding" are counted only once towards this
+  value; indices considered "boundary padding" are always counted towards this
+  value.  More explicitly, to calculate the ``size`` along a particular
+  dimension, one can sum the result of this function on each process:
+
+  .. code:: python
+
+      def calc_num_owned_elements(dimdict):
+          num_owned_elements = dimdict['size']
+          padding = dimdict.get('padding', (0,0))
+          if dimdict.get('proc_grid_rank', 0) != 0:
+              # We are not at the left boundary, so remove
+              # communication buffer for left edge.
+              num_owned_elements -= padding[0]
+          if dimdict.get('proc_grid_size', 1)-1 != dimdict.get('proc_grid_rank', 0):
+              # we are not at the right boundary, so remove
+              # communication buffer for right edge.
+              num_owned_elements -= padding[1]
+          return num_owned_elements
+
 All *distributed* dimensions shall have the following keys in their dimension
 dictionary, with the associated value:
 
