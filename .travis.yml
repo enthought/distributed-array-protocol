@@ -1,0 +1,9 @@
+language: python
+python:
+    - 2.7
+    - 3.3
+before_install:
+    - pip install numpy
+script:
+    - (cd $TRAVIS_BUILD_DIR && cd sphinx && make html)
+    - (cd $TRAVIS_BUILD_DIR && python -m unittest discover)
