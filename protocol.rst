@@ -365,7 +365,13 @@ resulting in one or more local arrays being empty.  For block and cyclic
 distributions, whenever ``start == size``, this indicates that there are no
 more global indices allocated to this local array for this dimension, thus the
 local array must be an empty buffer.  For block, whenever ``start == size``, it
-is a necessary condition that ``start == stop`` also.
+is a necessary condition that ``start == stop`` also.  Other cases that
+indicate an empty local buffer are:
+
+* ``proc_grid_size == 0`` for any dimension dictionary,
+* ``size == 0`` for any dimension dictionary, or
+* for an unstructured dimension (``dist_type == 'u'``), an empty ``indices``
+  array.
 
 
 Examples
