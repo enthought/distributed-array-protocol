@@ -8,4 +8,4 @@ before_install:
     - pip install sphinxcontrib-napoleon
 script:
     - (cd $TRAVIS_BUILD_DIR && cd sphinx && make html)
-    - (cd $TRAVIS_BUILD_DIR && python -m unittest discover)
+    - (cd $TRAVIS_BUILD_DIR && cd validator && python -m unittest discover)
