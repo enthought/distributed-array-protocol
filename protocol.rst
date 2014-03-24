@@ -360,7 +360,7 @@ General constraints
 It shall be possible for one or more local array sections to contain no data,
 depending on the values of the ``size``, ``start``, and ``stop`` parameters.
 This is supported by the protocol and is not an invalid state.  These
-situations may arise when down sampling or slicing a distributed array
+situations may arise when downsampling or slicing a distributed array
 resulting in one or more local arrays being empty.  For block and cyclic
 distributions, whenever ``start == size``, this indicates that there are no
 more global indices allocated to this local array for this dimension, thus the
