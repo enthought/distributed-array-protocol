@@ -1,3 +1,6 @@
+.. image:: https://travis-ci.org/enthought/distributed-array-protocol.png?branch=master
+   :target: https://travis-ci.org/enthought/distributed-array-protocol
+
 Distributed Array Protocol
 ==========================
 
