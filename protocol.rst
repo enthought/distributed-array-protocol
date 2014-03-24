@@ -215,7 +215,7 @@ dictionary, with the associated value:
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all ``'proc_grid_size'`` s for all distributed
+  Constraint: the product of all ``'proc_grid_size'``\s for all distributed
   dimensions shall equal the total number of processes.
 
 * ``proc_grid_rank`` : ``int``
