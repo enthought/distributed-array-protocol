@@ -576,6 +576,9 @@ In process 2:
                   20,  9, 16, 27,  8, 17, 22]},)
 
 
+.. include:: ../examples.rst
+
+
 References
 -------------------------------------------------------------------------------
 .. [#mpi] Message Passing Interface.  http://www.open-mpi.org/
