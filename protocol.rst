@@ -215,7 +215,7 @@ dictionary, with the associated value:
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all ``'proc_grid_size'`` s for all distributed
+  Constraint: the product of all ``'proc_grid_size'``\s for all distributed
   dimensions shall equal the total number of processes.
 
 * ``proc_grid_rank`` : ``int``
@@ -261,6 +261,9 @@ The remaining key-value pairs in each dimension dictionary depend on the
     and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
     ``start`` of ``b``.  Processes may contain differently-sized global index
     ranges.
+
+    For every block-distributed dimension ``i``, ``stop - start`` must be equal
+    to ``buffer.shape[i]``.
 
   * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
     Optional.
@@ -354,15 +357,17 @@ The remaining key-value pairs in each dimension dictionary depend on the
 General constraints
 ```````````````````
 
-It shall be possible for one or more local array sections to contain no data,
-depending on the values of the ``size``, ``start``, and ``stop`` parameters.
+It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
-situations may arise when down sampling or slicing a distributed array
-resulting in one or more local arrays being empty.  For block and cyclic
-distributions, whenever ``start == size``, this indicates that there are no
-more global indices allocated to this local array for this dimension, thus the
-local array must be an empty buffer.  For block, whenever ``start == size``, it
-is a necessary condition that ``start == stop`` also.
+situations may arise when downsampling or slicing a distributed array.
+
+The following properties of a dimension dictionary imply an empty local buffer:
+
+* With any ``dist_type``: ``proc_grid_size == 0``
+* With any ``dist_type``: ``size == 0``
+* With ``'b'`` or ``'c'`` ``dist_type``\s:  ``start == size``
+* With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
+* With the ``'u'`` ``dist_type``: ``len(indices) == 0``
 
 
 Examples
