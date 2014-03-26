@@ -124,8 +124,7 @@ boundary padding
     the logical *boundary* of the entire domain.  These are physical or real
     boundaries and correspond to the elements or indices that are involved with
     the physical system's boundary conditions in a PDE application, for
-    example.  These boundary padding elements would exist even if the array
-    were not distributed.  These elements are included in a distributed
+    example.  These elements are included in a distributed
     dimension's ``'size'``.
     
 communication padding
@@ -160,8 +159,8 @@ The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 "dimension dictionaries", containing one dictionary for each dimension of the
 distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
-one dimension dictionary per dimension, **whether or not that dimension is
-distributed**.  These dictionaries are intended to include all metadata
+one dimension dictionary per dimension.  These dictionaries are intended to
+include all metadata
 required to fully specify a distributed array's dimension information.  This
 tuple may be empty, indicating a zero-dimensional array.  The number of
 elements in the ``'dim_data'`` tuple must match the number of dimensions of the
@@ -173,20 +172,19 @@ Dimension Dictionaries
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
 type string.  The ``dist_type`` of a dimension specifies the kind of
-distribution for that dimension (or no distribution for value ``'n'``).
+distribution for that dimension.
 
 The following dist_types are currently supported:
 
 =============== =========== ========================== =======================
   name           dist_type   required keys              optional keys
 =============== =========== ========================== =======================
-no-distribution     'n'      'dist_type', 'size'        'padding', 'periodic'
 block               'b'       common, 'start', 'stop'   'padding', 'periodic'
 cyclic              'c'       common, 'start'           'block_size'
 unstructured        'u'       common, 'indices'         'one_to_one'
 =============== =========== ========================== =======================
 
-where "common" represents the keys common to all distributed dist_types:
+where "common" represents the keys common to all dist_types:
 ``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
 ``'proc_grid_rank'``.
 
@@ -198,7 +196,7 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{'n', 'b', 'c', 'u'}``
+* ``'dist_type'`` : ``{'b', 'c', 'u'}``
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
@@ -256,12 +254,6 @@ Distribution-type specific key-value pairs
 
 The remaining key-value pairs in each dimension dictionary depend on the
 ``dist_type`` and are described below:
-
-* no-distribution (``dist_type`` is ``'n'``):
-
-  * ``padding`` : optional. See same key under block distribution.
-  * ``periodic`` : optional. See same key under block distribution.
-
 
 * block (``dist_type`` is ``'b'``):
 
