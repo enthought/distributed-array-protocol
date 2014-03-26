@@ -389,6 +389,10 @@ The following properties of a dimension dictionary imply an empty local buffer:
 * With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
 * With the ``'u'`` ``dist_type``: ``len(indices) == 0``
 
+The global number of elements in an array is equal to ``reduce(operator.mul,
+dimension_sizes)`` except for when the array has zero dimensions, in which case
+the global number of elements is 1.
+
 
 Examples
 -------------------------------------------------------------------------------
