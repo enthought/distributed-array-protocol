@@ -385,12 +385,14 @@ The following properties of a dimension dictionary imply an empty local buffer:
 Examples
 -------------------------------------------------------------------------------
 
-Block, No-distribution
-``````````````````````
+Block, Block
+````````````
 
 Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
 array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
-block-distributed 0th dimension and no distribution for the 1st dimension.
+block distribution in both dimensions.  Note that since the ``proc_grid_size``
+of the first dimension is ``1``, it is essentially "undistributed".  Because of
+this, having a cyclic ``dist_type`` for this dimension would be equivalent.
 
 In process 0:
 
@@ -411,7 +413,11 @@ In process 0:
       'start': 0,
       'stop': 1},
      {'size': 10,
-      'dist_type': 'n'})
+      'dist_type': 'b',
+      'proc_grid_rank': 0,
+      'proc_grid_size': 1,
+      'start': 0,
+      'stop': 10})
 
 In process 1:
 
@@ -432,7 +438,11 @@ In process 1:
       'start': 1,
       'stop': 2},
      {'size': 10,
-      'dist_type': 'n'})
+      'dist_type': 'b',
+      'proc_grid_rank': 0,
+      'proc_grid_size': 1,
+      'start': 0,
+      'stop': 10})
 
 
 Block with padding
