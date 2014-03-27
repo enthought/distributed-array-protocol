@@ -305,8 +305,8 @@ The remaining key-value pairs in each dimension dictionary depend on the
     padding        (3, 2) (2, 2) (2, 2) (2, 3)
     ============== ====== ====== ====== ======
 
-    The value associated with ``padding`` can be the tuple ``(0,0)`` indicating
-    that this local array is not padded in this dimension.
+    If the value associated with ``padding`` is the tuple ``(0,0)`` (the
+    default), this indicates the local array is not padded in this dimension.
 
   * ``periodic`` : ``bool``, optional
 
