@@ -305,12 +305,8 @@ The remaining key-value pairs in each dimension dictionary depend on the
     padding        (3, 2) (2, 2) (2, 2) (2, 3)
     ============== ====== ====== ====== ======
 
-    Padding is an all-or-nothing attribute: if the ``padding`` keyword is
-    present in any dimension dictionary for a dimension of the distributed
-    array, then the ``padding`` keyword shall be present on *all* processes for
-    the same dimension dictionary.  The value associated with ``padding`` can
-    be the tuple ``(0,0)`` indicating that this local array is not padded in
-    this dimension.
+    The value associated with ``padding`` can be the tuple ``(0,0)`` indicating
+    that this local array is not padded in this dimension.
 
   * ``periodic`` : ``bool``, optional
 
