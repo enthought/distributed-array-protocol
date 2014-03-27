@@ -66,7 +66,7 @@ The primary sources and inspiration for the DAP are:
 
 
 Definitions
------------
+-------------------------------------------------------------------------------
 
 process
     A **process** is the basic unit of execution and is equivalent to a
@@ -139,7 +139,7 @@ communication padding
 
 
 Exporting a Distributed Array
------------------------------
+-------------------------------------------------------------------------------
 
 A "producer" object that subscribes to the DAP shall provide a method named
 ``__distarray__`` that, when called by a consumer, returns a dictionary with
@@ -169,7 +169,7 @@ associated buffer object.
 
 
 Dimension Dictionaries
-----------------------
+-------------------------------------------------------------------------------
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
 type string.  The ``dist_type`` of a dimension specifies the kind of
