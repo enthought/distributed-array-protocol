@@ -366,12 +366,12 @@ unstructured (``dist_type`` is ``'u'``)
 
 * ``one_to_one`` : bool, optional.
 
-  If not present, shall be equivalent to being present with a `False` value.
+  If not present, shall be equivalent to being present with a ``False`` value.
 
-  If `False`, indicates that some global indices may be duplicated in two or
+  If ``False``, indicates that some global indices may be duplicated in two or
   more local ``indices`` buffers.
 
-  If `True`, a global index shall be located in exactly one local ``indices``
+  If ``True``, a global index shall be located in exactly one local ``indices``
   buffer.
 
 
