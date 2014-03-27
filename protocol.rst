@@ -389,6 +389,15 @@ The following properties of a dimension dictionary imply an empty local buffer:
 * With the ``'b'`` ``dist_type``: ``start == stop``
 * With the ``'u'`` ``dist_type``: ``len(indices) == 0``
 
+Undistributed dimensions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+A dimension with ``proc_grid_size == 1`` is essentially undistributed; it is
+"distributed" over a single process.  Block-distributed dimensions of this type
+with the optional ``periodic`` and ``padding`` keys are supported by this
+protocol; block-distributed dimensions with ``periodic == True`` and nonzero
+values in their ``padding`` tuple are also supported.
+
 Global array size
 ~~~~~~~~~~~~~~~~~
 
