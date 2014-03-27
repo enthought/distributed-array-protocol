@@ -371,8 +371,8 @@ unstructured (``dist_type`` is ``'u'``)
   buffer.
 
 
-General constraints
-```````````````````
+General comments
+````````````````
 
 Empty local buffers
 ~~~~~~~~~~~~~~~~~~~
