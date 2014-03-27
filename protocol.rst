@@ -371,6 +371,8 @@ The remaining key-value pairs in each dimension dictionary depend on the
 General constraints
 ```````````````````
 
+Empty local buffers
+~~~~~~~~~~~~~~~~~~~
 It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
 situations may arise when downsampling or slicing a distributed array.
@@ -383,6 +385,8 @@ The following properties of a dimension dictionary imply an empty local buffer:
 * With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
 * With the ``'u'`` ``dist_type``: ``len(indices) == 0``
 
+Global array size
+~~~~~~~~~~~~~~~~~
 The global number of elements in an array is the product of the ``size``\s of
 the dimension dictionaries, or 1 if the ``dim_data`` sequence is empty.  In
 Python syntax, this would be ``reduce(operator.mul, global_shape, 1)`` where
@@ -390,6 +394,17 @@ Python syntax, this would be ``reduce(operator.mul, global_shape, 1)`` where
 is the ``size`` of the dimension dictionary for dimension ``i``.  If
 ``global_shape`` is an empty sequence, the result of the reduction above is
 ``1``, indicating the distributed array is a zero-dimensional scalar.
+
+Identical ``dim_data`` along an axis
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
+= dim_data[i]['proc_grid_rank']`` for some dimension ``i``, then all processes
+with the same ``rank`` for dimension ``i`` must have the same values for other
+keys in their respective dimension dictionaries.  Essentially, this says that
+dimension dictionary ``dim_data[i]`` is identical for all processes that have
+the same value for ``dim_data[i]['proc_grid_rank']``.  The only possible
+exception to this is the ``padding`` tuple, which may have different values on
+edge processes due to boundary padding.
 
 
 Examples
