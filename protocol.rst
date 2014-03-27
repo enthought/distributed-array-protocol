@@ -385,8 +385,8 @@ array.
 The following properties of a dimension dictionary imply an empty local buffer:
 
 * With any ``dist_type``: ``size == 0``
-* With ``'b'`` or ``'c'`` ``dist_type``\s:  ``start == size``
-* With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
+* With the ``'b'`` or ``'c'`` ``dist_type``:  ``start == size``
+* With the ``'b'`` ``dist_type``: ``start == stop``
 * With the ``'u'`` ``dist_type``: ``len(indices) == 0``
 
 Global array size
