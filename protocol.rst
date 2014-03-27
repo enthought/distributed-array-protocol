@@ -305,12 +305,14 @@ The remaining key-value pairs in each dimension dictionary depend on the
     (and the dimension is not periodic), that indicates that this is "boundary
     padding".
 
+    All communication padding widths must be the same for a dimension.
+
     Padding is an all-or-nothing attribute: if the ``padding`` keyword is
     present in any dimension dictionary for a dimension of the distributed
     array, then the ``padding`` keyword shall be present on *all* processes for
     the same dimension dictionary.  The value associated with ``padding`` can
     be the tuple ``(0,0)`` indicating that this local array is not padded in
-    this dimension, but other local arrays may be padded in this dimension.
+    this dimension.
 
   * ``periodic`` : ``bool``, optional
 
