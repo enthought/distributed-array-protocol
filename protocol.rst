@@ -189,7 +189,7 @@ where "common" represents the keys common to all dist_types:
 ``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
 ``'proc_grid_rank'``.
 
-Other dist_types may be added in future versions of the protocol.
+Other ``dist_type``\s may be added in future versions of the protocol.
 
 Required key-value pairs
 ````````````````````````
