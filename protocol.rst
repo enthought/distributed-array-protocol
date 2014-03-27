@@ -202,7 +202,7 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``, >= 0
+* ``'size'`` : ``int``, greater than or equal to 0
 
   Total number of global array elements along this dimension.
 
@@ -226,7 +226,7 @@ following key-value pairs:
               num_owned_elements -= padding[1]
           return num_owned_elements
 
-* ``'proc_grid_size'`` : ``int``, >= 1
+* ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
