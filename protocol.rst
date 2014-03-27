@@ -234,8 +234,8 @@ following key-value pairs:
   Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
   shall equal the total number of processes.
 
-* ``proc_grid_rank`` : ``int``, greater than or equal to 0, less than
-  ``proc_grid_size``
+* ``'proc_grid_rank'`` : ``int``, greater than or equal to 0, less than
+  ``'proc_grid_size'``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor sections of
