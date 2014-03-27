@@ -226,15 +226,12 @@ following key-value pairs:
               num_owned_elements -= padding[1]
           return num_owned_elements
 
-All *distributed* dimensions shall have the following keys in their dimension
-dictionary, with the associated value:
-
 * ``'proc_grid_size'`` : ``int``, >= 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all ``'proc_grid_size'``\s for all distributed
+  Constraint: the product of all ``'proc_grid_size'``\s for all
   dimensions shall equal the total number of processes.
 
 * ``proc_grid_rank`` : ``int``
