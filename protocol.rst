@@ -391,7 +391,7 @@ Block, Block
 Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
 array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
 block distribution in both dimensions.  Note that since the ``proc_grid_size``
-of the first dimension is ``1``, it is essentially "undistributed".  Because of
+of the first dimension is ``1``, it is essentially undistributed.  Because of
 this, having a cyclic ``dist_type`` for this dimension would be equivalent.
 
 In process 0:
