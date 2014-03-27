@@ -5,6 +5,7 @@ Distributed Array Protocol v0.9.0
 .. section-numbering::
 .. Contents::
 
+
 Overview
 -------------------------------------------------------------------------------
 
@@ -81,24 +82,25 @@ process rank
     contiguously from the range ``0 ... N-1`` for ``N`` processes.
 
 process grid
-  The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
-  uniquely identifies a process, and the process grid maps process ranks to
-  grid coordinates.  Process ranks are assigned to their corresponding grid
-  coordinate in "C-order", i.e., the last index varies fastest when iterating
-  through coordinates in rank order.  The product of the number of processes in
-  each dimension in the process grid shall be equal to the total number of
-  processes.
+    The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
+    uniquely identifies a process, and the process grid maps process ranks to
+    grid coordinates.  Process ranks are assigned to their corresponding grid
+    coordinate in "C-order", i.e., the last index varies fastest when iterating
+    through coordinates in rank order.  The product of the number of processes
+    in each dimension in the process grid shall be equal to the total number of
+    processes.
+    
+    For example, for an ``N`` by ``M`` process grid over ``N * M`` processes
+    with ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)``
+    corresponds to the process with rank ``i*M + j``.  
   
-  For example, for an ``N`` by ``M`` process grid over ``N * M`` processes with
-  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
-  to the process with rank ``i*M + j``.  
-
-  (Note that the protocol's *process grid* is compatible with MPI's
-  ``MPI_Cart_create()`` command, and the MPI standard guarantees that Cartesian
-  process coordinates are always assigned to ranks in the same way and are
-  "C-order" by default [#mpivirtualtopologies]_.  The protocol makes no
-  assumption about which underlying communication library is being used, nor
-  does it require subscribing packages to implement a communication layer.)
+    (Note that the protocol's *process grid* is compatible with MPI's
+    ``MPI_Cart_create()`` command, and the MPI standard guarantees that
+    Cartesian process coordinates are always assigned to ranks in the same way
+    and are "C-order" by default [#mpivirtualtopologies]_.  The protocol makes
+    no assumption about which underlying communication library is being used,
+    nor does it require subscribing packages to implement a communication
+    layer.)
 
 distributed array
     A single logical array of arbitrary dimensionality that is divided among
@@ -125,8 +127,8 @@ boundary padding
     the logical *boundary* of the entire domain.  These are physical or real
     boundaries and correspond to the elements or indices that are involved with
     the physical system's boundary conditions in a PDE application, for
-    example.  These elements are included in a distributed
-    dimension's ``'size'``.
+    example.  These elements are included in a distributed dimension's
+    ``'size'``.
     
 communication padding
     Padding indices that are shared logically with a neighboring local array.
@@ -161,11 +163,10 @@ The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
 one dimension dictionary per dimension.  These dictionaries are intended to
-include all metadata
-required to fully specify a distributed array's dimension information.  This
-tuple may be empty, indicating a zero-dimensional array.  The number of
-elements in the ``'dim_data'`` tuple must match the number of dimensions of the
-associated buffer object.
+include all metadata required to fully specify a distributed array's dimension
+information.  This tuple may be empty, indicating a zero-dimensional array.
+The number of elements in the ``'dim_data'`` tuple must match the number of
+dimensions of the associated buffer object.
 
 
 Dimension Dictionaries
@@ -185,9 +186,8 @@ cyclic              'c'       common, 'start'           'block_size'
 unstructured        'u'       common, 'indices'         'one_to_one'
 =============== =========== ========================== =======================
 
-where "common" represents the keys common to all dist_types:
-``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
-``'proc_grid_rank'``.
+where "common" represents the keys common to all dist_types: ``'dist_type'``,
+``'size'``, ``'proc_grid_size'``, and ``'proc_grid_rank'``.
 
 Other ``dist_type``\s may be added in future versions of the protocol.
 
@@ -231,8 +231,8 @@ following key-value pairs:
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all ``'proc_grid_size'``\s for all
-  dimensions shall equal the total number of processes.
+  Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
+  shall equal the total number of processes.
 
 * ``proc_grid_rank`` : ``int``
 
@@ -279,19 +279,19 @@ block (``dist_type`` is ``'b'``)
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
 
-  The padding tuple describes the width of the padding region at the
-  beginning and end of a buffer in a particular dimension.  Padding
-  represents extra allocation for an array, but padding values are in some
-  sense not "owned" by the local array and are reserved for other purposes.
+  The padding tuple describes the width of the padding region at the beginning
+  and end of a buffer in a particular dimension.  Padding represents extra
+  allocation for an array, but padding values are in some sense not "owned" by
+  the local array and are reserved for other purposes.
 
-  For the dimension dictionary with ``proc_grid_rank == 0``, the first
-  element in ``padding`` is the width of the boundary padding; this is extra
-  allocation reserved for boundary logic in applications that need it.  For
-  the dimension dictionary with ``proc_grid_rank == proc_grid_size-1``, the
-  second element in ``padding`` is the width of the boundary padding. All
-  other ``padding`` tuple values are for communication padding and represent
-  extra allocation reserved for communication between processes. All
-  communication padding widths must be the same for a dimension.
+  For the dimension dictionary with ``proc_grid_rank == 0``, the first element
+  in ``padding`` is the width of the boundary padding; this is extra allocation
+  reserved for boundary logic in applications that need it.  For the dimension
+  dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
+  ``padding`` is the width of the boundary padding. All other ``padding`` tuple
+  values are for communication padding and represent extra allocation reserved
+  for communication between processes. All communication padding widths must be
+  the same for a dimension.
 
   For example, consider a one-dimensional block-distributed array distributed
   over four processes.  Let its boundary padding have a width of 3 and its
@@ -321,10 +321,10 @@ cyclic (``dist_type`` is ``'c'``)
   this process.
   
   The cyclic distribution is what results from assigning global indices--or
-  contiguous blocks of indices, in the case when ``block_size`` is greater
-  than one--to processes in round-robin fashion.  When ``block_size`` equals
-  one, a Python slice formed from the ``start``, ``size``, and
-  ``proc_grid_size`` values would reproduce the local array's indices.
+  contiguous blocks of indices, in the case when ``block_size`` is greater than
+  one--to processes in round-robin fashion.  When ``block_size`` equals one, a
+  Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
+  values would reproduce the local array's indices.
 
 * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
@@ -335,14 +335,14 @@ cyclic (``dist_type`` is ``'c'``)
   If ``block_size == 1`` (the default), this specifies the "true" cyclic
   distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
   ``block_size == ceil(size / proc_grid_size)``, this distribution is
-  equivalent to an evenly-distributed block distribution.  If ``1 <
-  block_size < size // proc_grid_size``, then this specifies a distribution
-  sometimes called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
+  equivalent to an evenly-distributed block distribution.  If ``1 < block_size
+  < size // proc_grid_size``, then this specifies a distribution sometimes
+  called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
   
   Block-cyclic is a generalization of (evenly-distributed) block and cyclic
   distribution types.  It can be thought of as as a cyclic distribution with
-  contiguous blocks of global indices (rather than single indices)
-  distributed in a round robin fashion.
+  contiguous blocks of global indices (rather than single indices) distributed
+  in a round robin fashion.
   
   Note that since this protocol allows for block-distributed dimensions with
   irregular numbers of indices on each process, not all 'block'-distributed
@@ -356,9 +356,9 @@ unstructured (``dist_type`` is ``'u'``)
 
   Global indices available on this process.
 
-  The only constraint that applies to the ``indices`` buffer is that the
-  values are locally unique.  The indices values are otherwise unconstrained:
-  they can be negative, unordered, and non-contiguous.
+  The only constraint that applies to the ``indices`` buffer is that the values
+  are locally unique.  The indices values are otherwise unconstrained: they can
+  be negative, unordered, and non-contiguous.
 
 * ``one_to_one`` : bool, optional.
 
@@ -376,6 +376,7 @@ General constraints
 
 Empty local buffers
 ~~~~~~~~~~~~~~~~~~~
+
 It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
 situations may arise when downsampling or slicing a distributed array.
@@ -389,6 +390,7 @@ The following properties of a dimension dictionary imply an empty local buffer:
 
 Global array size
 ~~~~~~~~~~~~~~~~~
+
 The global number of elements in an array is the product of the ``size``\s of
 the dimension dictionaries, or 1 if the ``dim_data`` sequence is empty.  In
 Python syntax, this would be ``reduce(operator.mul, global_shape, 1)`` where
@@ -399,6 +401,7 @@ is the ``size`` of the dimension dictionary for dimension ``i``.  If
 
 Identical ``dim_data`` along an axis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
 = dim_data[i]['proc_grid_rank']`` for some dimension ``i``, then all processes
 with the same ``rank`` for dimension ``i`` must have the same values for other
