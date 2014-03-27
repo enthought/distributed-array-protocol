@@ -89,11 +89,11 @@ process grid
     through coordinates in rank order.  The product of the number of processes
     in each dimension in the process grid shall be equal to the total number of
     processes.
-    
+
     For example, for an ``N`` by ``M`` process grid over ``N * M`` processes
     with ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)``
-    corresponds to the process with rank ``i*M + j``.  
-  
+    corresponds to the process with rank ``i*M + j``.
+
     (Note that the protocol's *process grid* is compatible with MPI's
     ``MPI_Cart_create()`` command, and the MPI standard guarantees that
     Cartesian process coordinates are always assigned to ranks in the same way
@@ -129,7 +129,7 @@ boundary padding
     the physical system's boundary conditions in a PDE application, for
     example.  These elements are included in a distributed dimension's
     ``'size'``.
-    
+
 communication padding
     Padding indices that are shared logically with a neighboring local array.
     These padding regions are used often in finite differencing applications
@@ -303,7 +303,7 @@ block (``dist_type`` is ``'b'``)
   ============== ====== ====== ====== ======
   padding        (3, 2) (2, 2) (2, 2) (2, 3)
   ============== ====== ====== ====== ======
-  
+
   If the value associated with ``padding`` is the tuple ``(0,0)`` (the
   default), this indicates the local array is not padded in this dimension.
 
@@ -319,7 +319,7 @@ cyclic (``dist_type`` is ``'c'``)
 
   The start index (inclusive, 0-based) of the global index space available on
   this process.
-  
+
   The cyclic distribution is what results from assigning global indices--or
   contiguous blocks of indices, in the case when ``block_size`` is greater than
   one--to processes in round-robin fashion.  When ``block_size`` equals one, a
@@ -338,12 +338,12 @@ cyclic (``dist_type`` is ``'c'``)
   equivalent to an evenly-distributed block distribution.  If ``1 < block_size
   < size // proc_grid_size``, then this specifies a distribution sometimes
   called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
-  
+
   Block-cyclic is a generalization of (evenly-distributed) block and cyclic
   distribution types.  It can be thought of as as a cyclic distribution with
   contiguous blocks of global indices (rather than single indices) distributed
   in a round robin fashion.
-  
+
   Note that since this protocol allows for block-distributed dimensions with
   irregular numbers of indices on each process, not all 'block'-distributed
   dimensions describable by this protocol can be represented as 'cyclic' with
