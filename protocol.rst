@@ -251,121 +251,124 @@ Distribution-type specific key-value pairs
 ``````````````````````````````````````````
 
 The remaining key-value pairs in each dimension dictionary depend on the
-``dist_type`` and are described below:
+``dist_type`` and are described below.
 
-* block (``dist_type`` is ``'b'``):
+block (``dist_type`` is ``'b'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  * ``start`` : ``int``, greater than or equal to zero.
+* ``start`` : ``int``, greater than or equal to zero.
 
-    The start index (inclusive and 0-based) of the global index space available
-    on this process.
+  The start index (inclusive and 0-based) of the global index space available
+  on this process.
 
-  * ``stop`` : ``int``, greater than the ``start`` value
+* ``stop`` : ``int``, greater than the ``start`` value
 
-    The stop index (exclusive, as in standard Python indexing) of the global
-    index space available on this process.
+  The stop index (exclusive, as in standard Python indexing) of the global
+  index space available on this process.
 
-    For a block-distributed dimension, adjacent processes as determined by the
-    dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
-    index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
-    and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
-    ``start`` of ``b``.  Processes may contain differently-sized global index
-    ranges.
+  For a block-distributed dimension, adjacent processes as determined by the
+  dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
+  index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
+  and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
+  ``start`` of ``b``.  Processes may contain differently-sized global index
+  ranges.
 
-    For every block-distributed dimension ``i``, ``stop - start`` must be equal
-    to ``buffer.shape[i]``.
+  For every block-distributed dimension ``i``, ``stop - start`` must be equal
+  to ``buffer.shape[i]``.
 
-  * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
-    Optional.
+* ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
+  Optional.
 
-    The padding tuple describes the width of the padding region at the
-    beginning and end of a buffer in a particular dimension.  Padding
-    represents extra allocation for an array, but padding values are in some
-    sense not "owned" by the local array and are reserved for other purposes.
+  The padding tuple describes the width of the padding region at the
+  beginning and end of a buffer in a particular dimension.  Padding
+  represents extra allocation for an array, but padding values are in some
+  sense not "owned" by the local array and are reserved for other purposes.
 
-    For the dimension dictionary with ``proc_grid_rank == 0``, the first
-    element in ``padding`` is the width of the boundary padding; this is extra
-    allocation reserved for boundary logic in applications that need it.  For
-    the dimension dictionary with ``proc_grid_rank == proc_grid_size-1``, the
-    second element in ``padding`` is the width of the boundary padding. All
-    other ``padding`` tuple values are for communication padding and represent
-    extra allocation reserved for communication between processes. All
-    communication padding widths must be the same for a dimension.
+  For the dimension dictionary with ``proc_grid_rank == 0``, the first
+  element in ``padding`` is the width of the boundary padding; this is extra
+  allocation reserved for boundary logic in applications that need it.  For
+  the dimension dictionary with ``proc_grid_rank == proc_grid_size-1``, the
+  second element in ``padding`` is the width of the boundary padding. All
+  other ``padding`` tuple values are for communication padding and represent
+  extra allocation reserved for communication between processes. All
+  communication padding widths must be the same for a dimension.
 
-    For example, consider a one-dimensional block-distributed array distributed
-    over four processes.  Let its boundary padding have a width of 3 and its
-    communication padding have a width of 2. The padding tuple for the local
-    array on each rank would be:
+  For example, consider a one-dimensional block-distributed array distributed
+  over four processes.  Let its boundary padding have a width of 3 and its
+  communication padding have a width of 2. The padding tuple for the local
+  array on each rank would be:
 
-    ============== ====== ====== ====== ======
-    proc_grid_rank  0      1      2      3
-    ============== ====== ====== ====== ======
-    padding        (3, 2) (2, 2) (2, 2) (2, 3)
-    ============== ====== ====== ====== ======
+  ============== ====== ====== ====== ======
+  proc_grid_rank  0      1      2      3
+  ============== ====== ====== ====== ======
+  padding        (3, 2) (2, 2) (2, 2) (2, 3)
+  ============== ====== ====== ====== ======
+  
+  If the value associated with ``padding`` is the tuple ``(0,0)`` (the
+  default), this indicates the local array is not padded in this dimension.
 
-    If the value associated with ``padding`` is the tuple ``(0,0)`` (the
-    default), this indicates the local array is not padded in this dimension.
+* ``periodic`` : ``bool``, optional
 
-  * ``periodic`` : ``bool``, optional
+  Indicates whether this dimension is periodic.  When not present, indicates
+  this dimension is not periodic, equivalent to a value of ``False``.
 
-    Indicates whether this dimension is periodic.  When not present, indicates
-    this dimension is not periodic, equivalent to a value of ``False``.
+cyclic (``dist_type`` is ``'c'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* cyclic (``dist_type`` is ``'c'``):
+* ``start`` : ``int``, greater than or equal to zero.
 
-  * ``start`` : ``int``, greater than or equal to zero.
+  The start index (inclusive, 0-based) of the global index space available on
+  this process.
+  
+  The cyclic distribution is what results from assigning global indices--or
+  contiguous blocks of indices, in the case when ``block_size`` is greater
+  than one--to processes in round-robin fashion.  When ``block_size`` equals
+  one, a Python slice formed from the ``start``, ``size``, and
+  ``proc_grid_size`` values would reproduce the local array's indices.
 
-    The start index (inclusive, 0-based) of the global index space available on
-    this process.
+* ``block_size`` : ``int``, greater than or equal to one. Optional.
 
-    The cyclic distribution is what results from assigning global indices--or
-    contiguous blocks of indices, in the case when ``block_size`` is greater
-    than one--to processes in round-robin fashion.  When ``block_size`` equals
-    one, a Python slice formed from the ``start``, ``size``, and
-    ``proc_grid_size`` values would reproduce the local array's indices.
+  Indicates the size of contiguous blocks of indices for this dimension.  If
+  absent, equivalent to the case when ``block_size`` is present and equal to
+  one.
 
-  * ``block_size`` : ``int``, greater than or equal to one. Optional.
+  If ``block_size == 1`` (the default), this specifies the "true" cyclic
+  distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
+  ``block_size == ceil(size / proc_grid_size)``, this distribution is
+  equivalent to an evenly-distributed block distribution.  If ``1 <
+  block_size < size // proc_grid_size``, then this specifies a distribution
+  sometimes called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
+  
+  Block-cyclic is a generalization of (evenly-distributed) block and cyclic
+  distribution types.  It can be thought of as as a cyclic distribution with
+  contiguous blocks of global indices (rather than single indices)
+  distributed in a round robin fashion.
+  
+  Note that since this protocol allows for block-distributed dimensions with
+  irregular numbers of indices on each process, not all 'block'-distributed
+  dimensions describable by this protocol can be represented as 'cyclic' with
+  the 'block-size' key.
 
-    Indicates the size of contiguous blocks of indices for this dimension.  If
-    absent, equivalent to the case when ``block_size`` is present and equal to
-    one.
+unstructured (``dist_type`` is ``'u'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    If ``block_size == 1`` (the default), this specifies the "true" cyclic
-    distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
-    ``block_size == ceil(size / proc_grid_size)``, this distribution is
-    equivalent to an evenly-distributed block distribution.  If ``1 <
-    block_size < size // proc_grid_size``, then this specifies a distribution
-    sometimes called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
+* ``indices``: buffer (or buffer-compatible) of ``int``
 
-    Block-cyclic is a generalization of (evenly-distributed) block and cyclic
-    distribution types.  It can be thought of as as a cyclic distribution with
-    contiguous blocks of global indices (rather than single indices)
-    distributed in a round robin fashion.
+  Global indices available on this process.
 
-    Note that since this protocol allows for block-distributed dimensions with
-    irregular numbers of indices on each process, not all 'block'-distributed
-    dimensions describable by this protocol can be represented as 'cyclic' with
-    the 'block-size' key.
+  The only constraint that applies to the ``indices`` buffer is that the
+  values are locally unique.  The indices values are otherwise unconstrained:
+  they can be negative, unordered, and non-contiguous.
 
-* unstructured (``dist_type`` is ``'u'``):
+* ``one_to_one`` : bool, optional.
 
-  * ``indices``: buffer (or buffer-compatible) of ``int``
+  If not present, shall be equivalent to being present with a `False` value.
 
-    Global indices available on this process.
+  If `False`, indicates that some global indices may be duplicated in two or
+  more local ``indices`` buffers.
 
-    The only constraint that applies to the ``indices`` buffer is that the
-    values are locally unique.  The indices values are otherwise unconstrained:
-    they can be negative, unordered, and non-contiguous.
-
-  * ``one_to_one`` : bool, optional.
-
-    If not present, shall be equivalent to being present with a `False` value.
-
-    If `False`, indicates that some global indices may be duplicated in two or
-    more local ``indices`` buffers.
-
-    If `True`, a global index shall be located in exactly one local ``indices``
-    buffer.
+  If `True`, a global index shall be located in exactly one local ``indices``
+  buffer.
 
 
 General constraints
