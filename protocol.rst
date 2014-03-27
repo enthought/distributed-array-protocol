@@ -281,31 +281,33 @@ The remaining key-value pairs in each dimension dictionary depend on the
   * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
     Optional.
 
-    When present, indicates the number of "padding" values at the lower and
-    upper limits (respectively) of the indices available on this process.  This
-    padding can be either "boundary padding" or "communication padding".  When
-    not present, indicates that the distributed array is not padded in this
-    dimension on any process.
+    The padding tuple describes the width of the padding region at the
+    beginning and end of a buffer in a particular dimension.  Padding
+    represents extra allocation for an array, but padding values are in some
+    sense not "owned" by the local array and are reserved for other purposes.
 
-    Whenever an element of the ``padding`` tuple is > 0 and the padding is on
-    an internal edge of the process grid (or the dimension is periodic), that
-    indicates this is "communication padding", and the communication padding
-    elements do not count towards the ``size`` of the array in this dimension.
-    In other words, the array shares the indicated number of indices with its
-    neighbor (as determined by ``proc_grid_rank``), and further, this
-    neighboring process owns the data.  When an element of the ``padding``
-    tuple is > 0 and the padding is on an external edge of the process grid
-    (and the dimension is not periodic), that indicates that this is "boundary
-    padding".
+    For the dimension dictionary with ``proc_grid_rank == 0``, the first
+    element in ``padding`` is the width of the boundary padding; this is extra
+    allocation reserved for boundary logic in applications that need it.  For
+    the dimension dictionary with ``proc_grid_rank == proc_grid_size-1``, the
+    second element in ``padding`` is the width of the boundary padding. All
+    other ``padding`` tuple values are for communication padding and represent
+    extra allocation reserved for communication between processes. All
+    communication padding widths must be the same for a dimension.
 
-    All communication padding widths must be the same for a dimension.
+    For example, consider a one-dimensional block-distributed array distributed
+    over four processes.  Let its boundary padding have a width of 3 and its
+    communication padding have a width of 2. The padding tuple for the local
+    array on each rank would be:
 
-    Padding is an all-or-nothing attribute: if the ``padding`` keyword is
-    present in any dimension dictionary for a dimension of the distributed
-    array, then the ``padding`` keyword shall be present on *all* processes for
-    the same dimension dictionary.  The value associated with ``padding`` can
-    be the tuple ``(0,0)`` indicating that this local array is not padded in
-    this dimension.
+    ============== ====== ====== ====== ======
+    proc_grid_rank  0      1      2      3
+    ============== ====== ====== ====== ======
+    padding        (3, 2) (2, 2) (2, 2) (2, 3)
+    ============== ====== ====== ====== ======
+
+    If the value associated with ``padding`` is the tuple ``(0,0)`` (the
+    default), this indicates the local array is not padded in this dimension.
 
   * ``periodic`` : ``bool``, optional
 
