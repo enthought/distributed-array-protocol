@@ -280,6 +280,9 @@ block (``dist_type`` is ``'b'``)
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
 
+  If communication padding, must be less than or equal to the number of indices
+  owned by the neighboring process.
+
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
   allocation for an array, but padding values are in some sense not "owned" by
