@@ -35,7 +35,7 @@ Major usecases supported by the protocol include:
 
 * Block, cyclic, and block-cyclic distributions for structured arrays.
 
-* Padded block distributed arrays for finite differencing applications.  
+* Padded block-distributed arrays for finite differencing applications.
 
 * Unstructured distributions for arbitrary mappings between global indices and
   local data.
