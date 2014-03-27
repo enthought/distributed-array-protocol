@@ -379,7 +379,6 @@ situations may arise when downsampling or slicing a distributed array.
 
 The following properties of a dimension dictionary imply an empty local buffer:
 
-* With any ``dist_type``: ``proc_grid_size == 0``
 * With any ``dist_type``: ``size == 0``
 * With ``'b'`` or ``'c'`` ``dist_type``\s:  ``start == size``
 * With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
