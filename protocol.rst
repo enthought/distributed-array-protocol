@@ -294,10 +294,10 @@ The remaining key-value pairs in each dimension dictionary depend on the
     extra allocation reserved for communication between processes. All
     communication padding widths must be the same for a dimension.
 
-    For example, consider a one-dimensional distributed array with a block
-    distribution. Let the boundary padding have a width of 3 and communication
-    padding have a width of 2. The padding tuple for the local array on each
-    rank would be:
+    For example, consider a one-dimensional block-distributed array distributed
+    over four processes.  Let its boundary padding have a width of 3 and its
+    communication padding have a width of 2. The padding tuple for the local
+    array on each rank would be:
 
     ============== ====== ====== ====== ======
     proc_grid_rank  0      1      2      3
