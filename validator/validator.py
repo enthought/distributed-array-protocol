@@ -43,7 +43,6 @@ def validate(distbuffer):
         return (False, msg % version)
 
     # Verify the version number.
-    # import ipdb; ipdb.set_trace()
     if strict_version.version not in ((0,9,0), (1,0,0)):
         msg = '__version__ "%s" not supported by this checker.' 
         return (False, msg % version)
