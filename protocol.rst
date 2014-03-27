@@ -391,6 +391,15 @@ is the ``size`` of the dimension dictionary for dimension ``i``.  If
 ``global_shape`` is an empty sequence, the result of the reduction above is
 ``1``, indicating the distributed array is a zero-dimensional scalar.
 
+If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
+= dim_data[i]['proc_grid_rank']`` for some dimension ``i``, then all processes
+with the same ``rank`` for dimension ``i`` must have the same values for other
+keys in their respective dimension dictionaries.  Essentially, this says that
+dimension dictionary ``dim_data[i]`` is identical for all processes that have
+the same value for ``dim_data[i]['proc_grid_rank']``.  The only possible
+exception to this is the ``padding`` tuple, which may have different values on
+edge processes due to boundary padding.
+
 
 Examples
 -------------------------------------------------------------------------------
