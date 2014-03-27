@@ -2,6 +2,7 @@
 Distributed Array Protocol v0.9.0
 ===============================================================================
 
+.. section-numbering::
 .. Contents::
 
 Overview
