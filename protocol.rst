@@ -379,7 +379,8 @@ Empty local buffers
 
 It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
-situations may arise when downsampling or slicing a distributed array.
+situations may arise explicitly or when downsampling or slicing a distributed
+array.
 
 The following properties of a dimension dictionary imply an empty local buffer:
 
