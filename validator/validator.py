@@ -49,6 +49,14 @@ def _validate_common_dist_keys(idx, dim_dict):
 
     return (True, '')
 
+def _validate_padding(padding):
+    if not isinstance(padding, tuple):
+        msg = 'padding (%r) for dimension %d is not a tuple.'
+        return (False, msg % (padding, idx))
+
+    return (True, '')
+
+
 def _validate_block(idx, dim_dict):
     """Verify block distribution."""
     if dim_dict['dist_type'] != 'b':
@@ -72,10 +80,12 @@ def _validate_block(idx, dim_dict):
     if stop < start:
         msg = 'stop (%d) for dimension %d is less than start (%d).'
         return (False, msg % (stop, idx, start))
+
     padding = dim_dict.get('padding', (0,0))
-    if not isinstance(padding, tuple):
-        msg = 'padding (%r) for dimension %d is not a tuple.'
-        return (False, msg % (padding, idx))
+    is_valid, msg = _validate_padding(padding)
+    if not is_valid:
+        return (is_valid, msg)
+
     is_valid, msg = _validate_start(idx, dim_dict)
     if not is_valid:
         return (is_valid, msg)
