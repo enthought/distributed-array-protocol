@@ -186,7 +186,7 @@ def _validate_common(idx, dim_dict):
 
 def validate_dim_dict(idx, dim_dict):
     """
-    Validates that `dim_dict` conforms to the Distributed Array Protocol.
+    Validate that `dim_dict` conforms to the Distributed Array Protocol.
 
     Returns a 2-tuple of a boolean and string; boolean indicates validity, the
     string indicates the reason for invalidity, empty otherwise.
