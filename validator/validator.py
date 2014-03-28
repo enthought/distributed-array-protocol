@@ -4,6 +4,7 @@ Functions to validate Distributed Array Protocol data structures.
 Functions
 ---------
 validate_dim_dict(idx, dim_dict)
+validate_dim_data(dim_data)
 validate(distbuffer)
 
 """
