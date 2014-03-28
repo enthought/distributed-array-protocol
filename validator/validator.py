@@ -286,7 +286,8 @@ def validate(distbuffer):
     if not is_valid:
         return (is_valid, msg)
 
-    # Verify the number of dim_data dictionaries.
+    # Verify the number of dim_data dictionaries matches the number of
+    # dimensions in the buffer.
     # (This can't be done in validate_dim_data because it doesn't have access
     # to the buffer.)
     if len(dim_data) != buffer.ndim:
