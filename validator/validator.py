@@ -20,17 +20,16 @@ def _verify_exact_keys(dd, keys):
 
 
 def validate(distbuffer):
-    '''
-    Validates that `distbuffer` conforms to the Distributed Array Protocol.
+    """
+    Validate that `distbuffer` conforms to the Distributed Array Protocol.
 
     Returns a 2-tuple of a boolean and string; boolean indicates validity, the
     string indicates the reason for invalidity, empty otherwise.
 
     Currently supports Protocol versions 0.9.x and 1.0.x.
 
-    '''
-
-    # verify distbuffer is a dictionary.
+    """
+    # Verify distbuffer is a dictionary.
     if not isinstance(distbuffer, dict):
         msg = 'non-dictionary object of type %r.'
         return (False, msg % type(distbuffer))
@@ -66,7 +65,7 @@ def validate(distbuffer):
         msg = '%r does not have the buffer interface.'
         return (False, msg % buffer)
 
-    # verify the dim_data tuple:
+    # Verify the dim_data tuple:
     dim_data = distbuffer['dim_data']
 
     # First, check that it's a tuple...
@@ -85,7 +84,7 @@ def validate(distbuffer):
         msg = 'len(dim_data) == %d, which is not equal to buffer.ndim == %d.'
         return (False, msg % (len(dim_data), buffer.ndim))
 
-    # Verify each dim_data dict.
+    # Verify each dim_data dictionary.
     for idx, dim_dict in enumerate(dim_data):
         is_valid, msg = validate_dim_dict(idx, dim_dict)
         if not is_valid:
@@ -123,7 +122,7 @@ def _validate_common_dist_keys(idx, dim_dict):
     return (True, '')
 
 def _validate_block(idx, dim_dict):
-    ''' Verifies block distribution.'''
+    """Verify block distribution."""
     if dim_dict['dist_type'] != 'b':
         msg = '_validate_block expecting a dist_type of "b". (given %r)'
         raise ValueError(msg % dim_dict['dist_type'])
@@ -156,7 +155,7 @@ def _validate_block(idx, dim_dict):
     return (True, '')
 
 def _validate_cyclic(idx, dim_dict):
-    '''Verifies cyclic (and block-cyclic) distribution.'''
+    """Verify cyclic (and block-cyclic) distribution."""
     if dim_dict['dist_type'] != 'c':
         msg = '_validate_cyclic expecting a dist_type of "c". (given %r)'
         raise ValueError(msg % dim_dict['dist_type'])
@@ -199,7 +198,7 @@ def _validate_start(idx, dim_dict):
     return (True, '')
 
 def _validate_unstructured(idx, dim_dict):
-    # Verify unstructured distribution.
+    """Verify unstructured distribution."""
     if dim_dict['dist_type'] != 'u':
         msg = '_validate_unstructured expecting a dist_type of "u". (given %r)'
         raise ValueError(msg % dim_dict['dist_type'])
@@ -222,6 +221,7 @@ def _validate_unstructured(idx, dim_dict):
     return (True, '')
 
 def _validate_undistributed(idx, dim_dict):
+    """Verify undistributed distribution."""
     return _validate_common(idx, dim_dict)
 
 def _validate_common(idx, dim_dict):
@@ -258,7 +258,15 @@ def _validate_common(idx, dim_dict):
 
 
 def validate_dim_dict(idx, dim_dict):
+    """
+    Validates that `dim_dict` conforms to the Distributed Array Protocol.
 
+    Returns a 2-tuple of a boolean and string; boolean indicates validity, the
+    string indicates the reason for invalidity, empty otherwise.
+
+    Currently supports Protocol versions 0.9.x and 1.0.x.
+
+    """
     dist_type = dim_dict['dist_type']
 
     if dist_type not in set('bcun'):
