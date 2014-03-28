@@ -61,13 +61,6 @@ class TestValidator(unittest.TestCase):
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
 
-    def test_not_distributed(self):
-        distbuffer = {'__version__': '1.0.0',
-                'buffer': b'blonk',
-                'dim_data': ({'dist_type': 'n', 'size': 5},)}
-        is_valid, msg = validator.validate(distbuffer)
-        self.assertTrue(is_valid, msg)
-
     def test_extra_process(self):
         dimdata = {
             'dist_type':'c',

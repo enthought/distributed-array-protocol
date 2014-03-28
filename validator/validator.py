@@ -148,10 +148,6 @@ def _validate_unstructured(idx, dim_dict):
 
     return (True, '')
 
-def _validate_undistributed(idx, dim_dict):
-    """Verify undistributed distribution."""
-    return _validate_common(idx, dim_dict)
-
 def _validate_common(idx, dim_dict):
     # Verify presence of 'dist_type' and 'size' keys.
     extra, missing = _verify_exact_keys(dim_dict, 'dist_type size'.split())
@@ -172,7 +168,7 @@ def _validate_common(idx, dim_dict):
 
     # Verify dist_type.
     dist_type = dim_dict['dist_type']
-    if dist_type not in set('nbcu'):
+    if dist_type not in set('bcu'):
         msg = 'dimension dictionary for dimension %d has an invalid dist_type of %r'
         return (False, msg % (idx, dist_type))
 
@@ -197,15 +193,14 @@ def validate_dim_dict(idx, dim_dict):
     """
     dist_type = dim_dict['dist_type']
 
-    if dist_type not in set('bcun'):
-        msg = "dimension dict at index %r should have dist_type of 'b', 'c', 'u', or 'n' (given %r)"
+    if dist_type not in set('bcu'):
+        msg = "dimension dict at index %r should have dist_type of 'b', 'c', or 'u' (given %r)"
         return (False, msg % (idx, dist_type))
 
     # Select the appropriate distribution type and validate.
     return {'b': _validate_block,
             'c': _validate_cyclic,
             'u': _validate_unstructured,
-            'n': _validate_undistributed,
             }[dist_type](idx, dim_dict)
 
 
