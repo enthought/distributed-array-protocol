@@ -208,6 +208,36 @@ def validate_dim_dict(idx, dim_dict):
             }[dist_type](idx, dim_dict)
 
 
+def validate_dim_data(dim_data):
+    """
+    Validate that `dim_data` conforms to the Distributed Array Protocol.
+
+    Returns a 2-tuple of a boolean and string; boolean indicates validity, the
+    string indicates the reason for invalidity, empty otherwise.
+
+    Currently supports Protocol versions 0.9.x and 1.0.x.
+
+    """
+    # First, check that it's a tuple...
+    if not isinstance(dim_data, tuple):
+        msg = 'dim_data (type %r) is not an instance of tuple.'
+        return (False, msg % type(dim_data))
+
+    # ...of dictionaries.
+    for idx, dim_dict in enumerate(dim_data):
+        if not isinstance(dim_dict, dict):
+            msg = 'object at index %d with type %r is not an instance of dict.'
+            return (False, msg % (idx, type(dim_dict)))
+
+    # Verify each dim_data dictionary.
+    for idx, dim_dict in enumerate(dim_data):
+        is_valid, msg = validate_dim_dict(idx, dim_dict)
+        if not is_valid:
+            return (is_valid, msg)
+
+    return (True, '')
+
+
 def validate(distbuffer):
     """
     Validate that `distbuffer` conforms to the Distributed Array Protocol.
@@ -254,30 +284,18 @@ def validate(distbuffer):
         msg = '%r does not have the buffer interface.'
         return (False, msg % buffer)
 
-    # Verify the dim_data tuple:
+    # Verify the dim_data tuple.
     dim_data = distbuffer['dim_data']
-
-    # First, check that it's a tuple...
-    if not isinstance(dim_data, tuple):
-        msg = 'dim_data (type %r) is not an instance of tuple.'
-        return (False, msg % type(dim_data))
-
-    # ...of dictionaries.
-    for idx, dim_dict in enumerate(dim_data):
-        if not isinstance(dim_dict, dict):
-            msg = 'object at index %d with type %r is not an instance of dict.'
-            return (False, msg % (idx, type(dim_dict)))
+    is_valid, msg = validate_dim_data(dim_data)
+    if not is_valid:
+        return (is_valid, msg)
 
     # Verify the number of dim_data dictionaries.
+    # (This can't be done in validate_dim_data because it doesn't have access
+    # to the buffer.)
     if len(dim_data) != buffer.ndim:
         msg = 'len(dim_data) == %d, which is not equal to buffer.ndim == %d.'
         return (False, msg % (len(dim_data), buffer.ndim))
-
-    # Verify each dim_data dictionary.
-    for idx, dim_dict in enumerate(dim_data):
-        is_valid, msg = validate_dim_dict(idx, dim_dict)
-        if not is_valid:
-            return (is_valid, msg)
 
     return (True, '')
 
