@@ -202,7 +202,7 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``, >= 0
+* ``'size'`` : ``int``, greater than or equal to 0
 
   Total number of global array elements along this dimension.
 
@@ -226,7 +226,7 @@ following key-value pairs:
               num_owned_elements -= padding[1]
           return num_owned_elements
 
-* ``'proc_grid_size'`` : ``int``, >= 1
+* ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -234,7 +234,8 @@ following key-value pairs:
   Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
   shall equal the total number of processes.
 
-* ``proc_grid_rank`` : ``int``
+* ``'proc_grid_rank'`` : ``int``, greater than or equal to 0, less than
+  ``'proc_grid_size'``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor sections of
@@ -278,6 +279,9 @@ block (``dist_type`` is ``'b'``)
 
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
+
+  If communication padding, must be less than or equal to the number of indices
+  owned by the neighboring process.
 
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
@@ -362,12 +366,12 @@ unstructured (``dist_type`` is ``'u'``)
 
 * ``one_to_one`` : bool, optional.
 
-  If not present, shall be equivalent to being present with a `False` value.
+  If not present, shall be equivalent to being present with a ``False`` value.
 
-  If `False`, indicates that some global indices may be duplicated in two or
+  If ``False``, indicates that some global indices may be duplicated in two or
   more local ``indices`` buffers.
 
-  If `True`, a global index shall be located in exactly one local ``indices``
+  If ``True``, a global index shall be located in exactly one local ``indices``
   buffer.
 
 
