@@ -87,11 +87,13 @@ def _validate_block(idx, dim_dict):
         msg = 'stop (%d) for dimension %d is less than start (%d).'
         return (False, msg % (stop, idx, start))
 
+    # Validate padding.
     padding = dim_dict.get('padding', (0,0))
     is_valid, msg = _validate_padding(padding, idx)
     if not is_valid:
         return (is_valid, msg)
 
+    # Validate start.
     is_valid, msg = _validate_start(idx, dim_dict)
     if not is_valid:
         return (is_valid, msg)
