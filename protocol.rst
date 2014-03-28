@@ -375,6 +375,32 @@ unstructured (``dist_type`` is ``'u'``)
   buffer.
 
 
+Dimension dictionary aliases
+````````````````````````````
+
+The following aliases are provided for convenience.  Only one is provided in
+the current version of this protocol, but more may be added in future versions.
+
+Empty dimension dictionary
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An empty dimension dictionary in dimension ``i``, will be interpreted as the
+following:
+
+.. code:: python
+
+    {'dist_type': 'b',
+     'proc_grid_rank': 0,
+     'proc_grid_size': 1,
+     'start': 0,
+     'stop': buf.shape[i],
+     'size': buf.shape[i]}
+
+Where ``buf`` is the associated buffer object.
+
+This is intended to be a shortcut for defining undistributed dimensions.
+
+
 General comments
 ````````````````
 
