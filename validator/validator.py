@@ -19,79 +19,6 @@ def _verify_exact_keys(dd, keys):
     return (extra, missing)
 
 
-def validate(distbuffer):
-    """
-    Validate that `distbuffer` conforms to the Distributed Array Protocol.
-
-    Returns a 2-tuple of a boolean and string; boolean indicates validity, the
-    string indicates the reason for invalidity, empty otherwise.
-
-    Currently supports Protocol versions 0.9.x and 1.0.x.
-
-    """
-    # Verify distbuffer is a dictionary.
-    if not isinstance(distbuffer, dict):
-        msg = 'non-dictionary object of type %r.'
-        return (False, msg % type(distbuffer))
-
-    # Verify distbuffer keys.
-    extra, missing = _verify_exact_keys(distbuffer,
-            '__version__ buffer dim_data'.split())
-    if extra:
-        msg = 'extra keys %r present.'
-        return (False, msg % (tuple(extra),))
-    if missing:
-        msg = 'keys %r missing.'
-        return (False, msg % (tuple(missing),))
-
-    # Verify the version string.
-    version = distbuffer['__version__']
-    try:
-        strict_version = StrictVersion(version)
-    except ValueError:
-        msg = '__version__ "%s" not valid.'
-        return (False, msg % version)
-
-    # Verify the version number.
-    if strict_version.version not in ((0,9,0), (1,0,0)):
-        msg = '__version__ "%s" not supported by this checker.'
-        return (False, msg % version)
-
-    # Verify the buffer.
-    buffer = distbuffer['buffer']
-    try:
-        buffer = memoryview(buffer)
-    except TypeError:
-        msg = '%r does not have the buffer interface.'
-        return (False, msg % buffer)
-
-    # Verify the dim_data tuple:
-    dim_data = distbuffer['dim_data']
-
-    # First, check that it's a tuple...
-    if not isinstance(dim_data, tuple):
-        msg = 'dim_data (type %r) is not an instance of tuple.'
-        return (False, msg % type(dim_data))
-
-    # ...of dictionaries.
-    for idx, dim_dict in enumerate(dim_data):
-        if not isinstance(dim_dict, dict):
-            msg = 'object at index %d with type %r is not an instance of dict.'
-            return (False, msg % (idx, type(dim_dict)))
-
-    # Verify the number of dim_data dictionaries.
-    if len(dim_data) != buffer.ndim:
-        msg = 'len(dim_data) == %d, which is not equal to buffer.ndim == %d.'
-        return (False, msg % (len(dim_data), buffer.ndim))
-
-    # Verify each dim_data dictionary.
-    for idx, dim_dict in enumerate(dim_data):
-        is_valid, msg = validate_dim_dict(idx, dim_dict)
-        if not is_valid:
-            return (is_valid, msg)
-
-    return (True, '')
-
 def _validate_common_dist_keys(idx, dim_dict):
     # Verify presence of common keys for distributed dimensions.
     extra, missing = _verify_exact_keys(dim_dict, 'proc_grid_rank proc_grid_size'.split())
@@ -279,3 +206,78 @@ def validate_dim_dict(idx, dim_dict):
             'u': _validate_unstructured,
             'n': _validate_undistributed,
             }[dist_type](idx, dim_dict)
+
+
+def validate(distbuffer):
+    """
+    Validate that `distbuffer` conforms to the Distributed Array Protocol.
+
+    Returns a 2-tuple of a boolean and string; boolean indicates validity, the
+    string indicates the reason for invalidity, empty otherwise.
+
+    Currently supports Protocol versions 0.9.x and 1.0.x.
+
+    """
+    # Verify distbuffer is a dictionary.
+    if not isinstance(distbuffer, dict):
+        msg = 'non-dictionary object of type %r.'
+        return (False, msg % type(distbuffer))
+
+    # Verify distbuffer keys.
+    extra, missing = _verify_exact_keys(distbuffer,
+            '__version__ buffer dim_data'.split())
+    if extra:
+        msg = 'extra keys %r present.'
+        return (False, msg % (tuple(extra),))
+    if missing:
+        msg = 'keys %r missing.'
+        return (False, msg % (tuple(missing),))
+
+    # Verify the version string.
+    version = distbuffer['__version__']
+    try:
+        strict_version = StrictVersion(version)
+    except ValueError:
+        msg = '__version__ "%s" not valid.'
+        return (False, msg % version)
+
+    # Verify the version number.
+    if strict_version.version not in ((0,9,0), (1,0,0)):
+        msg = '__version__ "%s" not supported by this checker.'
+        return (False, msg % version)
+
+    # Verify the buffer.
+    buffer = distbuffer['buffer']
+    try:
+        buffer = memoryview(buffer)
+    except TypeError:
+        msg = '%r does not have the buffer interface.'
+        return (False, msg % buffer)
+
+    # Verify the dim_data tuple:
+    dim_data = distbuffer['dim_data']
+
+    # First, check that it's a tuple...
+    if not isinstance(dim_data, tuple):
+        msg = 'dim_data (type %r) is not an instance of tuple.'
+        return (False, msg % type(dim_data))
+
+    # ...of dictionaries.
+    for idx, dim_dict in enumerate(dim_data):
+        if not isinstance(dim_dict, dict):
+            msg = 'object at index %d with type %r is not an instance of dict.'
+            return (False, msg % (idx, type(dim_dict)))
+
+    # Verify the number of dim_data dictionaries.
+    if len(dim_data) != buffer.ndim:
+        msg = 'len(dim_data) == %d, which is not equal to buffer.ndim == %d.'
+        return (False, msg % (len(dim_data), buffer.ndim))
+
+    # Verify each dim_data dictionary.
+    for idx, dim_dict in enumerate(dim_data):
+        is_valid, msg = validate_dim_dict(idx, dim_dict)
+        if not is_valid:
+            return (is_valid, msg)
+
+    return (True, '')
+
