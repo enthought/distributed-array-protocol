@@ -1,3 +1,13 @@
+"""
+Functions to validate Distributed Array Protocol data structures.
+
+Functions
+---------
+validate_dim_dict(idx, dim_dict)
+validate(distbuffer)
+
+"""
+
 from distutils.version import StrictVersion
 
 
