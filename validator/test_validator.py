@@ -3,6 +3,7 @@ import numpy as np
 
 import validator
 
+
 class TestValidator(unittest.TestCase):
 
     def test_block(self):
@@ -45,7 +46,6 @@ class TestValidator(unittest.TestCase):
 
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
-
 
     def test_unstructured(self):
         dim_data = ({'dist_type': 'u',
