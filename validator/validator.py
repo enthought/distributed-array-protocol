@@ -209,6 +209,10 @@ def validate_dim_dict(idx, dim_dict):
     Currently supports Protocol versions 0.9.x and 1.0.x.
 
     """
+    # Check for the empty dim_dict alias
+    if not dim_dict: # the dim_dict is empty
+        return (True, '')
+
     dist_type = dim_dict['dist_type']
 
     if dist_type not in set('bcu'):
