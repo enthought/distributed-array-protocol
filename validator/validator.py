@@ -49,13 +49,19 @@ def _validate_common_dist_keys(idx, dim_dict):
 
     return (True, '')
 
-def _validate_padding(padding):
+def _validate_padding(padding, idx):
     if not isinstance(padding, tuple):
         msg = 'padding (%r) for dimension %d is not a tuple.'
         return (False, msg % (padding, idx))
+    if not len(padding) == 2:
+        msg = 'padding (%r) for dimension %d is not of length 2.'
+        return (False, msg % (padding, idx))
+    for i, element in enumerate(padding):
+        if not isinstance(element, int):
+            msg = 'padding element %r (%r) for dimension %d has non-integer type %r.'
+            return (False, msg % (i, padding[i], idx, type(element)))
 
     return (True, '')
-
 
 def _validate_block(idx, dim_dict):
     """Verify block distribution."""
@@ -82,7 +88,7 @@ def _validate_block(idx, dim_dict):
         return (False, msg % (stop, idx, start))
 
     padding = dim_dict.get('padding', (0,0))
-    is_valid, msg = _validate_padding(padding)
+    is_valid, msg = _validate_padding(padding, idx)
     if not is_valid:
         return (is_valid, msg)
 
