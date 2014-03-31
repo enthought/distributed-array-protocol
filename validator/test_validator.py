@@ -256,3 +256,21 @@ class TestInvalidDimData(unittest.TestCase):
         is_valid, msg = validator.validate(distbuffer)
         self.assertFalse(is_valid, msg)
 
+
+class TestCornerCases(unittest.TestCase):
+
+    def test_undistributed_padded_periodic(self):
+        dim_data = ({'dist_type': 'b',
+            'size': 10,
+            'proc_grid_size': 1,
+            'proc_grid_rank': 0,
+            'start': 0,
+            'stop': 10,
+            'padding': (2,2),
+            'periodic': True,},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones(10),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertTrue(is_valid, msg)
