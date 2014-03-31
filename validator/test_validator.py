@@ -166,7 +166,8 @@ class TestInvalidKeys(unittest.TestCase):
 
 class TestInvalidDimData(unittest.TestCase):
 
-    def test_bad_block_stop(self):
+    def test_bad_block_stop_0(self):
+        """Test stop > size."""
         dim_data = ({'dist_type': 'b',
             'size': 50,
             'proc_grid_size': 2,
@@ -174,22 +175,84 @@ class TestInvalidDimData(unittest.TestCase):
             'start': 0,
             'stop': 51},)
         distbuffer = {'__version__': '1.0.0',
-                'buffer': np.ones(10),
+                'buffer': np.ones(51),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertFalse(is_valid, msg)
+
+    def test_bad_block_stop_1(self):
+        """Test stop < start."""
+        dim_data = ({'dist_type': 'b',
+            'size': 50,
+            'proc_grid_size': 2,
+            'proc_grid_rank': 0,
+            'start': 10,
+            'stop': 9},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones((0,)),
                 'dim_data': dim_data}
 
         is_valid, msg = validator.validate(distbuffer)
         self.assertFalse(is_valid, msg)
 
     def test_bad_block_start(self):
+        """Test negative start."""
         dim_data = ({'dist_type': 'b',
             'size': 50,
             'proc_grid_size': 2,
             'proc_grid_rank': 0,
             'start': -1,
-            'stop': 50},)
+            'stop': 10},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones(11),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertFalse(is_valid, msg)
+
+    def test_bad_block_padding(self):
+        """Test padding not ints."""
+        dim_data = ({'dist_type': 'b',
+            'size': 50,
+            'proc_grid_size': 2,
+            'proc_grid_rank': 0,
+            'start': 0,
+            'stop': 10,
+            'padding': ('a','b')},)
         distbuffer = {'__version__': '1.0.0',
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
         is_valid, msg = validator.validate(distbuffer)
         self.assertFalse(is_valid, msg)
+
+    def test_bad_cyclic_block_size(self):
+        """Test negative block size in cyclic."""
+        dim_data = ({'dist_type': 'c',
+            'size': 100,
+            'proc_grid_size': 3,
+            'proc_grid_rank': 0,
+            'start': 0,
+            'block_size': -10},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones(10),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertFalse(is_valid, msg)
+
+    def test_bad_unstructured_indices(self):
+        """Test non-buffer for unstructured indices."""
+        dim_data = ({'dist_type': 'u',
+            'size': 100,
+            'proc_grid_size': 2,
+            'proc_grid_rank': 0,
+            'indices': [1, 2, 3, 4]},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones(4),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertFalse(is_valid, msg)
+
