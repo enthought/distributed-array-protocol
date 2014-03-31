@@ -166,6 +166,21 @@ class TestInvalidKeys(unittest.TestCase):
 
 class TestInvalidDimData(unittest.TestCase):
 
+    def test_bad_dist_type(self):
+        """Test stop > size."""
+        dim_data = ({'dist_type': 'q',
+            'size': 50,
+            'proc_grid_size': 2,
+            'proc_grid_rank': 0,
+            'start': 0,
+            'stop': 51},)
+        distbuffer = {'__version__': '1.0.0',
+                'buffer': np.ones(51),
+                'dim_data': dim_data}
+
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertFalse(is_valid, msg)
+
     def test_bad_block_stop_0(self):
         """Test stop > size."""
         dim_data = ({'dist_type': 'b',
