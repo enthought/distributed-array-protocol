@@ -579,6 +579,9 @@ In process 2:
 .. include:: ../examples.rst
 
 
+.. include:: ../examples_3d.rst
+
+
 References
 -------------------------------------------------------------------------------
 .. [#mpi] Message Passing Interface.  http://www.open-mpi.org/
