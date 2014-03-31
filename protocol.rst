@@ -378,8 +378,8 @@ unstructured (``dist_type`` is ``'u'``)
 Dimension dictionary aliases
 ````````````````````````````
 
-The following aliases are provided for convenience.  Only one is provided in
-the current version of this protocol, but more may be added in future versions.
+The following dimension dictionary alias is provided for convenience.  More
+aliases may be added in future versions of this protocol.
 
 Empty dimension dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
