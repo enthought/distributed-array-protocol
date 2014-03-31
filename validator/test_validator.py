@@ -88,3 +88,11 @@ class TestValidator(unittest.TestCase):
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(is_valid, msg)
+
+    def test_empty_dict_alias(self):
+        dimdata = {}
+        distbuffer = {'__version__': '1.0.0',
+                'buffer' : b'',
+                'dim_data' : (dimdata,)}
+        is_valid, msg = validator.validate(distbuffer)
+        self.assertTrue(is_valid, msg)
