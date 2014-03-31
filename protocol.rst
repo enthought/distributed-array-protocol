@@ -5,6 +5,7 @@ Distributed Array Protocol v0.9.0
 .. section-numbering::
 .. Contents::
 
+
 Overview
 -------------------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ Major usecases supported by the protocol include:
 
 * Block, cyclic, and block-cyclic distributions for structured arrays.
 
-* Padded block distributed arrays for finite differencing applications.  
+* Padded block-distributed arrays for finite differencing applications.
 
 * Unstructured distributions for arbitrary mappings between global indices and
   local data.
@@ -66,7 +67,7 @@ The primary sources and inspiration for the DAP are:
 
 
 Definitions
------------
+-------------------------------------------------------------------------------
 
 process
     A **process** is the basic unit of execution and is equivalent to a
@@ -81,24 +82,25 @@ process rank
     contiguously from the range ``0 ... N-1`` for ``N`` processes.
 
 process grid
-  The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
-  uniquely identifies a process, and the process grid maps process ranks to
-  grid coordinates.  Process ranks are assigned to their corresponding grid
-  coordinate in "C-order", i.e., the last index varies fastest when iterating
-  through coordinates in rank order.  The product of the number of processes in
-  each dimension in the process grid shall be equal to the total number of
-  processes.
-  
-  For example, for an ``N`` by ``M`` process grid over ``N * M`` processes with
-  ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)`` corresponds
-  to the process with rank ``i*M + j``.  
+    The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
+    uniquely identifies a process, and the process grid maps process ranks to
+    grid coordinates.  Process ranks are assigned to their corresponding grid
+    coordinate in "C-order", i.e., the last index varies fastest when iterating
+    through coordinates in rank order.  The product of the number of processes
+    in each dimension in the process grid shall be equal to the total number of
+    processes.
 
-  (Note that the protocol's *process grid* is compatible with MPI's
-  ``MPI_Cart_create()`` command, and the MPI standard guarantees that Cartesian
-  process coordinates are always assigned to ranks in the same way and are
-  "C-order" by default [#mpivirtualtopologies]_.  The protocol makes no
-  assumption about which underlying communication library is being used, nor
-  does it require subscribing packages to implement a communication layer.)
+    For example, for an ``N`` by ``M`` process grid over ``N * M`` processes
+    with ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)``
+    corresponds to the process with rank ``i*M + j``.
+
+    (Note that the protocol's *process grid* is compatible with MPI's
+    ``MPI_Cart_create()`` command, and the MPI standard guarantees that
+    Cartesian process coordinates are always assigned to ranks in the same way
+    and are "C-order" by default [#mpivirtualtopologies]_.  The protocol makes
+    no assumption about which underlying communication library is being used,
+    nor does it require subscribing packages to implement a communication
+    layer.)
 
 distributed array
     A single logical array of arbitrary dimensionality that is divided among
@@ -125,9 +127,9 @@ boundary padding
     the logical *boundary* of the entire domain.  These are physical or real
     boundaries and correspond to the elements or indices that are involved with
     the physical system's boundary conditions in a PDE application, for
-    example.  These elements are included in a distributed
-    dimension's ``'size'``.
-    
+    example.  These elements are included in a distributed dimension's
+    ``'size'``.
+
 communication padding
     Padding indices that are shared logically with a neighboring local array.
     These padding regions are used often in finite differencing applications
@@ -139,7 +141,7 @@ communication padding
 
 
 Exporting a Distributed Array
------------------------------
+-------------------------------------------------------------------------------
 
 A "producer" object that subscribes to the DAP shall provide a method named
 ``__distarray__`` that, when called by a consumer, returns a dictionary with
@@ -161,15 +163,14 @@ The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 distributed array, with the zeroth dictionary associated with the zeroth
 dimension of the array, and so on for each dimension in succession. There is
 one dimension dictionary per dimension.  These dictionaries are intended to
-include all metadata
-required to fully specify a distributed array's dimension information.  This
-tuple may be empty, indicating a zero-dimensional array.  The number of
-elements in the ``'dim_data'`` tuple must match the number of dimensions of the
-associated buffer object.
+include all metadata required to fully specify a distributed array's dimension
+information.  This tuple may be empty, indicating a zero-dimensional array.
+The number of elements in the ``'dim_data'`` tuple must match the number of
+dimensions of the associated buffer object.
 
 
 Dimension Dictionaries
-----------------------
+-------------------------------------------------------------------------------
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
 type string.  The ``dist_type`` of a dimension specifies the kind of
@@ -185,11 +186,10 @@ cyclic              'c'       common, 'start'           'block_size'
 unstructured        'u'       common, 'indices'         'one_to_one'
 =============== =========== ========================== =======================
 
-where "common" represents the keys common to all dist_types:
-``'dist_type'``, ``'size'``, ``'proc_grid_size'``, and
-``'proc_grid_rank'``.
+where "common" represents the keys common to all dist_types: ``'dist_type'``,
+``'size'``, ``'proc_grid_size'``, and ``'proc_grid_rank'``.
 
-Other dist_types may be added in future versions of the protocol.
+Other ``dist_type``\s may be added in future versions of the protocol.
 
 Required key-value pairs
 ````````````````````````
@@ -226,16 +226,13 @@ following key-value pairs:
               num_owned_elements -= padding[1]
           return num_owned_elements
 
-All *distributed* dimensions shall have the following keys in their dimension
-dictionary, with the associated value:
-
 * ``'proc_grid_size'`` : ``int``, >= 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
 
-  Constraint: the product of all ``'proc_grid_size'``\s for all distributed
-  dimensions shall equal the total number of processes.
+  Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
+  shall equal the total number of processes.
 
 * ``proc_grid_rank`` : ``int``
 
@@ -254,121 +251,124 @@ Distribution-type specific key-value pairs
 ``````````````````````````````````````````
 
 The remaining key-value pairs in each dimension dictionary depend on the
-``dist_type`` and are described below:
+``dist_type`` and are described below.
 
-* block (``dist_type`` is ``'b'``):
+block (``dist_type`` is ``'b'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  * ``start`` : ``int``, greater than or equal to zero.
+* ``start`` : ``int``, greater than or equal to zero.
 
-    The start index (inclusive and 0-based) of the global index space available
-    on this process.
+  The start index (inclusive and 0-based) of the global index space available
+  on this process.
 
-  * ``stop`` : ``int``, greater than the ``start`` value
+* ``stop`` : ``int``, greater than the ``start`` value
 
-    The stop index (exclusive, as in standard Python indexing) of the global
-    index space available on this process.
+  The stop index (exclusive, as in standard Python indexing) of the global
+  index space available on this process.
 
-    For a block-distributed dimension, adjacent processes as determined by the
-    dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
-    index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
-    and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
-    ``start`` of ``b``.  Processes may contain differently-sized global index
-    ranges.
+  For a block-distributed dimension, adjacent processes as determined by the
+  dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
+  index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
+  and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
+  ``start`` of ``b``.  Processes may contain differently-sized global index
+  ranges.
 
-    For every block-distributed dimension ``i``, ``stop - start`` must be equal
-    to ``buffer.shape[i]``.
+  For every block-distributed dimension ``i``, ``stop - start`` must be equal
+  to ``buffer.shape[i]``.
 
-  * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
-    Optional.
+* ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
+  Optional.
 
-    The padding tuple describes the width of the padding region at the
-    beginning and end of a buffer in a particular dimension.  Padding
-    represents extra allocation for an array, but padding values are in some
-    sense not "owned" by the local array and are reserved for other purposes.
+  The padding tuple describes the width of the padding region at the beginning
+  and end of a buffer in a particular dimension.  Padding represents extra
+  allocation for an array, but padding values are in some sense not "owned" by
+  the local array and are reserved for other purposes.
 
-    For the dimension dictionary with ``proc_grid_rank == 0``, the first
-    element in ``padding`` is the width of the boundary padding; this is extra
-    allocation reserved for boundary logic in applications that need it.  For
-    the dimension dictionary with ``proc_grid_rank == proc_grid_size-1``, the
-    second element in ``padding`` is the width of the boundary padding. All
-    other ``padding`` tuple values are for communication padding and represent
-    extra allocation reserved for communication between processes. All
-    communication padding widths must be the same for a dimension.
+  For the dimension dictionary with ``proc_grid_rank == 0``, the first element
+  in ``padding`` is the width of the boundary padding; this is extra allocation
+  reserved for boundary logic in applications that need it.  For the dimension
+  dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
+  ``padding`` is the width of the boundary padding. All other ``padding`` tuple
+  values are for communication padding and represent extra allocation reserved
+  for communication between processes. All communication padding widths must be
+  the same for a dimension.
 
-    For example, consider a one-dimensional block-distributed array distributed
-    over four processes.  Let its boundary padding have a width of 3 and its
-    communication padding have a width of 2. The padding tuple for the local
-    array on each rank would be:
+  For example, consider a one-dimensional block-distributed array distributed
+  over four processes.  Let its boundary padding have a width of 3 and its
+  communication padding have a width of 2. The padding tuple for the local
+  array on each rank would be:
 
-    ============== ====== ====== ====== ======
-    proc_grid_rank  0      1      2      3
-    ============== ====== ====== ====== ======
-    padding        (3, 2) (2, 2) (2, 2) (2, 3)
-    ============== ====== ====== ====== ======
+  ============== ====== ====== ====== ======
+  proc_grid_rank  0      1      2      3
+  ============== ====== ====== ====== ======
+  padding        (3, 2) (2, 2) (2, 2) (2, 3)
+  ============== ====== ====== ====== ======
 
-    If the value associated with ``padding`` is the tuple ``(0,0)`` (the
-    default), this indicates the local array is not padded in this dimension.
+  If the value associated with ``padding`` is the tuple ``(0,0)`` (the
+  default), this indicates the local array is not padded in this dimension.
 
-  * ``periodic`` : ``bool``, optional
+* ``periodic`` : ``bool``, optional
 
-    Indicates whether this dimension is periodic.  When not present, indicates
-    this dimension is not periodic, equivalent to a value of ``False``.
+  Indicates whether this dimension is periodic.  When not present, indicates
+  this dimension is not periodic, equivalent to a value of ``False``.
 
-* cyclic (``dist_type`` is ``'c'``):
+cyclic (``dist_type`` is ``'c'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  * ``start`` : ``int``, greater than or equal to zero.
+* ``start`` : ``int``, greater than or equal to zero.
 
-    The start index (inclusive, 0-based) of the global index space available on
-    this process.
+  The start index (inclusive, 0-based) of the global index space available on
+  this process.
 
-    The cyclic distribution is what results from assigning global indices--or
-    contiguous blocks of indices, in the case when ``block_size`` is greater
-    than one--to processes in round-robin fashion.  When ``block_size`` equals
-    one, a Python slice formed from the ``start``, ``size``, and
-    ``proc_grid_size`` values would reproduce the local array's indices.
+  The cyclic distribution is what results from assigning global indices--or
+  contiguous blocks of indices, in the case when ``block_size`` is greater than
+  one--to processes in round-robin fashion.  When ``block_size`` equals one, a
+  Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
+  values would reproduce the local array's indices.
 
-  * ``block_size`` : ``int``, greater than or equal to one. Optional.
+* ``block_size`` : ``int``, greater than or equal to one. Optional.
 
-    Indicates the size of contiguous blocks of indices for this dimension.  If
-    absent, equivalent to the case when ``block_size`` is present and equal to
-    one.
+  Indicates the size of contiguous blocks of indices for this dimension.  If
+  absent, equivalent to the case when ``block_size`` is present and equal to
+  one.
 
-    If ``block_size == 1`` (the default), this specifies the "true" cyclic
-    distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
-    ``block_size == ceil(size / proc_grid_size)``, this distribution is
-    equivalent to an evenly-distributed block distribution.  If ``1 <
-    block_size < size // proc_grid_size``, then this specifies a distribution
-    sometimes called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
+  If ``block_size == 1`` (the default), this specifies the "true" cyclic
+  distribution as described in the ScaLAPACK documentation [#bcnetlib]_.  If
+  ``block_size == ceil(size / proc_grid_size)``, this distribution is
+  equivalent to an evenly-distributed block distribution.  If ``1 < block_size
+  < size // proc_grid_size``, then this specifies a distribution sometimes
+  called "block-cyclic" [#bcnetlib]_ [#bcibm]_.
 
-    Block-cyclic is a generalization of (evenly-distributed) block and cyclic
-    distribution types.  It can be thought of as as a cyclic distribution with
-    contiguous blocks of global indices (rather than single indices)
-    distributed in a round robin fashion.
+  Block-cyclic is a generalization of (evenly-distributed) block and cyclic
+  distribution types.  It can be thought of as as a cyclic distribution with
+  contiguous blocks of global indices (rather than single indices) distributed
+  in a round robin fashion.
 
-    Note that since this protocol allows for block-distributed dimensions with
-    irregular numbers of indices on each process, not all 'block'-distributed
-    dimensions describable by this protocol can be represented as 'cyclic' with
-    the 'block-size' key.
+  Note that since this protocol allows for block-distributed dimensions with
+  irregular numbers of indices on each process, not all 'block'-distributed
+  dimensions describable by this protocol can be represented as 'cyclic' with
+  the 'block-size' key.
 
-* unstructured (``dist_type`` is ``'u'``):
+unstructured (``dist_type`` is ``'u'``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  * ``indices``: buffer (or buffer-compatible) of ``int``
+* ``indices``: buffer (or buffer-compatible) of ``int``
 
-    Global indices available on this process.
+  Global indices available on this process.
 
-    The only constraint that applies to the ``indices`` buffer is that the
-    values are locally unique.  The indices values are otherwise unconstrained:
-    they can be negative, unordered, and non-contiguous.
+  The only constraint that applies to the ``indices`` buffer is that the values
+  are locally unique.  The indices values are otherwise unconstrained: they can
+  be negative, unordered, and non-contiguous.
 
-  * ``one_to_one`` : bool, optional.
+* ``one_to_one`` : bool, optional.
 
-    If not present, shall be equivalent to being present with a `False` value.
+  If not present, shall be equivalent to being present with a `False` value.
 
-    If `False`, indicates that some global indices may be duplicated in two or
-    more local ``indices`` buffers.
+  If `False`, indicates that some global indices may be duplicated in two or
+  more local ``indices`` buffers.
 
-    If `True`, a global index shall be located in exactly one local ``indices``
-    buffer.
+  If `True`, a global index shall be located in exactly one local ``indices``
+  buffer.
 
 
 General constraints
@@ -376,13 +376,13 @@ General constraints
 
 Empty local buffers
 ~~~~~~~~~~~~~~~~~~~
+
 It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
 situations may arise when downsampling or slicing a distributed array.
 
 The following properties of a dimension dictionary imply an empty local buffer:
 
-* With any ``dist_type``: ``proc_grid_size == 0``
 * With any ``dist_type``: ``size == 0``
 * With ``'b'`` or ``'c'`` ``dist_type``\s:  ``start == size``
 * With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
@@ -390,6 +390,7 @@ The following properties of a dimension dictionary imply an empty local buffer:
 
 Global array size
 ~~~~~~~~~~~~~~~~~
+
 The global number of elements in an array is the product of the ``size``\s of
 the dimension dictionaries, or 1 if the ``dim_data`` sequence is empty.  In
 Python syntax, this would be ``reduce(operator.mul, global_shape, 1)`` where
@@ -400,6 +401,7 @@ is the ``size`` of the dimension dictionary for dimension ``i``.  If
 
 Identical ``dim_data`` along an axis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
 = dim_data[i]['proc_grid_rank']`` for some dimension ``i``, then all processes
 with the same ``rank`` for dimension ``i`` must have the same values for other
