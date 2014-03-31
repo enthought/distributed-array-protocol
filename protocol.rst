@@ -262,7 +262,8 @@ block (``dist_type`` is ``'b'``)
   The start index (inclusive and 0-based) of the global index space available
   on this process.
 
-* ``stop`` : ``int``, greater than the ``start`` value
+* ``stop`` : ``int``, greater than the ``start`` value, less than or equal to
+  the ``size`` value.
 
   The stop index (exclusive, as in standard Python indexing) of the global
   index space available on this process.

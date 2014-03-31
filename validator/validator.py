@@ -86,6 +86,11 @@ def _validate_block(idx, dim_dict):
     if stop < start:
         msg = 'stop (%d) for dimension %d is less than start (%d).'
         return (False, msg % (stop, idx, start))
+    size = dim_dict['size']
+    if stop > size:
+        msg = 'stop (%d) for dimension %d is greater than size (%d).'
+        return (False, msg % (stop, idx, size))
+
 
     # Validate padding.
     padding = dim_dict.get('padding', (0,0))
