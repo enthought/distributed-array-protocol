@@ -424,10 +424,10 @@ Undistributed dimensions
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 A dimension with ``proc_grid_size == 1`` is essentially undistributed; it is
-"distributed" over a single process.  Block-distributed dimensions of this type
-with the optional ``periodic`` and ``padding`` keys are supported by this
-protocol; block-distributed dimensions with ``periodic == True`` and nonzero
-values in their ``padding`` tuple are also supported.
+"distributed" over a single process.  Block-distributed dimensions with
+``proc_grid_size == 1`` and with the ``periodic`` and ``padding`` keys present
+are valid.  The ``periodic == True`` and ``padding`` values indicate this array
+is periodic on one processor, with associated padding regions.
 
 Global array size
 ~~~~~~~~~~~~~~~~~
