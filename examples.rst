@@ -429,6 +429,76 @@ The local arrays, on each separate engine:
 |  'stop': 7})                    |  'stop': 9})                    |
 +---------------------------------+---------------------------------+
 
+BlockCyclic, BlockCyclic
+````````````````````````
+
+A (5 X 9) array, with a BlockCyclic, BlockCyclic ('bc' x 'bc') distribution over a (2 X 2) process grid.
+
+.. image:: ../images/plot_blockcyclic_blockcyclic.png
+
+The full (undistributed) array:
+
+>>> full_array
+array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+       [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.],
+       [ 18.,  19.,  20.,  21.,  22.,  23.,  24.,  25.,  26.],
+       [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.],
+       [ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])
+
+In all processes, we have:
+
+>>> distbuffer = local_array.__distarray__()
+>>> distbuffer.keys()
+['buffer', 'dim_data', '__version__']
+>>> distbuffer['__version__']
+'1.0.0'
+
+The local arrays, on each separate engine:
+
+.. image:: ../images/plot_blockcyclic_blockcyclic_local.png
+
++---------------------------------------+---------------------------------------+
+|In process 0:                          |In process 1:                          |
+|                                       |                                       |
+|>>> distbuffer['buffer']               |>>> distbuffer['buffer']               |
+|array([[  0.,   1.,   4.,   5.,   8.], |array([[  2.,   3.,   6.,   7.],       |
+|       [  9.,  10.,  13.,  14.,  17.], |       [ 11.,  12.,  15.,  16.],       |
+|       [ 36.,  37.,  40.,  41.,  44.]])|       [ 38.,  39.,  42.,  43.]])      |
+|>>> distbuffer['dim_data']             |>>> distbuffer['dim_data']             |
+|({'block_size': 2,                     |({'block_size': 2,                     |
+|  'dist_type': 'c',                    |  'dist_type': 'c',                    |
+|  'proc_grid_rank': 0,                 |  'proc_grid_rank': 0,                 |
+|  'proc_grid_size': 2,                 |  'proc_grid_size': 2,                 |
+|  'size': 5,                           |  'size': 5,                           |
+|  'start': 0},                         |  'start': 0},                         |
+| {'block_size': 2,                     | {'block_size': 2,                     |
+|  'dist_type': 'c',                    |  'dist_type': 'c',                    |
+|  'proc_grid_rank': 0,                 |  'proc_grid_rank': 1,                 |
+|  'proc_grid_size': 2,                 |  'proc_grid_size': 2,                 |
+|  'size': 9,                           |  'size': 9,                           |
+|  'start': 0})                         |  'start': 2})                         |
++---------------------------------------+---------------------------------------+
+|In process 2:                          |In process 3:                          |
+|                                       |                                       |
+|>>> distbuffer['buffer']               |>>> distbuffer['buffer']               |
+|array([[ 18.,  19.,  22.,  23.,  26.], |array([[ 20.,  21.,  24.,  25.],       |
+|       [ 27.,  28.,  31.,  32.,  35.]])|       [ 29.,  30.,  33.,  34.]])      |
+|>>> distbuffer['dim_data']             |>>> distbuffer['dim_data']             |
+|({'block_size': 2,                     |({'block_size': 2,                     |
+|  'dist_type': 'c',                    |  'dist_type': 'c',                    |
+|  'proc_grid_rank': 1,                 |  'proc_grid_rank': 1,                 |
+|  'proc_grid_size': 2,                 |  'proc_grid_size': 2,                 |
+|  'size': 5,                           |  'size': 5,                           |
+|  'start': 2},                         |  'start': 2},                         |
+| {'block_size': 2,                     | {'block_size': 2,                     |
+|  'dist_type': 'c',                    |  'dist_type': 'c',                    |
+|  'proc_grid_rank': 0,                 |  'proc_grid_rank': 1,                 |
+|  'proc_grid_size': 2,                 |  'proc_grid_size': 2,                 |
+|  'size': 9,                           |  'size': 9,                           |
+|  'start': 0})                         |  'start': 2})                         |
+|                                       |                                       |
++---------------------------------------+---------------------------------------+
+
 Unstructured, Unstructured
 ``````````````````````````
 
