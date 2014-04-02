@@ -371,22 +371,32 @@ unstructured (``dist_type`` is ``'u'``)
   buffer.
 
 
-General constraints
-```````````````````
+General comments
+````````````````
 
 Empty local buffers
 ~~~~~~~~~~~~~~~~~~~
 
 It shall be possible for one or more local array sections to contain no data.
 This is supported by the protocol and is not an invalid state.  These
-situations may arise when downsampling or slicing a distributed array.
+situations may arise explicitly or when downsampling or slicing a distributed
+array.
 
 The following properties of a dimension dictionary imply an empty local buffer:
 
 * With any ``dist_type``: ``size == 0``
-* With ``'b'`` or ``'c'`` ``dist_type``\s:  ``start == size``
-* With the ``'b'`` ``dist_type``: ``start == size`` (this also implies that ``start == stop``)
+* With the ``'b'`` or ``'c'`` ``dist_type``:  ``start == size``
+* With the ``'b'`` ``dist_type``: ``start == stop``
 * With the ``'u'`` ``dist_type``: ``len(indices) == 0``
+
+Undistributed dimensions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+A dimension with ``proc_grid_size == 1`` is essentially undistributed; it is
+"distributed" over a single process.  Block-distributed dimensions with
+``proc_grid_size == 1`` and with the ``periodic`` and ``padding`` keys present
+are valid.  The ``periodic == True`` and ``padding`` values indicate this array
+is periodic on one processor, with associated padding regions.
 
 Global array size
 ~~~~~~~~~~~~~~~~~
