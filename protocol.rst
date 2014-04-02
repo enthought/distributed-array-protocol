@@ -329,7 +329,7 @@ cyclic (``dist_type`` is ``'c'``)
   contiguous blocks of indices, in the case when ``block_size`` is greater than
   one--to processes in round-robin fashion.  When ``block_size`` equals one, a
   Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
-  values would reproduce the local array's indices.
+  values selects the global indices that are owned by this local array.
 
 * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
