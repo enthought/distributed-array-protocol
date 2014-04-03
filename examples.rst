@@ -1,94 +1,9 @@
-Block, Nondistributed
-`````````````````````
+Block, Block
+````````````
 
-A (5 X 9) array, with a Block, Nondistributed ('b' x 'n') distribution over a (4 X 1) process grid.
+A (5 X 9) array, with a Block, Block ('b' x 'b') distribution over a (4 X 1) process grid.
 
-.. image:: ../images/plot_block_nondist.png
-
-The full (undistributed) array:
-
-.. code-block:: python
-
-    >>> full_array
-    array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
-           [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.],
-           [ 18.,  19.,  20.,  21.,  22.,  23.,  24.,  25.,  26.],
-           [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.],
-           [ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])
-
-In all processes, we have:
-
-.. code-block:: python
-
-    >>> distbuffer = local_array.__distarray__()
-    >>> distbuffer.keys()
-    ['buffer', 'dim_data', '__version__']
-    >>> distbuffer['__version__']
-    '1.0.0'
-
-The local arrays, on each separate engine:
-
-.. image:: ../images/plot_block_nondist_local.png
-
-+-----------------------------------------------------------------------------+
-|In process (0, 0):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],           |
-|           [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.]])          |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 0,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 5,                                                             |
-|      'start': 0,                                                            |
-|      'stop': 2},                                                            |
-|     {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 9})|
-|                                                                             |
-+-----------------------------------------------------------------------------+
-|In process (1, 0):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[ 18.,  19.,  20.,  21.,  22.,  23.,  24.,  25.,  26.],           |
-|           [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.]])          |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 1,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 5,                                                             |
-|      'start': 2,                                                            |
-|      'stop': 4},                                                            |
-|     {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 9})|
-|                                                                             |
-+-----------------------------------------------------------------------------+
-|In process (2, 0):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])          |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 2,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 5,                                                             |
-|      'start': 4,                                                            |
-|      'stop': 5},                                                            |
-|     {'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 9})|
-|                                                                             |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-
-Nondistributed, Block
-`````````````````````
-
-A (5 X 9) array, with a Nondistributed, Block ('n' x 'b') distribution over a (1 X 4) process grid.
-
-.. image:: ../images/plot_nondist_block.png
+.. image:: ../images/plot_block_block_4x1.png
 
 The full (undistributed) array:
 
@@ -113,76 +28,191 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_nondist_block_local.png
+.. image:: ../images/plot_block_block_4x1_local.png
 
-+-----------------------------------------------------------------------------+
-|In process (0, 0):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[  0.,   1.,   2.],                                               |
-|           [  9.,  10.,  11.],                                               |
-|           [ 18.,  19.,  20.],                                               |
-|           [ 27.,  28.,  29.],                                               |
-|           [ 36.,  37.,  38.]])                                              |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 5},|
-|     {'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 0,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 9,                                                             |
-|      'start': 0,                                                            |
-|      'stop': 3})                                                            |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-|In process (0, 1):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[  3.,   4.,   5.],                                               |
-|           [ 12.,  13.,  14.],                                               |
-|           [ 21.,  22.,  23.],                                               |
-|           [ 30.,  31.,  32.],                                               |
-|           [ 39.,  40.,  41.]])                                              |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 5},|
-|     {'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 1,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 9,                                                             |
-|      'start': 3,                                                            |
-|      'stop': 6})                                                            |
-|                                                                             |
-+-----------------------------------------------------------------------------+
-|In process (0, 2):                                                           |
-|                                                                             |
-|.. code-block:: python                                                       |
-|                                                                             |
-|    >>> distbuffer['buffer']                                                 |
-|    array([[  6.,   7.,   8.],                                               |
-|           [ 15.,  16.,  17.],                                               |
-|           [ 24.,  25.,  26.],                                               |
-|           [ 33.,  34.,  35.],                                               |
-|           [ 42.,  43.,  44.]])                                              |
-|    >>> distbuffer['dim_data']                                               |
-|    ({'dist_type': 'n', 'proc_grid_rank': 0, 'proc_grid_size': 1, 'size': 5},|
-|     {'dist_type': 'b',                                                      |
-|      'proc_grid_rank': 2,                                                   |
-|      'proc_grid_size': 4,                                                   |
-|      'size': 9,                                                             |
-|      'start': 6,                                                            |
-|      'stop': 9})                                                            |
-|                                                                             |
-+-----------------------------------------------------------------------------+
++-------------------------------------------------------------------+
+|In process (0, 0):                                                 |
+|                                                                   |
+|.. code-block:: python                                             |
+|                                                                   |
+|    >>> distbuffer['buffer']                                       |
+|    array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.], |
+|           [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.]])|
+|    >>> distbuffer['dim_data']                                     |
+|    ({'dist_type': 'b',                                            |
+|      'proc_grid_rank': 0,                                         |
+|      'proc_grid_size': 4,                                         |
+|      'size': 5,                                                   |
+|      'start': 0,                                                  |
+|      'stop': 2},                                                  |
+|     {'dist_type': 'b',                                            |
+|      'proc_grid_rank': 0,                                         |
+|      'proc_grid_size': 1,                                         |
+|      'size': 9,                                                   |
+|      'start': 0,                                                  |
+|      'stop': 9})                                                  |
+|                                                                   |
++-------------------------------------------------------------------+
+|In process (1, 0):                                                 |
+|                                                                   |
+|.. code-block:: python                                             |
+|                                                                   |
+|    >>> distbuffer['buffer']                                       |
+|    array([[ 18.,  19.,  20.,  21.,  22.,  23.,  24.,  25.,  26.], |
+|           [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.]])|
+|    >>> distbuffer['dim_data']                                     |
+|    ({'dist_type': 'b',                                            |
+|      'proc_grid_rank': 1,                                         |
+|      'proc_grid_size': 4,                                         |
+|      'size': 5,                                                   |
+|      'start': 2,                                                  |
+|      'stop': 4},                                                  |
+|     {'dist_type': 'b',                                            |
+|      'proc_grid_rank': 0,                                         |
+|      'proc_grid_size': 1,                                         |
+|      'size': 9,                                                   |
+|      'start': 0,                                                  |
+|      'stop': 9})                                                  |
+|                                                                   |
++-------------------------------------------------------------------+
+|In process (2, 0):                                                 |
+|                                                                   |
+|.. code-block:: python                                             |
+|                                                                   |
+|    >>> distbuffer['buffer']                                       |
+|    array([[ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])|
+|    >>> distbuffer['dim_data']                                     |
+|    ({'dist_type': 'b',                                            |
+|      'proc_grid_rank': 2,                                         |
+|      'proc_grid_size': 4,                                         |
+|      'size': 5,                                                   |
+|      'start': 4,                                                  |
+|      'stop': 5},                                                  |
+|     {'dist_type': 'b',                                            |
+|      'proc_grid_rank': 0,                                         |
+|      'proc_grid_size': 1,                                         |
+|      'size': 9,                                                   |
+|      'start': 0,                                                  |
+|      'stop': 9})                                                  |
+|                                                                   |
+|                                                                   |
++-------------------------------------------------------------------+
+
+Block, Block
+````````````
+
+A (5 X 9) array, with a Block, Block ('b' x 'b') distribution over a (1 X 4) process grid.
+
+.. image:: ../images/plot_block_block_1x4.png
+
+The full (undistributed) array:
+
+.. code-block:: python
+
+    >>> full_array
+    array([[  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.],
+           [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.],
+           [ 18.,  19.,  20.,  21.,  22.,  23.,  24.,  25.,  26.],
+           [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.],
+           [ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])
+
+In all processes, we have:
+
+.. code-block:: python
+
+    >>> distbuffer = local_array.__distarray__()
+    >>> distbuffer.keys()
+    ['buffer', 'dim_data', '__version__']
+    >>> distbuffer['__version__']
+    '1.0.0'
+
+The local arrays, on each separate engine:
+
+.. image:: ../images/plot_block_block_1x4_local.png
+
++-------------------------------+
+|In process (0, 0):             |
+|                               |
+|.. code-block:: python         |
+|                               |
+|    >>> distbuffer['buffer']   |
+|    array([[  0.,   1.,   2.], |
+|           [  9.,  10.,  11.], |
+|           [ 18.,  19.,  20.], |
+|           [ 27.,  28.,  29.], |
+|           [ 36.,  37.,  38.]])|
+|    >>> distbuffer['dim_data'] |
+|    ({'dist_type': 'b',        |
+|      'proc_grid_rank': 0,     |
+|      'proc_grid_size': 1,     |
+|      'size': 5,               |
+|      'start': 0,              |
+|      'stop': 5},              |
+|     {'dist_type': 'b',        |
+|      'proc_grid_rank': 0,     |
+|      'proc_grid_size': 4,     |
+|      'size': 9,               |
+|      'start': 0,              |
+|      'stop': 3})              |
+|                               |
++-------------------------------+
+|In process (0, 1):             |
+|                               |
+|.. code-block:: python         |
+|                               |
+|    >>> distbuffer['buffer']   |
+|    array([[  3.,   4.,   5.], |
+|           [ 12.,  13.,  14.], |
+|           [ 21.,  22.,  23.], |
+|           [ 30.,  31.,  32.], |
+|           [ 39.,  40.,  41.]])|
+|    >>> distbuffer['dim_data'] |
+|    ({'dist_type': 'b',        |
+|      'proc_grid_rank': 0,     |
+|      'proc_grid_size': 1,     |
+|      'size': 5,               |
+|      'start': 0,              |
+|      'stop': 5},              |
+|     {'dist_type': 'b',        |
+|      'proc_grid_rank': 1,     |
+|      'proc_grid_size': 4,     |
+|      'size': 9,               |
+|      'start': 3,              |
+|      'stop': 6})              |
+|                               |
++-------------------------------+
+|In process (0, 2):             |
+|                               |
+|.. code-block:: python         |
+|                               |
+|    >>> distbuffer['buffer']   |
+|    array([[  6.,   7.,   8.], |
+|           [ 15.,  16.,  17.], |
+|           [ 24.,  25.,  26.], |
+|           [ 33.,  34.,  35.], |
+|           [ 42.,  43.,  44.]])|
+|    >>> distbuffer['dim_data'] |
+|    ({'dist_type': 'b',        |
+|      'proc_grid_rank': 0,     |
+|      'proc_grid_size': 1,     |
+|      'size': 5,               |
+|      'start': 0,              |
+|      'stop': 5},              |
+|     {'dist_type': 'b',        |
+|      'proc_grid_rank': 2,     |
+|      'proc_grid_size': 4,     |
+|      'size': 9,               |
+|      'start': 6,              |
+|      'stop': 9})              |
+|                               |
++-------------------------------+
 
 Block, Block
 ````````````
 
 A (5 X 9) array, with a Block, Block ('b' x 'b') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_block_block.png
+.. image:: ../images/plot_block_block_2x2.png
 
 The full (undistributed) array:
 
@@ -207,7 +237,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_block_local.png
+.. image:: ../images/plot_block_block_2x2_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
@@ -411,12 +441,12 @@ The local arrays, on each separate engine:
 |                                           |                                           |
 +-------------------------------------------+-------------------------------------------+
 
-Block, Irregular-Block
-``````````````````````
+Irregular-Block, Irregular-Block
+````````````````````````````````
 
-A (5 X 9) array, with a Block, Irregular-Block ('b' x 'b') distribution over a (1 X 4) process grid.
+A (5 X 9) array, with a Irregular-Block, Irregular-Block ('b' x 'b') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_block_irregularblock.png
+.. image:: ../images/plot_irregularblock_irregularblock.png
 
 The full (undistributed) array:
 
@@ -441,64 +471,62 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_irregularblock_local.png
+.. image:: ../images/plot_irregularblock_irregularblock_local.png
 
-+-------------------------------------+-------------------------------------+
-|In process (0, 0):                   |In process (0, 1):                   |
-|                                     |                                     |
-|.. code-block:: python               |.. code-block:: python               |
-|                                     |                                     |
-|    >>> distbuffer['buffer']         |    >>> distbuffer['buffer']         |
-|    array([[  0.,   1.],             |    array([[  2.,   3.,   4.,   5.], |
-|           [  9.,  10.],             |           [ 11.,  12.,  13.,  14.], |
-|           [ 18.,  19.],             |           [ 20.,  21.,  22.,  23.], |
-|           [ 27.,  28.],             |           [ 29.,  30.,  31.,  32.], |
-|           [ 36.,  37.]])            |           [ 38.,  39.,  40.,  41.]])|
-|    >>> distbuffer['dim_data']       |    >>> distbuffer['dim_data']       |
-|    ({'dist_type': 'b',              |    ({'dist_type': 'b',              |
-|      'proc_grid_rank': 0,           |      'proc_grid_rank': 0,           |
-|      'proc_grid_size': 1,           |      'proc_grid_size': 1,           |
-|      'size': 5,                     |      'size': 5,                     |
-|      'start': 0,                    |      'start': 0,                    |
-|      'stop': 5},                    |      'stop': 5},                    |
-|     {'dist_type': 'b',              |     {'dist_type': 'b',              |
-|      'proc_grid_rank': 0,           |      'proc_grid_rank': 1,           |
-|      'proc_grid_size': 4,           |      'proc_grid_size': 4,           |
-|      'size': 9,                     |      'size': 9,                     |
-|      'start': 0,                    |      'start': 2,                    |
-|      'stop': 2})                    |      'stop': 6})                    |
-|                                     |                                     |
-+-------------------------------------+-------------------------------------+
-|In process (0, 2):                   |In process (0, 3):                   |
-|                                     |                                     |
-|.. code-block:: python               |.. code-block:: python               |
-|                                     |                                     |
-|    >>> distbuffer['buffer']         |    >>> distbuffer['buffer']         |
-|    array([[  6.],                   |    array([[  7.,   8.],             |
-|           [ 15.],                   |           [ 16.,  17.],             |
-|           [ 24.],                   |           [ 25.,  26.],             |
-|           [ 33.],                   |           [ 34.,  35.],             |
-|           [ 42.]])                  |           [ 43.,  44.]])            |
-|    >>> distbuffer['dim_data']       |    >>> distbuffer['dim_data']       |
-|    ({'dist_type': 'b',              |    ({'dist_type': 'b',              |
-|      'proc_grid_rank': 0,           |      'proc_grid_rank': 0,           |
-|      'proc_grid_size': 1,           |      'proc_grid_size': 1,           |
-|      'size': 5,                     |      'size': 5,                     |
-|      'start': 0,                    |      'start': 0,                    |
-|      'stop': 5},                    |      'stop': 5},                    |
-|     {'dist_type': 'b',              |     {'dist_type': 'b',              |
-|      'proc_grid_rank': 2,           |      'proc_grid_rank': 3,           |
-|      'proc_grid_size': 4,           |      'proc_grid_size': 4,           |
-|      'size': 9,                     |      'size': 9,                     |
-|      'start': 6,                    |      'start': 7,                    |
-|      'stop': 7})                    |      'stop': 9})                    |
-|                                     |                                     |
-+-------------------------------------+-------------------------------------+
++-------------------------------------------------------+-------------------------------------------------------+
+|In process (0, 0):                                     |In process (0, 1):                                     |
+|                                                       |                                                       |
+|.. code-block:: python                                 |.. code-block:: python                                 |
+|                                                       |                                                       |
+|    >>> distbuffer['buffer']                           |    >>> distbuffer['buffer']                           |
+|    array([[ 0.,  1.]])                                |    array([[ 2.,  3.,  4.,  5.,  6.,  7.,  8.]])       |
+|    >>> distbuffer['dim_data']                         |    >>> distbuffer['dim_data']                         |
+|    ({'dist_type': 'b',                                |    ({'dist_type': 'b',                                |
+|      'proc_grid_rank': 0,                             |      'proc_grid_rank': 0,                             |
+|      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
+|      'size': 5,                                       |      'size': 5,                                       |
+|      'start': 0,                                      |      'start': 0,                                      |
+|      'stop': 1},                                      |      'stop': 1},                                      |
+|     {'dist_type': 'b',                                |     {'dist_type': 'b',                                |
+|      'proc_grid_rank': 0,                             |      'proc_grid_rank': 1,                             |
+|      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
+|      'size': 9,                                       |      'size': 9,                                       |
+|      'start': 0,                                      |      'start': 2,                                      |
+|      'stop': 2})                                      |      'stop': 9})                                      |
+|                                                       |                                                       |
+|                                                       |                                                       |
+|                                                       |                                                       |
+|                                                       |                                                       |
++-------------------------------------------------------+-------------------------------------------------------+
+|In process (1, 0):                                     |In process (1, 1):                                     |
+|                                                       |                                                       |
+|.. code-block:: python                                 |.. code-block:: python                                 |
+|                                                       |                                                       |
+|    >>> distbuffer['buffer']                           |    >>> distbuffer['buffer']                           |
+|    array([[  9.,  10.],                               |    array([[ 11.,  12.,  13.,  14.,  15.,  16.,  17.], |
+|           [ 18.,  19.],                               |           [ 20.,  21.,  22.,  23.,  24.,  25.,  26.], |
+|           [ 27.,  28.],                               |           [ 29.,  30.,  31.,  32.,  33.,  34.,  35.], |
+|           [ 36.,  37.]])                              |           [ 38.,  39.,  40.,  41.,  42.,  43.,  44.]])|
+|    >>> distbuffer['dim_data']                         |    >>> distbuffer['dim_data']                         |
+|    ({'dist_type': 'b',                                |    ({'dist_type': 'b',                                |
+|      'proc_grid_rank': 1,                             |      'proc_grid_rank': 1,                             |
+|      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
+|      'size': 5,                                       |      'size': 5,                                       |
+|      'start': 1,                                      |      'start': 1,                                      |
+|      'stop': 5},                                      |      'stop': 5},                                      |
+|     {'dist_type': 'b',                                |     {'dist_type': 'b',                                |
+|      'proc_grid_rank': 0,                             |      'proc_grid_rank': 1,                             |
+|      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
+|      'size': 9,                                       |      'size': 9,                                       |
+|      'start': 0,                                      |      'start': 2,                                      |
+|      'stop': 2})                                      |      'stop': 9})                                      |
+|                                                       |                                                       |
++-------------------------------------------------------+-------------------------------------------------------+
 
 BlockCyclic, BlockCyclic
 ````````````````````````
 
-A (5 X 9) array, with a BlockCyclic, BlockCyclic ('bc' x 'bc') distribution over a (2 X 2) process grid.
+A (5 X 9) array, with a BlockCyclic, BlockCyclic ('b' x 'b') distribution over a (2 X 2) process grid.
 
 .. image:: ../images/plot_blockcyclic_blockcyclic.png
 
