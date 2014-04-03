@@ -213,14 +213,14 @@ following key-value pairs:
 
   .. code:: python
 
-      def calc_num_owned_elements(dimdict):
-          num_owned_elements = dimdict['size']
-          padding = dimdict.get('padding', (0,0))
-          if dimdict['proc_grid_rank'] != 0:
+      def calc_num_owned_elements(dim_dict):
+          num_owned_elements = dim_dict['size']
+          padding = dim_dict.get('padding', (0,0))
+          if dim_dict['proc_grid_rank'] != 0:
               # We are not at the left boundary, so remove
               # communication buffer for left edge.
               num_owned_elements -= padding[0]
-          if dimdict['proc_grid_size']-1 != dimdict['proc_grid_rank']:
+          if dim_dict['proc_grid_size']-1 != dim_dict['proc_grid_rank']:
               # we are not at the right boundary, so remove
               # communication buffer for right edge.
               num_owned_elements -= padding[1]
