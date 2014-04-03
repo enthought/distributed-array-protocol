@@ -202,7 +202,7 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``, >= 0
+* ``'size'`` : ``int``, greater than or equal to 0
 
   Total number of global array elements along this dimension.
 
@@ -216,17 +216,17 @@ following key-value pairs:
       def calc_num_owned_elements(dimdict):
           num_owned_elements = dimdict['size']
           padding = dimdict.get('padding', (0,0))
-          if dimdict.get('proc_grid_rank', 0) != 0:
+          if dimdict['proc_grid_rank'] != 0:
               # We are not at the left boundary, so remove
               # communication buffer for left edge.
               num_owned_elements -= padding[0]
-          if dimdict.get('proc_grid_size', 1)-1 != dimdict.get('proc_grid_rank', 0):
+          if dimdict['proc_grid_size']-1 != dimdict['proc_grid_rank']:
               # we are not at the right boundary, so remove
               # communication buffer for right edge.
               num_owned_elements -= padding[1]
           return num_owned_elements
 
-* ``'proc_grid_size'`` : ``int``, >= 1
+* ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -234,7 +234,8 @@ following key-value pairs:
   Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
   shall equal the total number of processes.
 
-* ``proc_grid_rank`` : ``int``
+* ``'proc_grid_rank'`` : ``int``, greater than or equal to 0, less than
+  ``'proc_grid_size'``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor sections of
@@ -261,7 +262,8 @@ block (``dist_type`` is ``'b'``)
   The start index (inclusive and 0-based) of the global index space available
   on this process.
 
-* ``stop`` : ``int``, greater than the ``start`` value
+* ``stop`` : ``int``, greater than the ``start`` value, less than or equal to
+  the ``size`` value.
 
   The stop index (exclusive, as in standard Python indexing) of the global
   index space available on this process.
@@ -278,6 +280,9 @@ block (``dist_type`` is ``'b'``)
 
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
+
+  If communication padding, must be less than or equal to the number of indices
+  owned by the neighboring process.
 
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
@@ -324,7 +329,7 @@ cyclic (``dist_type`` is ``'c'``)
   contiguous blocks of indices, in the case when ``block_size`` is greater than
   one--to processes in round-robin fashion.  When ``block_size`` equals one, a
   Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
-  values would reproduce the local array's indices.
+  values selects the global indices that are owned by this local array.
 
 * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
@@ -362,13 +367,39 @@ unstructured (``dist_type`` is ``'u'``)
 
 * ``one_to_one`` : bool, optional.
 
-  If not present, shall be equivalent to being present with a `False` value.
+  If not present, shall be equivalent to being present with a ``False`` value.
 
-  If `False`, indicates that some global indices may be duplicated in two or
+  If ``False``, indicates that some global indices may be duplicated in two or
   more local ``indices`` buffers.
 
-  If `True`, a global index shall be located in exactly one local ``indices``
+  If ``True``, a global index shall be located in exactly one local ``indices``
   buffer.
+
+
+Dimension dictionary aliases
+````````````````````````````
+
+The following aliases are provided for convenience.  Only one is provided in
+the current version of this protocol, but more may be added in future versions.
+
+Empty dimension dictionary
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An empty dimension dictionary in dimension ``i``, will be interpreted as the
+following:
+
+.. code:: python
+
+    {'dist_type': 'b',
+     'proc_grid_rank': 0,
+     'proc_grid_size': 1,
+     'start': 0,
+     'stop': buf.shape[i],
+     'size': buf.shape[i]}
+
+Where ``buf`` is the associated buffer object.
+
+This is intended to be a shortcut for defining undistributed dimensions.
 
 
 General comments

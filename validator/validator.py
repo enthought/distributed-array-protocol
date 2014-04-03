@@ -49,6 +49,20 @@ def _validate_common_dist_keys(idx, dim_dict):
 
     return (True, '')
 
+def _validate_padding(padding, idx):
+    if not isinstance(padding, tuple):
+        msg = 'padding (%r) for dimension %d is not a tuple.'
+        return (False, msg % (padding, idx))
+    if not len(padding) == 2:
+        msg = 'padding (%r) for dimension %d is not of length 2.'
+        return (False, msg % (padding, idx))
+    for i, element in enumerate(padding):
+        if not isinstance(element, int):
+            msg = 'padding element %r (%r) for dimension %d has non-integer type %r.'
+            return (False, msg % (i, padding[i], idx, type(element)))
+
+    return (True, '')
+
 def _validate_block(idx, dim_dict):
     """Verify block distribution."""
     if dim_dict['dist_type'] != 'b':
@@ -72,10 +86,19 @@ def _validate_block(idx, dim_dict):
     if stop < start:
         msg = 'stop (%d) for dimension %d is less than start (%d).'
         return (False, msg % (stop, idx, start))
+    size = dim_dict['size']
+    if stop > size:
+        msg = 'stop (%d) for dimension %d is greater than size (%d).'
+        return (False, msg % (stop, idx, size))
+
+
+    # Validate padding.
     padding = dim_dict.get('padding', (0,0))
-    if not isinstance(padding, tuple):
-        msg = 'padding (%r) for dimension %d is not a tuple.'
-        return (False, msg % (padding, idx))
+    is_valid, msg = _validate_padding(padding, idx)
+    if not is_valid:
+        return (is_valid, msg)
+
+    # Validate start.
     is_valid, msg = _validate_start(idx, dim_dict)
     if not is_valid:
         return (is_valid, msg)
@@ -148,10 +171,6 @@ def _validate_unstructured(idx, dim_dict):
 
     return (True, '')
 
-def _validate_undistributed(idx, dim_dict):
-    """Verify undistributed distribution."""
-    return _validate_common(idx, dim_dict)
-
 def _validate_common(idx, dim_dict):
     # Verify presence of 'dist_type' and 'size' keys.
     extra, missing = _verify_exact_keys(dim_dict, 'dist_type size'.split())
@@ -172,7 +191,7 @@ def _validate_common(idx, dim_dict):
 
     # Verify dist_type.
     dist_type = dim_dict['dist_type']
-    if dist_type not in set('nbcu'):
+    if dist_type not in set('bcu'):
         msg = 'dimension dictionary for dimension %d has an invalid dist_type of %r'
         return (False, msg % (idx, dist_type))
 
@@ -195,17 +214,20 @@ def validate_dim_dict(idx, dim_dict):
     Currently supports Protocol versions 0.9.x and 1.0.x.
 
     """
+    # Check for the empty dim_dict alias
+    if not dim_dict: # the dim_dict is empty
+        return (True, '')
+
     dist_type = dim_dict['dist_type']
 
-    if dist_type not in set('bcun'):
-        msg = "dimension dict at index %r should have dist_type of 'b', 'c', 'u', or 'n' (given %r)"
+    if dist_type not in set('bcu'):
+        msg = "dimension dict at index %r should have dist_type of 'b', 'c', or 'u' (given %r)"
         return (False, msg % (idx, dist_type))
 
     # Select the appropriate distribution type and validate.
     return {'b': _validate_block,
             'c': _validate_cyclic,
             'u': _validate_unstructured,
-            'n': _validate_undistributed,
             }[dist_type](idx, dim_dict)
 
 
@@ -291,7 +313,8 @@ def validate(distbuffer):
     if not is_valid:
         return (is_valid, msg)
 
-    # Verify the number of dim_data dictionaries.
+    # Verify the number of dim_data dictionaries matches the number of
+    # dimensions in the buffer.
     # (This can't be done in validate_dim_data because it doesn't have access
     # to the buffer.)
     if len(dim_data) != buffer.ndim:
