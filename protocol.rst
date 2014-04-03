@@ -612,7 +612,7 @@ In process 0:
       'dist_type': 'u',
       'proc_grid_rank': 0,
       'proc_grid_size': 3,
-      'indices': [19, 1, 0, 12, 2, 15, 4]},)
+      'indices': array([19, 1, 0, 12, 2, 15, 4])},)
 
 In process 1:
 
@@ -625,7 +625,7 @@ In process 1:
       'dist_type': 'u',
       'proc_grid_rank': 1,
       'proc_grid_size': 3,
-      'indices': [6, 13, 3]},)
+      'indices': array([6, 13, 3])},)
 
 In process 2:
 
@@ -639,8 +639,8 @@ In process 2:
       'dist_type': 'u',
       'proc_grid_rank': 2,
       'proc_grid_size': 3,
-      'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
-                  20,  9, 16, 27,  8, 17, 22]},)
+      'indices': array([10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
+                  20,  9, 16, 27,  8, 17, 22])},)
 
 
 .. include:: ../examples.rst
