@@ -281,8 +281,8 @@ block (``dist_type`` is ``'b'``)
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
 
-  If communication padding, must be less than or equal to the number of indices
-  owned by the neighboring process.
+  If a tuple value defines the width of communication padding, it must be less
+  than or equal to the number of indices owned by the neighboring process.
 
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
@@ -379,8 +379,8 @@ unstructured (``dist_type`` is ``'u'``)
 Dimension dictionary aliases
 ````````````````````````````
 
-The following aliases are provided for convenience.  Only one is provided in
-the current version of this protocol, but more may be added in future versions.
+The following dimension dictionary alias is provided for convenience.  More
+aliases may be added in future versions of this protocol.
 
 Empty dimension dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
