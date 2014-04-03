@@ -206,14 +206,12 @@ following key-value pairs:
 
   Total number of global array elements along this dimension.
 
-  Indices considered "communication padding" are counted only once towards this
-  value; indices considered "boundary padding" are always counted towards this
+  Indices considered "communication padding" *are not* counted towards this
+  value; indices considered "boundary padding" *are* counted towards this
   value.  More explicitly, to calculate the ``size`` along a particular
-  dimension, one can sum the result of this function on each process:
-
-  .. literalinclude:: ../utils.py
-     :pyobject: num_owned_indices
-
+  dimension, one can sum the result of the function ``num_owned_indices`` (in
+  the provided ``utils.py``) run on the appropriate dimension dictionary on
+  every process.
 
 * ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
