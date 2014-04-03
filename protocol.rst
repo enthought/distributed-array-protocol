@@ -255,12 +255,16 @@ block (``dist_type`` is ``'b'``)
   The stop index (exclusive, as in standard Python indexing) of the global
   index space available on this process.
 
-  For a block-distributed dimension, adjacent processes as determined by the
-  dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
-  index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
-  and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
-  ``start`` of ``b``.  Processes may contain differently-sized global index
-  ranges.
+  For a block-distributed dimension without communication padding, adjacent
+  processes as determined by the dimension dictionary's ``proc_grid_rank``
+  field shall have adjacent global index ranges. More explicitly, for two
+  processes ``a`` and ``b`` with grid ranks ``i`` and ``i+1`` respectively, the
+  ``stop`` of ``a`` shall be equal the ``start`` of ``b``.  With communication
+  padding present, the stop of ``a`` may be greater than the ``start`` of
+  ``b``.
+
+  Processes may contain differently-sized global index ranges; this is
+  sometimes called an "irregular block distribution".
 
   For every block-distributed dimension ``i``, ``stop - start`` must be equal
   to ``buffer.shape[i]``.
