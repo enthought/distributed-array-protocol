@@ -286,18 +286,21 @@ block (``dist_type`` is ``'b'``)
   dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
   ``padding`` is the width of the boundary padding. All other ``padding`` tuple
   values are for communication padding and represent extra allocation reserved
-  for communication between processes. All communication padding widths must be
-  the same for a dimension.
+  for communication between processes. Every communication padding width must
+  equal its counterpart on its neighboring process; more specifically, the
+  "right" communication padding on rank ``i`` in a 1D grid must equal the
+  "left" communication padding on rank ``i+1``.
 
   For example, consider a one-dimensional block-distributed array distributed
-  over four processes.  Let its boundary padding have a width of 3 and its
-  communication padding have a width of 2. The padding tuple for the local
-  array on each rank would be:
+  over four processes.  Let its left boundary padding width be 4, its right
+  boundary padding width be 0 and its communication padding widths be (1,) (1,
+  2), (2, 3), and (3,). The padding tuple for the local array on each rank
+  would be:
 
   ============== ====== ====== ====== ======
   proc_grid_rank  0      1      2      3
   ============== ====== ====== ====== ======
-  padding        (3, 2) (2, 2) (2, 2) (2, 3)
+  padding        (4, 1) (1, 2) (2, 3) (3, 0)
   ============== ====== ====== ====== ======
 
   If the value associated with ``padding`` is the tuple ``(0,0)`` (the
