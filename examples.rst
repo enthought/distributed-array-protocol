@@ -1,8 +1,3 @@
-========
-Examples
-========
-
-
 Block, Nondistributed
 `````````````````````
 

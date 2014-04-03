@@ -6,5 +6,5 @@ Distributed Array Protocol 0.9.0
     :numbered:
 
     protocol
-    examples
+    all_examples
     appendix
