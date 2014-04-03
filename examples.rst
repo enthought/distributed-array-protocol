@@ -3,7 +3,7 @@ Block, Nondistributed
 
 A (5 X 9) array, with a Block, Nondistributed ('b' x 'n') distribution over a (4 X 1) process grid.
 
-.. image:: ../images/plot_block_nondist.png
+.. image:: images/plot_block_nondist.png
 
 The full (undistributed) array:
 
@@ -81,7 +81,7 @@ Nondistributed, Block
 
 A (5 X 9) array, with a Nondistributed, Block ('n' x 'b') distribution over a (1 X 4) process grid.
 
-.. image:: ../images/plot_nondist_block.png
+.. image:: images/plot_nondist_block.png
 
 The full (undistributed) array:
 
@@ -169,7 +169,7 @@ Block, Block
 
 A (5 X 9) array, with a Block, Block ('b' x 'b') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_block_block.png
+.. image:: images/plot_block_block.png
 
 The full (undistributed) array:
 
@@ -271,7 +271,7 @@ Block, Cyclic
 
 A (5 X 9) array, with a Block, Cyclic ('b' x 'c') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_block_cyclic.png
+.. image:: images/plot_block_cyclic.png
 
 The full (undistributed) array:
 
@@ -373,7 +373,7 @@ Cyclic, Cyclic
 
 A (5 X 9) array, with a Cyclic, Cyclic ('c' x 'c') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_cyclic_cyclic.png
+.. image:: images/plot_cyclic_cyclic.png
 
 The full (undistributed) array:
 
@@ -475,7 +475,7 @@ BlockCyclic, BlockCyclic
 
 A (5 X 9) array, with a BlockCyclic, BlockCyclic ('bc' x 'bc') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_blockcyclic_blockcyclic.png
+.. image:: images/plot_blockcyclic_blockcyclic.png
 
 The full (undistributed) array:
 
@@ -577,7 +577,7 @@ BlockPadded, BlockPadded
 
 A (5 X 9) array, with a BlockPadded, BlockPadded ('bp' x 'bp') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_blockpad_blockpad.png
+.. image:: images/plot_blockpad_blockpad.png
 
 The full (undistributed) array:
 
@@ -687,7 +687,7 @@ Unstructured, Unstructured
 
 A (5 X 9) array, with a Unstructured, Unstructured ('u' x 'u') distribution over a (2 X 2) process grid.
 
-.. image:: ../images/plot_unstruct_unstruct.png
+.. image:: images/plot_unstruct_unstruct.png
 
 The full (undistributed) array:
 

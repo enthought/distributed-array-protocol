@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from . import validator
+import validator
 
 
 class TestValidDimData(unittest.TestCase):
