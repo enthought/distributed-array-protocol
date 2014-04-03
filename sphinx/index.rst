@@ -1,1 +1,1 @@
-.. include:: ../protocol.rst
+.. include:: protocol.rst
