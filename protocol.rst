@@ -211,20 +211,9 @@ following key-value pairs:
   value.  More explicitly, to calculate the ``size`` along a particular
   dimension, one can sum the result of this function on each process:
 
-  .. code:: python
+  .. literalinclude:: ../utils.py
+     :pyobject: num_owned_indices
 
-      def calc_num_owned_elements(dim_dict):
-          num_owned_elements = dim_dict['size']
-          padding = dim_dict.get('padding', (0,0))
-          if dim_dict['proc_grid_rank'] != 0:
-              # We are not at the left boundary, so remove
-              # communication buffer for left edge.
-              num_owned_elements -= padding[0]
-          if dim_dict['proc_grid_size']-1 != dim_dict['proc_grid_rank']:
-              # we are not at the right boundary, so remove
-              # communication buffer for right edge.
-              num_owned_elements -= padding[1]
-          return num_owned_elements
 
 * ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
