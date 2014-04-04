@@ -19,7 +19,7 @@ In process 0:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.9.0'
+    '0.10.0'
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
     >>> distbuffer['dim_data']
@@ -44,7 +44,7 @@ In process 1:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.9.0'
+    '0.10.0'
     >>> distbuffer['buffer']
     array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
     >>> distbuffer['dim_data']
@@ -101,7 +101,7 @@ In process 0:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.9.0'
+    '0.10.0'
     >>> distbuffer['buffer']
     array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
     >>> distbuffer['dim_data']
@@ -121,7 +121,7 @@ In process 1:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.9.0'
+    '0.10.0'
     >>> distbuffer['buffer']
     array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
     >>> distbuffer['dim_data']
@@ -149,7 +149,7 @@ On all processes:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.9.0'
+    '0.10.10'
     >>> len(distbuffer['dim_data']) == 1  # one dimension only
     True
 
