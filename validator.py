@@ -1,5 +1,6 @@
 """
-Functions to validate Distributed Array Protocol data structures.
+Functions to validate Distributed Array Protocol data structures for protocol
+version 0.10.0.
 
 Functions
 ---------
@@ -10,6 +11,9 @@ validate(distbuffer)
 """
 
 from distutils.version import StrictVersion
+
+
+VERSIONS = ((0, 10, 0),)
 
 
 def _verify_exact_keys(dd, keys):
@@ -211,8 +215,6 @@ def validate_dim_dict(idx, dim_dict):
     Returns a 2-tuple of a boolean and string; boolean indicates validity, the
     string indicates the reason for invalidity, empty otherwise.
 
-    Currently supports Protocol versions 0.9.x and 1.0.x.
-
     """
     # Check for the empty dim_dict alias
     if not dim_dict: # the dim_dict is empty
@@ -237,8 +239,6 @@ def validate_dim_data(dim_data):
 
     Returns a 2-tuple of a boolean and string; boolean indicates validity, the
     string indicates the reason for invalidity, empty otherwise.
-
-    Currently supports Protocol versions 0.9.x and 1.0.x.
 
     """
     # First, check that it's a tuple...
@@ -268,8 +268,6 @@ def validate(distbuffer):
     Returns a 2-tuple of a boolean and string; boolean indicates validity, the
     string indicates the reason for invalidity, empty otherwise.
 
-    Currently supports Protocol versions 0.9.x and 1.0.x.
-
     """
     # Verify distbuffer is a dictionary.
     if not isinstance(distbuffer, dict):
@@ -295,7 +293,7 @@ def validate(distbuffer):
         return (False, msg % version)
 
     # Verify the version number.
-    if strict_version.version not in ((0,9,0), (1,0,0)):
+    if strict_version.version not in VERSIONS:
         msg = '__version__ "%s" not supported by this checker.'
         return (False, msg % version)
 
