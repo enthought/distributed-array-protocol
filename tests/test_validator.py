@@ -4,6 +4,9 @@ import numpy as np
 import validator
 
 
+VERSION = '0.10.0'
+
+
 class TestValidDimData(unittest.TestCase):
 
     def test_block(self):
@@ -13,7 +16,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': 0,
             'stop': 10},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
@@ -26,7 +29,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_size': 2,
             'proc_grid_rank': 0,
             'start': 0},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(50),
                 'dim_data': dim_data}
 
@@ -40,7 +43,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_rank': 1,
             'start': 5,
             'block_size': 5},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(50),
                 'dim_data': dim_data}
 
@@ -54,7 +57,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_rank': 1,
             'indices': np.array([1, 22, 44, 49, 9, 33, 21], dtype=np.uint32)
             },)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(len(dim_data[0]['indices'])),
                 'dim_data': dim_data}
 
@@ -69,7 +72,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_rank':0,
             'start' : 0,
             }
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer' : b'a',
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
@@ -83,7 +86,7 @@ class TestValidDimData(unittest.TestCase):
             'proc_grid_rank':3,
             'start' : 3,
             }
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer' : b'',
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
@@ -91,7 +94,7 @@ class TestValidDimData(unittest.TestCase):
 
     def test_empty_dict_alias(self):
         dimdata = {}
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer' : b'',
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
@@ -108,7 +111,7 @@ class TestMissingKeys(unittest.TestCase):
             'proc_grid_rank':3,
             'start' : 3,
             }
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'dim_data' : (dimdata,)}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(not is_valid, msg)
@@ -127,7 +130,7 @@ class TestMissingKeys(unittest.TestCase):
         self.assertTrue(not is_valid, msg)
 
     def test_missing_dim_data(self):
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer' : b'',}
         is_valid, msg = validator.validate(distbuffer)
         self.assertTrue(not is_valid, msg)
@@ -143,7 +146,7 @@ class TestInvalidKeys(unittest.TestCase):
             'proc_grid_rank':3,
             'start' : 3,
             }
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'dim_data' : (dimdata,),
                 'buffer' : [1,2,3,4],}
         is_valid, msg = validator.validate(distbuffer)
@@ -174,7 +177,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': 0,
             'stop': 51},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(51),
                 'dim_data': dim_data}
 
@@ -189,7 +192,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': 0,
             'stop': 51},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(51),
                 'dim_data': dim_data}
 
@@ -204,7 +207,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': 10,
             'stop': 9},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones((0,)),
                 'dim_data': dim_data}
 
@@ -219,7 +222,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': -1,
             'stop': 10},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(11),
                 'dim_data': dim_data}
 
@@ -235,7 +238,7 @@ class TestInvalidDimData(unittest.TestCase):
             'start': 0,
             'stop': 10,
             'padding': ('a','b')},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
@@ -250,7 +253,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_rank': 0,
             'start': 0,
             'block_size': -10},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
@@ -264,7 +267,7 @@ class TestInvalidDimData(unittest.TestCase):
             'proc_grid_size': 2,
             'proc_grid_rank': 0,
             'indices': [1, 2, 3, 4]},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(4),
                 'dim_data': dim_data}
 
@@ -283,7 +286,7 @@ class TestCornerCases(unittest.TestCase):
             'stop': 10,
             'padding': (2,2),
             'periodic': True,},)
-        distbuffer = {'__version__': '1.0.0',
+        distbuffer = {'__version__': VERSION,
                 'buffer': np.ones(10),
                 'dim_data': dim_data}
 
