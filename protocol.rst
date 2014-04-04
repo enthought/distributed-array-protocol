@@ -156,13 +156,14 @@ section of a distributed array.
 
 The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 "dimension dictionaries", containing one dictionary for each dimension of the
-distributed array, with the zeroth dictionary associated with the zeroth
-dimension of the array, and so on for each dimension in succession. There is
-one dimension dictionary per dimension.  These dictionaries are intended to
-include all metadata required to fully specify a distributed array's dimension
-information.  This tuple may be empty, indicating a zero-dimensional array.
-The number of elements in the ``'dim_data'`` tuple must match the number of
-dimensions of the associated buffer object.
+distributed array.  The zeroth dictionary in ``dim_data`` shall describe the
+zeroth dimension of the array, the first dictionary shall describe the first
+dimension, and so on for each dimension in succession. There must be one
+dimension dictionary per dimension.  These dictionaries include all metadata
+required to specify a distributed array's distribution.  The ``dim_data`` tuple
+may be empty, indicating a zero-dimensional array.  The number of elements in
+the ``'dim_data'`` tuple must match the number of dimensions of the associated
+buffer object.
 
 
 Dimension Dictionaries
