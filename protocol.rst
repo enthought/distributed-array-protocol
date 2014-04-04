@@ -90,7 +90,7 @@ process grid
     with ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)``
     corresponds to the process with rank ``i*M + j``.
 
-    (Note that the protocol's *process grid* is compatible with MPI's
+    (Note that the protocol's process grid is compatible with MPI's
     ``MPI_Cart_create()`` command, and the MPI standard guarantees that
     Cartesian process coordinates are always assigned to ranks in the same way
     and are "C-order" by default [#mpivirtualtopologies]_.  The protocol makes
