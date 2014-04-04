@@ -28,7 +28,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_block_4x1_local.png
+.. image:: images/plot_block_block_4x1_local.png
 
 +-------------------------------------------------------------------+
 |In process (0, 0):                                                 |
@@ -40,12 +40,14 @@ The local arrays, on each separate engine:
 |           [  9.,  10.,  11.,  12.,  13.,  14.,  15.,  16.,  17.]])|
 |    >>> distbuffer['dim_data']                                     |
 |    ({'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 0,                                         |
 |      'proc_grid_size': 4,                                         |
 |      'size': 5,                                                   |
 |      'start': 0,                                                  |
 |      'stop': 2},                                                  |
 |     {'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 0,                                         |
 |      'proc_grid_size': 1,                                         |
 |      'size': 9,                                                   |
@@ -62,12 +64,14 @@ The local arrays, on each separate engine:
 |           [ 27.,  28.,  29.,  30.,  31.,  32.,  33.,  34.,  35.]])|
 |    >>> distbuffer['dim_data']                                     |
 |    ({'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 1,                                         |
 |      'proc_grid_size': 4,                                         |
 |      'size': 5,                                                   |
 |      'start': 2,                                                  |
 |      'stop': 4},                                                  |
 |     {'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 0,                                         |
 |      'proc_grid_size': 1,                                         |
 |      'size': 9,                                                   |
@@ -83,12 +87,14 @@ The local arrays, on each separate engine:
 |    array([[ 36.,  37.,  38.,  39.,  40.,  41.,  42.,  43.,  44.]])|
 |    >>> distbuffer['dim_data']                                     |
 |    ({'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 2,                                         |
 |      'proc_grid_size': 4,                                         |
 |      'size': 5,                                                   |
 |      'start': 4,                                                  |
 |      'stop': 5},                                                  |
 |     {'dist_type': 'b',                                            |
+|      'padding': [0, 0],                                           |
 |      'proc_grid_rank': 0,                                         |
 |      'proc_grid_size': 1,                                         |
 |      'size': 9,                                                   |
@@ -128,7 +134,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_block_1x4_local.png
+.. image:: images/plot_block_block_1x4_local.png
 
 +-------------------------------+
 |In process (0, 0):             |
@@ -143,12 +149,14 @@ The local arrays, on each separate engine:
 |           [ 36.,  37.,  38.]])|
 |    >>> distbuffer['dim_data'] |
 |    ({'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 0,     |
 |      'proc_grid_size': 1,     |
 |      'size': 5,               |
 |      'start': 0,              |
 |      'stop': 5},              |
 |     {'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 0,     |
 |      'proc_grid_size': 4,     |
 |      'size': 9,               |
@@ -168,12 +176,14 @@ The local arrays, on each separate engine:
 |           [ 39.,  40.,  41.]])|
 |    >>> distbuffer['dim_data'] |
 |    ({'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 0,     |
 |      'proc_grid_size': 1,     |
 |      'size': 5,               |
 |      'start': 0,              |
 |      'stop': 5},              |
 |     {'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 1,     |
 |      'proc_grid_size': 4,     |
 |      'size': 9,               |
@@ -193,12 +203,14 @@ The local arrays, on each separate engine:
 |           [ 42.,  43.,  44.]])|
 |    >>> distbuffer['dim_data'] |
 |    ({'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 0,     |
 |      'proc_grid_size': 1,     |
 |      'size': 5,               |
 |      'start': 0,              |
 |      'stop': 5},              |
 |     {'dist_type': 'b',        |
+|      'padding': [0, 0],       |
 |      'proc_grid_rank': 2,     |
 |      'proc_grid_size': 4,     |
 |      'size': 9,               |
@@ -237,7 +249,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_block_2x2_local.png
+.. image:: images/plot_block_block_2x2_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
@@ -317,7 +329,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_block_cyclic_local.png
+.. image:: images/plot_block_cyclic_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
@@ -395,7 +407,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_cyclic_cyclic_local.png
+.. image:: images/plot_cyclic_cyclic_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
@@ -471,7 +483,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_irregularblock_irregularblock_local.png
+.. image:: images/plot_irregularblock_irregularblock_local.png
 
 +-------------------------------------------------------+-------------------------------------------------------+
 |In process (0, 0):                                     |In process (0, 1):                                     |
@@ -482,12 +494,14 @@ The local arrays, on each separate engine:
 |    array([[ 0.,  1.]])                                |    array([[ 2.,  3.,  4.,  5.,  6.,  7.,  8.]])       |
 |    >>> distbuffer['dim_data']                         |    >>> distbuffer['dim_data']                         |
 |    ({'dist_type': 'b',                                |    ({'dist_type': 'b',                                |
+|      'padding': [0, 0],                               |      'padding': [0, 0],                               |
 |      'proc_grid_rank': 0,                             |      'proc_grid_rank': 0,                             |
 |      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
 |      'size': 5,                                       |      'size': 5,                                       |
 |      'start': 0,                                      |      'start': 0,                                      |
 |      'stop': 1},                                      |      'stop': 1},                                      |
 |     {'dist_type': 'b',                                |     {'dist_type': 'b',                                |
+|      'padding': [0, 0],                               |      'padding': [0, 0],                               |
 |      'proc_grid_rank': 0,                             |      'proc_grid_rank': 1,                             |
 |      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
 |      'size': 9,                                       |      'size': 9,                                       |
@@ -509,12 +523,14 @@ The local arrays, on each separate engine:
 |           [ 36.,  37.]])                              |           [ 38.,  39.,  40.,  41.,  42.,  43.,  44.]])|
 |    >>> distbuffer['dim_data']                         |    >>> distbuffer['dim_data']                         |
 |    ({'dist_type': 'b',                                |    ({'dist_type': 'b',                                |
+|      'padding': [0, 0],                               |      'padding': [0, 0],                               |
 |      'proc_grid_rank': 1,                             |      'proc_grid_rank': 1,                             |
 |      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
 |      'size': 5,                                       |      'size': 5,                                       |
 |      'start': 1,                                      |      'start': 1,                                      |
 |      'stop': 5},                                      |      'stop': 5},                                      |
 |     {'dist_type': 'b',                                |     {'dist_type': 'b',                                |
+|      'padding': [0, 0],                               |      'padding': [0, 0],                               |
 |      'proc_grid_rank': 0,                             |      'proc_grid_rank': 1,                             |
 |      'proc_grid_size': 2,                             |      'proc_grid_size': 2,                             |
 |      'size': 9,                                       |      'size': 9,                                       |
@@ -553,7 +569,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_blockcyclic_blockcyclic_local.png
+.. image:: images/plot_blockcyclic_blockcyclic_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
@@ -633,7 +649,7 @@ In all processes, we have:
 
 The local arrays, on each separate engine:
 
-.. image:: ../images/plot_unstruct_unstruct_local.png
+.. image:: images/plot_unstruct_unstruct_local.png
 
 +-------------------------------------------+-------------------------------------------+
 |In process (0, 0):                         |In process (0, 1):                         |
