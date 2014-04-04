@@ -542,7 +542,7 @@ The local arrays, on each separate engine:
 BlockCyclic, BlockCyclic
 ````````````````````````
 
-A (5 X 9) array, with a BlockCyclic, BlockCyclic ('b' x 'b') distribution over a (2 X 2) process grid.
+A (5 X 9) array, with a BlockCyclic, BlockCyclic ('c' x 'c') distribution over a (2 X 2) process grid.
 
 .. image:: images/plot_blockcyclic_blockcyclic.png
 
