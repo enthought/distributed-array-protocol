@@ -149,7 +149,7 @@ On all processes:
     >>> distbuffer.keys()
     ['__version__', 'buffer', 'dim_data']
     >>> distbuffer['__version__']
-    '0.10.10'
+    '0.10.0'
     >>> len(distbuffer['dim_data']) == 1  # one dimension only
     True
 
