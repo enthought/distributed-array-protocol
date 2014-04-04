@@ -1,2 +1,2 @@
 *.pyc
-sphinx/build/*
+build/*

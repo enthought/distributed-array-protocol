@@ -1,10 +1,6 @@
 ===============================================================================
-Distributed Array Protocol v0.9.0
+Distributed Array Protocol
 ===============================================================================
-
-.. section-numbering::
-.. Contents::
-
 
 Overview
 -------------------------------------------------------------------------------
@@ -202,31 +198,18 @@ following key-value pairs:
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``, >= 0
+* ``'size'`` : ``int``, greater than or equal to 0
 
   Total number of global array elements along this dimension.
 
-  Indices considered "communication padding" are counted only once towards this
-  value; indices considered "boundary padding" are always counted towards this
+  Indices considered "communication padding" *are not* counted towards this
+  value; indices considered "boundary padding" *are* counted towards this
   value.  More explicitly, to calculate the ``size`` along a particular
-  dimension, one can sum the result of this function on each process:
+  dimension, one can sum the result of the function ``num_owned_indices`` (in
+  the provided ``utils.py``) run on the appropriate dimension dictionary on
+  every process.
 
-  .. code:: python
-
-      def calc_num_owned_elements(dimdict):
-          num_owned_elements = dimdict['size']
-          padding = dimdict.get('padding', (0,0))
-          if dimdict.get('proc_grid_rank', 0) != 0:
-              # We are not at the left boundary, so remove
-              # communication buffer for left edge.
-              num_owned_elements -= padding[0]
-          if dimdict.get('proc_grid_size', 1)-1 != dimdict.get('proc_grid_rank', 0):
-              # we are not at the right boundary, so remove
-              # communication buffer for right edge.
-              num_owned_elements -= padding[1]
-          return num_owned_elements
-
-* ``'proc_grid_size'`` : ``int``, >= 1
+* ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -234,7 +217,8 @@ following key-value pairs:
   Constraint: the product of all ``'proc_grid_size'``\s for all dimensions
   shall equal the total number of processes.
 
-* ``proc_grid_rank`` : ``int``
+* ``'proc_grid_rank'`` : ``int``, greater than or equal to 0, less than
+  ``'proc_grid_size'``
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor sections of
@@ -261,23 +245,31 @@ block (``dist_type`` is ``'b'``)
   The start index (inclusive and 0-based) of the global index space available
   on this process.
 
-* ``stop`` : ``int``, greater than the ``start`` value
+* ``stop`` : ``int``, greater than the ``start`` value, less than or equal to
+  the ``size`` value.
 
   The stop index (exclusive, as in standard Python indexing) of the global
   index space available on this process.
 
-  For a block-distributed dimension, adjacent processes as determined by the
-  dimension dictionary's ``proc_grid_rank`` field shall have adjacent global
-  index ranges, i.e., for two processes ``a`` and ``b`` with grid ranks ``i``
-  and ``i+1`` respectively, the ``stop`` of ``a`` shall be equal to the
-  ``start`` of ``b``.  Processes may contain differently-sized global index
-  ranges.
+  For a block-distributed dimension without communication padding, adjacent
+  processes as determined by the dimension dictionary's ``proc_grid_rank``
+  field shall have adjacent global index ranges. More explicitly, for two
+  processes ``a`` and ``b`` with grid ranks ``i`` and ``i+1`` respectively, the
+  ``stop`` of ``a`` shall be equal the ``start`` of ``b``.  With communication
+  padding present, the stop of ``a`` may be greater than the ``start`` of
+  ``b``.
+
+  Processes may contain differently-sized global index ranges; this is
+  sometimes called an "irregular block distribution".
 
   For every block-distributed dimension ``i``, ``stop - start`` must be equal
   to ``buffer.shape[i]``.
 
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
+
+  If communication padding, must be less than or equal to the number of indices
+  owned by the neighboring process.
 
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
@@ -290,18 +282,21 @@ block (``dist_type`` is ``'b'``)
   dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
   ``padding`` is the width of the boundary padding. All other ``padding`` tuple
   values are for communication padding and represent extra allocation reserved
-  for communication between processes. All communication padding widths must be
-  the same for a dimension.
+  for communication between processes. Every communication padding width must
+  equal its counterpart on its neighboring process; more specifically, the
+  "right" communication padding on rank ``i`` in a 1D grid must equal the
+  "left" communication padding on rank ``i+1``.
 
   For example, consider a one-dimensional block-distributed array distributed
-  over four processes.  Let its boundary padding have a width of 3 and its
-  communication padding have a width of 2. The padding tuple for the local
-  array on each rank would be:
+  over four processes.  Let its left boundary padding width be 4, its right
+  boundary padding width be 0 and its communication padding widths be (1,) (1,
+  2), (2, 3), and (3,). The padding tuple for the local array on each rank
+  would be:
 
   ============== ====== ====== ====== ======
   proc_grid_rank  0      1      2      3
   ============== ====== ====== ====== ======
-  padding        (3, 2) (2, 2) (2, 2) (2, 3)
+  padding        (4, 1) (1, 2) (2, 3) (3, 0)
   ============== ====== ====== ====== ======
 
   If the value associated with ``padding`` is the tuple ``(0,0)`` (the
@@ -324,7 +319,7 @@ cyclic (``dist_type`` is ``'c'``)
   contiguous blocks of indices, in the case when ``block_size`` is greater than
   one--to processes in round-robin fashion.  When ``block_size`` equals one, a
   Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
-  values would reproduce the local array's indices.
+  values selects the global indices that are owned by this local array.
 
 * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
@@ -362,13 +357,39 @@ unstructured (``dist_type`` is ``'u'``)
 
 * ``one_to_one`` : bool, optional.
 
-  If not present, shall be equivalent to being present with a `False` value.
+  If not present, shall be equivalent to being present with a ``False`` value.
 
-  If `False`, indicates that some global indices may be duplicated in two or
+  If ``False``, indicates that some global indices may be duplicated in two or
   more local ``indices`` buffers.
 
-  If `True`, a global index shall be located in exactly one local ``indices``
+  If ``True``, a global index shall be located in exactly one local ``indices``
   buffer.
+
+
+Dimension dictionary aliases
+````````````````````````````
+
+The following aliases are provided for convenience.  Only one is provided in
+the current version of this protocol, but more may be added in future versions.
+
+Empty dimension dictionary
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+An empty dimension dictionary in dimension ``i``, will be interpreted as the
+following:
+
+.. code:: python
+
+    {'dist_type': 'b',
+     'proc_grid_rank': 0,
+     'proc_grid_size': 1,
+     'start': 0,
+     'stop': buf.shape[i],
+     'size': buf.shape[i]}
+
+Where ``buf`` is the associated buffer object.
+
+This is intended to be a shortcut for defining undistributed dimensions.
 
 
 General comments
@@ -420,205 +441,6 @@ dimension dictionary ``dim_data[i]`` is identical for all processes that have
 the same value for ``dim_data[i]['proc_grid_rank']``.  The only possible
 exception to this is the ``padding`` tuple, which may have different values on
 edge processes due to boundary padding.
-
-
-Examples
--------------------------------------------------------------------------------
-
-Block, Block
-````````````
-
-Assume we have a process grid with 2 rows and 1 column, and we have a 2x10
-array ``a`` distributed over it.  Let ``a`` be a two-dimensional array with a
-block distribution in both dimensions.  Note that since the ``proc_grid_size``
-of the first dimension is ``1``, it is essentially undistributed.  Because of
-this, having a cyclic ``dist_type`` for this dimension would be equivalent.
-
-In process 0:
-
-.. code:: python
-
-    >>> distbuffer = a0.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.5])
-    >>> distbuffer['dim_data']
-    ({'size': 2,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 2,
-      'start': 0,
-      'stop': 1},
-     {'size': 10,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 1,
-      'start': 0,
-      'stop': 10})
-
-In process 1:
-
-.. code:: python
-
-    >>> distbuffer = a1.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6,  1. ])
-    >>> distbuffer['dim_data']
-    ({'size': 2,
-      'dist_type': 'b',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 2,
-      'start': 1,
-      'stop': 2},
-     {'size': 10,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 1,
-      'start': 0,
-      'stop': 10})
-
-
-Block with padding
-``````````````````
-
-Assume we have a process grid with 2 processes, and we have an 18-element array
-``a`` distributed over it.  Let ``a`` be a one-dimensional array with a
-block-padded distribution for its 0th (and only) dimension.
-
-Since the ``'padding'`` for each process is ``(1, 1)``, the local array on each
-process has one element of padding on the left and one element of padding on
-the right.  Since each of these processes is at one edge of the process grid
-(and the array has no ``'periodic'`` dimensions), the "outside" element on each
-local array is an example of "boundary padding", and the "inside" element on
-each local array is an example of "communication padding".  Note that the
-``'size'`` of the distributed array is not equal to the combined buffer sizes
-of `a0` and `a1` , since the communication padding is not counted toward the
-size (though the boundary padding is).
-
-For this example, the global index arrangement on each processor, with 'B' for
-boundary and 'C' for communication elements, are arranged as follows::
-
-    Process 0: B 1 2 3 4 5 6 7 8 C
-    Process 1:                 C 9 10 11 12 13 14 15 16 B
-
-The 'B' element on process 0 occupies global index 0, and the 'B' element on
-process 1 occupies global index 17.  Each 'B' element counts towards the
-array's `size`.  The communication elements on each process overlap with a data
-element on the other process to indicate which data elements these
-communication elements are meant to communicate with.
-
-The protocol data structure on each process is as follows.
-
-In process 0:
-
-.. code:: python
-
-    >>> distbuffer = a0.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.2,  0.6,  0.9,  0.6,  0.8,  0.4,  0.2,  0.2,  0.3,  0.9])
-    >>> distbuffer['dim_data']
-    ({'size': 18,
-      'dist_type': 'b',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 2,
-      'start': 0,
-      'stop': 9,
-      'padding': (1, 1)})
-
-In process 1:
-
-.. code:: python
-
-    >>> distbuffer = a1.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> distbuffer['buffer']
-    array([ 0.3,  0.9,  0.2,  1. ,  0.4,  0.5,  0. ,  0.6,  0.8,  0.6])
-    >>> distbuffer['dim_data']
-    ({'size': 18,
-      'dist_type': 'b',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 2,
-      'start': 9,
-      'stop': 18,
-      'padding': (1, 1)})
-
-
-Unstructured
-````````````
-
-Assume we have a process grid with 3 rows, and we have a size 30 array ``a``
-distributed over it.  Let ``a`` be a one-dimensional unstructured array with 7
-elements on process 0, 3 elements on process 1, and 20 elements on process 2.
-
-On all processes:
-
-.. code:: python
-
-    >>> distbuffer = local_array.__distarray__()
-    >>> distbuffer.keys()
-    ['__version__', 'buffer', 'dim_data']
-    >>> distbuffer['__version__']
-    '0.9.0'
-    >>> len(distbuffer['dim_data']) == 1  # one dimension only
-    True
-
-In process 0:
-
-.. code:: python
-
-    >>> distbuffer['buffer']
-    array([0.7,  0.5,  0.9,  0.2,  0.7,  0.0,  0.5])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 0,
-      'proc_grid_size': 3,
-      'indices': [19, 1, 0, 12, 2, 15, 4]},)
-
-In process 1:
-
-.. code:: python
-
-    >>> distbuffer['buffer']
-    array([0.1,  0.5,  0.9])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 1,
-      'proc_grid_size': 3,
-      'indices': [6, 13, 3]},)
-
-In process 2:
-
-.. code:: python
-
-    >>> distbuffer['buffer']
-    array([ 0.1,  0.8,  0.4,  0.8,  0.2,  0.4,  0.4,  0.3,  0.5,  0.7,
-            0.4,  0.7,  0.6,  0.2,  0.8,  0.5,  0.3,  0.8,  0.4,  0.2])
-    >>> distbuffer['dim_data']
-    ({'size': 30,
-      'dist_type': 'u',
-      'proc_grid_rank': 2,
-      'proc_grid_size': 3,
-      'indices': [10, 25,  5, 21,  7, 18, 11, 26, 29, 24, 23, 28, 14,
-                  20,  9, 16, 27,  8, 17, 22]},)
-
-
-.. include:: ../examples.rst
 
 
 References
