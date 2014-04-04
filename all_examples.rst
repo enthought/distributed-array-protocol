@@ -76,8 +76,8 @@ the right.  Since each of these processes is at one edge of the process grid
 local array is an example of "boundary padding", and the "inside" element on
 each local array is an example of "communication padding".  Note that the
 ``'size'`` of the distributed array is not equal to the combined buffer sizes
-of `a0` and `a1` , since the communication padding is not counted toward the
-size (though the boundary padding is).
+of `a0` and `a1` , since communication padding is not counted toward the size
+(though the boundary padding is).
 
 For this example, the global index arrangement on each processor, with 'B' for
 boundary and 'C' for communication elements, are arranged as follows::
@@ -110,7 +110,7 @@ In process 0:
       'proc_grid_rank': 0,
       'proc_grid_size': 2,
       'start': 0,
-      'stop': 9,
+      'stop': 10,
       'padding': (1, 1)})
 
 In process 1:
@@ -129,7 +129,7 @@ In process 1:
       'dist_type': 'b',
       'proc_grid_rank': 1,
       'proc_grid_size': 2,
-      'start': 9,
+      'start': 8,
       'stop': 18,
       'padding': (1, 1)})
 
