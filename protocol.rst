@@ -207,8 +207,8 @@ following key-value pairs:
   value; indices considered "boundary padding" *are* counted towards this
   value.  More explicitly, to calculate the ``size`` along a particular
   dimension, one can sum the result of the function ``num_owned_indices`` (in
-  the provided ``utils.py``) run on the appropriate dimension dictionary on
-  every process.
+  the provided ``utils.py`` or in this document's appendix) run on the
+  appropriate dimension dictionary on every process.
 
 * ``'proc_grid_size'`` : ``int``, greater than or equal to 1
 
