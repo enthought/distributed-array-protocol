@@ -4,7 +4,8 @@
 Distributed Array Protocol
 ==========================
 
-Source repository for the Distributed Array Protocol and associated utilities.
+Source repository for the Distributed Array Protocol document and associated
+utilities.
 
 A validator for data structures defined in the protocol is included as
 ``validator.py``.
