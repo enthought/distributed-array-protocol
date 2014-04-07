@@ -254,7 +254,7 @@ block (``dist_type`` is ``'b'``)
 
   For a block-distributed dimension without communication padding, adjacent
   processes as determined by the dimension dictionary's ``proc_grid_rank``
-  field shall have adjacent global index ranges. More explicitly, for two
+  field shall have adjacent global index ranges.  More explicitly, for two
   processes ``a`` and ``b`` with grid ranks ``i`` and ``i+1`` respectively, the
   ``stop`` of ``a`` shall be equal the ``start`` of ``b``.  With communication
   padding present, the stop of ``a`` may be greater than the ``start`` of
@@ -281,9 +281,9 @@ block (``dist_type`` is ``'b'``)
   in ``padding`` is the width of the boundary padding; this is extra allocation
   reserved for boundary logic in applications that need it.  For the dimension
   dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
-  ``padding`` is the width of the boundary padding. All other ``padding`` tuple
+  ``padding`` is the width of the boundary padding.  All other ``padding`` tuple
   values are for communication padding and represent extra allocation reserved
-  for communication between processes. Every communication padding width must
+  for communication between processes.  Every communication padding width must
   equal its counterpart on its neighboring process; more specifically, the
   "right" communication padding on rank ``i`` in a 1D grid must equal the
   "left" communication padding on rank ``i+1``.
@@ -291,7 +291,7 @@ block (``dist_type`` is ``'b'``)
   For example, consider a one-dimensional block-distributed array distributed
   over four processes.  Let its left boundary padding width be 4, its right
   boundary padding width be 0 and its communication padding widths be (1,) (1,
-  2), (2, 3), and (3,). The padding tuple for the local array on each rank
+  2), (2, 3), and (3,).  The padding tuple for the local array on each rank
   would be:
 
   ============== ====== ====== ====== ======
@@ -322,7 +322,7 @@ cyclic (``dist_type`` is ``'c'``)
   slice formed from the ``start``, ``size``, and ``proc_grid_size`` values
   selects the global indices that are owned by this local array.
 
-* ``block_size`` : ``int``, greater than or equal to one. Optional.
+* ``block_size`` : ``int``, greater than or equal to one.  Optional.
 
   Indicates the size of contiguous blocks of indices for this dimension.  If
   absent, equivalent to the case when ``block_size`` is present and equal to
@@ -457,17 +457,17 @@ References
 .. [#semver] Semantic Versioning 2.0.0.  http://semver.org/
 .. [#pep440] PEP 440: Version Identification and Dependency
              Specification.  http://www.python.org/dev/peps/pep-0440/
-.. [#trilinos] Trilinos. http://trilinos.sandia.gov/
+.. [#trilinos] Trilinos.  http://trilinos.sandia.gov/
 .. [#pytrilinos] PyTrilinos.
                  http://trilinos.sandia.gov/packages/pytrilinos/
-.. [#globalarrays] Global Arrays. http://hpc.pnl.gov/globalarrays/
+.. [#globalarrays] Global Arrays.  http://hpc.pnl.gov/globalarrays/
 .. [#gain] Global Arrays in NumPy.
            http://www.pnnl.gov/science/highlights/highlight.asp?id=1043
-.. [#chapel] Chapel. http://chapel.cray.com/
-.. [#x10] X10. http://x10-lang.org/
-.. [#hpfortran] High Perfomance Fortran. http://dacnet.rice.edu/
-.. [#julia] Julia. http://docs.julialang.org
-.. [#numpy] NumPy. http://www.numpy.org/
+.. [#chapel] Chapel.  http://chapel.cray.com/
+.. [#x10] X10.  http://x10-lang.org/
+.. [#hpfortran] High Perfomance Fortran.  http://dacnet.rice.edu/
+.. [#julia] Julia.  http://docs.julialang.org
+.. [#numpy] NumPy.  http://www.numpy.org/
 .. [#bcnetlib] ScaLAPACK Users' Guide: The Two-dimensional Block-Cyclic Distribution.
                http://netlib.org/scalapack/slug/node75.html
 .. [#bcibm] Parallel ESSL Guide and Reference: Block-Cyclic Distribution over Two-Dimensional Process Grids.
