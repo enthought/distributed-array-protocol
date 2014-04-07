@@ -194,12 +194,12 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{'b', 'c', 'u'}``
+* ``'dist_type'`` : ``{'b', 'c', 'u'}``.
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
 
-* ``'size'`` : ``int``, greater than or equal to 0
+* ``'size'`` : ``int``, greater than or equal to 0.
 
   Total number of global array elements along this dimension.
 
@@ -210,7 +210,7 @@ following key-value pairs:
   the provided ``utils.py`` or in this document's appendix) run on the
   appropriate dimension dictionary on every process.
 
-* ``'proc_grid_size'`` : ``int``, greater than or equal to 1
+* ``'proc_grid_size'`` : ``int``, greater than or equal to 1.
 
   The total number of processes in the process grid in this dimension.
   Necessary for computing the global / local index mapping, etc.
@@ -219,7 +219,7 @@ following key-value pairs:
   shall equal the total number of processes.
 
 * ``'proc_grid_rank'`` : ``int``, greater than or equal to 0, less than
-  ``'proc_grid_size'``
+  ``'proc_grid_size'``.
 
   The rank of the process for this dimension in the process grid.  This
   information allows the consumer to determine where the neighbor sections of
@@ -269,8 +269,8 @@ block (``dist_type`` is ``'b'``)
 * ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
 
-  If communication padding, must be less than or equal to the number of indices
-  owned by the neighboring process.
+  If a value represents communication padding width, it must be less than or
+  equal to the number of indices owned by the neighboring process.
 
   The padding tuple describes the width of the padding region at the beginning
   and end of a buffer in a particular dimension.  Padding represents extra
@@ -303,7 +303,7 @@ block (``dist_type`` is ``'b'``)
   If the value associated with ``padding`` is the tuple ``(0,0)`` (the
   default), this indicates the local array is not padded in this dimension.
 
-* ``periodic`` : ``bool``, optional
+* ``periodic`` : ``bool``, optional.
 
   Indicates whether this dimension is periodic.  When not present, indicates
   this dimension is not periodic, equivalent to a value of ``False``.
@@ -348,7 +348,7 @@ cyclic (``dist_type`` is ``'c'``)
 unstructured (``dist_type`` is ``'u'``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* ``indices``: buffer (or buffer-compatible) of ``int``
+* ``indices`` : buffer (or buffer-compatible) of ``int``.
 
   Global indices available on this process.
 
@@ -356,7 +356,7 @@ unstructured (``dist_type`` is ``'u'``)
   are locally unique.  The indices values are otherwise unconstrained: they can
   be negative, unordered, and non-contiguous.
 
-* ``one_to_one`` : bool, optional.
+* ``one_to_one`` : ``bool``, optional.
 
   If not present, shall be equivalent to being present with a ``False`` value.
 
