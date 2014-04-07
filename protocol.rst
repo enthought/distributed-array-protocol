@@ -376,8 +376,8 @@ the current version of this protocol, but more may be added in future versions.
 Empty dimension dictionary
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An empty dimension dictionary in dimension ``i``, will be interpreted as the
-following:
+An empty dimension dictionary in dimension ``i`` of ``'dim_data'``, will be
+interpreted as the following:
 
 .. code:: python
 
