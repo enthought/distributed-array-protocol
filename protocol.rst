@@ -417,8 +417,8 @@ Undistributed dimensions
 A dimension with ``proc_grid_size == 1`` is essentially undistributed; it is
 "distributed" over a single process.  Block-distributed dimensions with
 ``proc_grid_size == 1`` and with the ``periodic`` and ``padding`` keys present
-are valid.  The ``periodic == True`` and ``padding`` values indicate this array
-is periodic on one processor, with associated padding regions.
+are valid.  ``periodic == True`` and nonzero ``padding`` values indicate this
+array is periodic on one processor and has associated padding regions.
 
 Global array size
 ~~~~~~~~~~~~~~~~~
