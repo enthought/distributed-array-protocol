@@ -316,11 +316,11 @@ cyclic (``dist_type`` is ``'c'``)
   The start index (inclusive, 0-based) of the global index space available on
   this process.
 
-  The cyclic distribution is what results from assigning global indices--or
-  contiguous blocks of indices, in the case when ``block_size`` is greater than
-  one--to processes in round-robin fashion.  When ``block_size`` equals one, a
-  Python slice formed from the ``start``, ``size``, and ``proc_grid_size``
-  values selects the global indices that are owned by this local array.
+  The cyclic distribution is what results from assigning global indices (or
+  contiguous blocks of indices when ``block_size`` is greater than one) to
+  processes in round-robin fashion.  When ``block_size`` equals one, a Python
+  slice formed from the ``start``, ``size``, and ``proc_grid_size`` values
+  selects the global indices that are owned by this local array.
 
 * ``block_size`` : ``int``, greater than or equal to one. Optional.
 
@@ -343,7 +343,7 @@ cyclic (``dist_type`` is ``'c'``)
   Note that since this protocol allows for block-distributed dimensions with
   irregular numbers of indices on each process, not all 'block'-distributed
   dimensions describable by this protocol can be represented as 'cyclic' with
-  the 'block-size' key.
+  the ``block_size`` key.
 
 unstructured (``dist_type`` is ``'u'``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
