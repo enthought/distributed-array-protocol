@@ -432,7 +432,7 @@ the reduction above is ``1``, indicating the distributed array is a
 zero-dimensional scalar.
 
 Identical ``'dim_data'`` along an axis
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
 = dim_data[i]['proc_grid_rank']`` for some dimension ``i``, then all processes
