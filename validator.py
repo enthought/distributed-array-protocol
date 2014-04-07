@@ -1,3 +1,9 @@
+# encoding: utf-8
+# ---------------------------------------------------------------------------
+#  Copyright (C) 2008-2014, Enthought, Inc.
+#  Distributed under the terms of the BSD License.  See COPYING.rst.
+# ---------------------------------------------------------------------------
+
 """
 Functions to validate Distributed Array Protocol data structures for protocol
 version 0.10.0.
