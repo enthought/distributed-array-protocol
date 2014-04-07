@@ -158,12 +158,11 @@ The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 "dimension dictionaries", containing one dictionary for each dimension of the
 distributed array.  The zeroth dictionary in ``dim_data`` shall describe the
 zeroth dimension of the array, the first dictionary shall describe the first
-dimension, and so on for each dimension in succession.
-These dictionaries include all metadata
-required to specify a distributed array's distribution.  The ``dim_data`` tuple
-may be empty, indicating a zero-dimensional array.  The number of elements in
-the ``'dim_data'`` tuple must match the number of dimensions of the associated
-buffer object.
+dimension, and so on for each dimension in succession.  These dictionaries
+include all metadata required to specify a distributed array's distribution.
+The ``dim_data`` tuple may be empty, indicating a zero-dimensional array.  The
+number of elements in the ``'dim_data'`` tuple must match the number of
+dimensions of the associated buffer object.
 
 
 Dimension Dictionaries
@@ -281,12 +280,12 @@ block (``dist_type`` is ``'b'``)
   in ``padding`` is the width of the boundary padding; this is extra allocation
   reserved for boundary logic in applications that need it.  For the dimension
   dictionary with ``proc_grid_rank == proc_grid_size-1``, the second element in
-  ``padding`` is the width of the boundary padding.  All other ``padding`` tuple
-  values are for communication padding and represent extra allocation reserved
-  for communication between processes.  Every communication padding width must
-  equal its counterpart on its neighboring process; more specifically, the
-  "right" communication padding on rank ``i`` in a 1D grid must equal the
-  "left" communication padding on rank ``i+1``.
+  ``padding`` is the width of the boundary padding.  All other ``padding``
+  tuple values are for communication padding and represent extra allocation
+  reserved for communication between processes.  Every communication padding
+  width must equal its counterpart on its neighboring process; more
+  specifically, the "right" communication padding on rank ``i`` in a 1D grid
+  must equal the "left" communication padding on rank ``i+1``.
 
   For example, consider a one-dimensional block-distributed array distributed
   over four processes.  Let its left boundary padding width be 4, its right
