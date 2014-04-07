@@ -423,13 +423,14 @@ array is periodic on one processor and has associated padding regions.
 Global array size
 ~~~~~~~~~~~~~~~~~
 
-The global number of elements in an array is the product of the ``size``\s of
-the dimension dictionaries, or 1 if the ``dim_data`` sequence is empty.  In
-Python syntax, this would be ``reduce(operator.mul, global_shape, 1)`` where
-``global_shape`` is a Python sequence of integers such that ``global_shape[i]``
-is the ``size`` of the dimension dictionary for dimension ``i``.  If
-``global_shape`` is an empty sequence, the result of the reduction above is
-``1``, indicating the distributed array is a zero-dimensional scalar.
+The global number of elements in an array is the product of the values of
+``'size'`` in the dimension dictionaries, or ``1`` if the ``dim_data`` sequence
+is empty.  In Python syntax, this would be ``reduce(operator.mul, global_shape,
+1)`` where ``global_shape`` is a Python sequence of integers such that
+``global_shape[i]`` is the value of ``'size'`` in the dimension dictionary for
+dimension ``i``.  If ``global_shape`` is an empty sequence, the result of the
+reduction above is ``1``, indicating the distributed array is a
+zero-dimensional scalar.
 
 Identical ``dim_data`` along an axis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
