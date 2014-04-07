@@ -87,8 +87,8 @@ boundary padding and 'C' representing communication padding) is as follows::
 
 The 'B' element on process 0 occupies global index 0, and the 'B' element on
 process 1 occupies global index 17.  Each 'B' element counts towards the
-array's `size`.  The communication elements on each process overlap with a data
-element on the other process to indicate which data elements these
+array's ``'size'``.  The communication elements on each process overlap with a
+data element on the other process to indicate which data elements these
 communication elements are meant to communicate with.
 
 The protocol data structure on each process is as follows.
