@@ -387,7 +387,7 @@ interpreted as the following:
      'stop': buf.shape[i],
      'size': buf.shape[i]}
 
-Where ``buf`` is the associated buffer object.
+where ``buf`` is the associated buffer object.
 
 This is intended to be a shortcut for defining undistributed dimensions.
 
