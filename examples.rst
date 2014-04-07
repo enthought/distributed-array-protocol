@@ -456,7 +456,7 @@ The local arrays, on each separate engine:
 Irregular-Block, Irregular-Block
 ````````````````````````````````
 
-A (5 X 9) array, with a Irregular-Block, Irregular-Block ('b' X 'b') distribution over a (2 X 2) process grid.
+A (5 X 9) array, with an Irregular-Block, Irregular-Block ('b' X 'b') distribution over a (2 X 2) process grid.
 
 .. image:: images/plot_irregularblock_irregularblock.png
 
@@ -622,7 +622,7 @@ The local arrays, on each separate engine:
 Unstructured, Unstructured
 ``````````````````````````
 
-A (5 X 9) array, with a Unstructured, Unstructured ('u' X 'u') distribution over a (2 X 2) process grid.
+A (5 X 9) array, with an Unstructured, Unstructured ('u' X 'u') distribution over a (2 X 2) process grid.
 
 .. image:: images/plot_unstruct_unstruct.png
 
