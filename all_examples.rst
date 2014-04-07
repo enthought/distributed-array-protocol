@@ -79,8 +79,8 @@ each local array is an example of "communication padding".  Note that the
 of ``a0`` and ``a1`` , since communication padding is not counted toward
 ``'size'`` (though the boundary padding is).
 
-For this example, the global index arrangement on each processor, with 'B' for
-boundary and 'C' for communication elements, are arranged as follows::
+For this example, the distribution of global indices (with 'B' representing
+boundary padding and 'C' representing communication padding) is as follows::
 
     Process 0: B 1 2 3 4 5 6 7 8 C
     Process 1:                 C 9 10 11 12 13 14 15 16 B
