@@ -44,7 +44,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Distributed Array Protocol'
-copyright = u'2014, Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, Kurt Smith, Bill Spotz'
+copyright = (u'2014, Jeff Daily, Brian Granger, Robert Grant, '
+             u'Min Ragan-Kelley, Mark Kness, Kurt Smith, Bill Spotz')
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -197,7 +198,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'DistributedArrayProtocol.tex', u'Distributed Array Protocol Documentation',
-   u'Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, Kurt Smith, Bill Spotz', 'manual'),
+   ur'Jeff Daily \and Brian Granger \and Robert Grant \and Min Ragan-Kelley \and Mark Kness \and Kurt Smith \and Bill Spotz',
+   'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -227,7 +229,8 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'distributedarrayprotocol', u'Distributed Array Protocol Documentation',
-     [u'Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, Kurt Smith, Bill Spotz'], 1)
+     [u'Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, '
+      u'Mark Kness, Kurt Smith, Bill Spotz'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -241,7 +244,9 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'DistributedArrayProtocol', u'Distributed Array Protocol Documentation',
-   u'Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, Kurt Smith, Bill Spotz', 'DistributedArrayProtocol', 'One line description of project.',
+   (u'Jeff Daily, Brian Granger, Robert Grant, Min Ragan-Kelley, '
+    u'Mark Kness, Kurt Smith, Bill Spotz'),
+   'DistributedArrayProtocol', 'Python protocol for distributed arrays.',
    'Miscellaneous'),
 ]
 
