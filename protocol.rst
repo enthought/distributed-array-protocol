@@ -156,12 +156,12 @@ section of a distributed array.
 
 The value for the ``'dim_data'`` key shall be a tuple of dictionaries, called
 "dimension dictionaries", containing one dictionary for each dimension of the
-distributed array.  The zeroth dictionary in ``dim_data`` shall describe the
+distributed array.  The zeroth dictionary in ``'dim_data'`` shall describe the
 zeroth dimension of the array, the first dictionary shall describe the first
 dimension, and so on for each dimension in succession.  These dictionaries
 include all metadata required to specify a distributed array's distribution.
-The ``dim_data`` tuple may be empty, indicating a zero-dimensional array.  The
-number of elements in the ``'dim_data'`` tuple must match the number of
+The ``'dim_data'`` tuple may be empty, indicating a zero-dimensional array.
+The number of elements in the ``'dim_data'`` tuple must match the number of
 dimensions of the associated buffer object.
 
 
@@ -423,15 +423,15 @@ Global array size
 ~~~~~~~~~~~~~~~~~
 
 The global number of elements in an array is the product of the values of
-``'size'`` in the dimension dictionaries, or ``1`` if the ``dim_data`` sequence
-is empty.  In Python syntax, this would be ``reduce(operator.mul, global_shape,
-1)`` where ``global_shape`` is a Python sequence of integers such that
-``global_shape[i]`` is the value of ``'size'`` in the dimension dictionary for
-dimension ``i``.  If ``global_shape`` is an empty sequence, the result of the
-reduction above is ``1``, indicating the distributed array is a
+``'size'`` in the dimension dictionaries, or ``1`` if the ``'dim_data'``
+sequence is empty.  In Python syntax, this would be ``reduce(operator.mul,
+global_shape, 1)`` where ``global_shape`` is a Python sequence of integers such
+that ``global_shape[i]`` is the value of ``'size'`` in the dimension dictionary
+for dimension ``i``.  If ``global_shape`` is an empty sequence, the result of
+the reduction above is ``1``, indicating the distributed array is a
 zero-dimensional scalar.
 
-Identical ``dim_data`` along an axis
+Identical ``'dim_data'`` along an axis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If ``dim_data`` is the tuple of dimension dictionaries for a process and ``rank
