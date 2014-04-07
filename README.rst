@@ -20,6 +20,6 @@ run ``make html`` or ``make singlehtml`` in this directory.  See the output of
 
 .. _Sphinx: http://sphinx-doc.org/
 
-To run the tests for the validator and the included utilities, run ``python -m
+To run the tests for the validator and included utilities, run ``python -m
 unittest discover`` from this directory.
 
