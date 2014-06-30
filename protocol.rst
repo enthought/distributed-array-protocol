@@ -5,15 +5,17 @@ Distributed Array Protocol
 Overview
 -------------------------------------------------------------------------------
 
-The Distributed Array Protocol (DAP) is a process-local protocol that allows
-two subscribers, called the "producer" and the "consumer" or the "exporter" and
-the "importer", to communicate the essential data and metadata necessary to
-share a distributed-memory array between them.  This allows two independently
-developed components to access, modify, and update a distributed array without
-copying.  The protocol formalizes the metadata and buffers involved in the
-transfer, allowing several distributed array projects to collaborate,
-facilitating interoperability.  By not copying the underlying array data, the
-protocol allows for efficient sharing of array data.
+The Distributed Array Protocol (DAP) is a process-local protocol that
+allows two subscribers, called the "producer" and the "consumer" or
+the "exporter" and the "importer", to communicate the essential data
+and metadata necessary to share a distributed-memory array (or simply
+a distributed array) between them.  This allows two independently
+developed components to access, modify, and update a distributed array
+without copying.  The protocol formalizes the metadata and buffers
+involved in the transfer, allowing several distributed array projects
+to collaborate, facilitating interoperability.  By not copying the
+underlying array data, the protocol allows for efficient sharing of
+array data.
 
 The DAP is intended to build on the concepts and implementation of the existing
 PEP-3118 buffer protocol [#bufferprotocol]_, and uses PEP-3118 buffers (and
@@ -78,13 +80,14 @@ process rank
     contiguously from the range ``0 ... N-1`` for ``N`` processes.
 
 process grid
-    The **process grid** is an N-dimensional Cartesian grid.  Each coordinate
-    uniquely identifies a process, and the process grid maps process ranks to
-    grid coordinates.  Process ranks are assigned to their corresponding grid
-    coordinate in "C-order", i.e., the last index varies fastest when iterating
-    through coordinates in rank order.  The product of the number of processes
-    in each dimension in the process grid shall be equal to the total number of
-    processes.
+    The **process grid** is an N-dimensional Cartesian grid of
+    processes.  Each coordinate uniquely identifies a process, and the
+    process grid maps process ranks to grid coordinates.  Process
+    ranks are assigned to their corresponding grid coordinate in
+    "C-order", i.e., the last index varies fastest when iterating
+    through coordinates in rank order.  The product of the number of
+    processes in each dimension in the process grid shall be equal to
+    the total number of processes.
 
     For example, for an ``N`` by ``M`` process grid over ``N * M`` processes
     with ranks ``0, 1, ..., (N*M)-1``, process grid coordinate ``(i,j)``
@@ -119,12 +122,12 @@ map
     corresponds to a given local index.
 
 boundary padding
-    Padding indices in a local array that indicate which indices are part of
-    the logical *boundary* of the entire domain.  These are physical or real
-    boundaries and correspond to the elements or indices that are involved with
-    the physical system's boundary conditions in a PDE application, for
-    example.  These elements are included in a distributed dimension's
-    ``'size'``.
+    Padding indices in a local array that indicate which indices are
+    part of the logical *boundary* of the entire domain.  These can
+    represent "real" boundaries or "imaginary" numerical spaces
+    that are required by a finite difference method to compute
+    boundary conditions in a PDE application, for example.  These
+    elements are included in a distributed dimension's ``'size'``.
 
 communication padding
     Padding indices that are shared logically with a neighboring local array.
@@ -169,7 +172,7 @@ Dimension Dictionaries
 -------------------------------------------------------------------------------
 
 All dimension dictionaries shall have a ``'dist_type'`` key with a value of
-type string.  The ``dist_type`` of a dimension specifies the kind of
+type ``string``.  The ``'dist_type'`` of a dimension specifies the kind of
 distribution for that dimension.
 
 The following dist_types are currently supported:
@@ -193,7 +196,7 @@ Required key-value pairs
 All dimension dictionaries (regardless of distribution type) must define the
 following key-value pairs:
 
-* ``'dist_type'`` : ``{'b', 'c', 'u'}``.
+* ``'dist_type'`` : ``'b' | 'c' | 'u'``.
 
   The distribution type; the primary way to determine the kind of distribution
   for this dimension.
@@ -240,12 +243,12 @@ The remaining key-value pairs in each dimension dictionary depend on the
 block (``dist_type`` is ``'b'``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* ``start`` : ``int``, greater than or equal to zero.
+* ``'start'`` : ``int``, greater than or equal to zero.
 
   The start index (inclusive and 0-based) of the global index space available
   on this process.
 
-* ``stop`` : ``int``, greater than the ``start`` value, less than or equal to
+* ``'stop'`` : ``int``, greater than the ``start`` value, less than or equal to
   the ``size`` value.
 
   The stop index (exclusive, as in standard Python indexing) of the global
@@ -256,8 +259,8 @@ block (``dist_type`` is ``'b'``)
   field shall have adjacent global index ranges.  More explicitly, for two
   processes ``a`` and ``b`` with grid ranks ``i`` and ``i+1`` respectively, the
   ``stop`` of ``a`` shall be equal the ``start`` of ``b``.  With communication
-  padding present, the stop of ``a`` may be greater than the ``start`` of
-  ``b``.
+  padding present, the stop of ``a`` shall be greater than the ``start`` of
+  ``b`` by the specified padding.
 
   Processes may contain differently-sized global index ranges; this is
   sometimes called an "irregular block distribution".
@@ -265,16 +268,13 @@ block (``dist_type`` is ``'b'``)
   For every block-distributed dimension ``i``, ``stop - start`` must be equal
   to ``buffer.shape[i]``.
 
-* ``padding`` : 2-tuple of ``int``, each greater than or equal to zero.
+* ``'padding'`` : 2-tuple of ``int``, each greater than or equal to zero.
   Optional.
 
-  If a value represents communication padding width, it must be less than or
-  equal to the number of indices owned by the neighboring process.
-
   The padding tuple describes the width of the padding region at the beginning
-  and end of a buffer in a particular dimension.  Padding represents extra
-  allocation for an array, but padding values are in some sense not "owned" by
-  the local array and are reserved for other purposes.
+  and end of a local buffer in a particular dimension.  Padding represents extra
+  allocation for a local array, but padding values are in some sense not "owned"
+  by the local array and are reserved for other purposes.
 
   For the dimension dictionary with ``proc_grid_rank == 0``, the first element
   in ``padding`` is the width of the boundary padding; this is extra allocation
@@ -287,11 +287,15 @@ block (``dist_type`` is ``'b'``)
   specifically, the "right" communication padding on rank ``i`` in a 1D grid
   must equal the "left" communication padding on rank ``i+1``.
 
-  For example, consider a one-dimensional block-distributed array distributed
-  over four processes.  Let its left boundary padding width be 4, its right
-  boundary padding width be 0 and its communication padding widths be (1,) (1,
-  2), (2, 3), and (3,).  The padding tuple for the local array on each rank
-  would be:
+  If a value represents communication padding width, it must be less than or
+  equal to the number of indices owned by the neighboring process.
+
+  As a ``'padding'`` example, consider a one-dimensional
+  block-distributed array distributed over four processes.  Let its
+  left boundary padding width be 4, its right boundary padding width
+  be 0 and its communication padding widths be (1,) (1, 2), (2, 3),
+  and (3,).  The padding tuple for the local array on each rank would
+  be:
 
   ============== ====== ====== ====== ======
   proc_grid_rank  0      1      2      3
@@ -299,18 +303,22 @@ block (``dist_type`` is ``'b'``)
   padding        (4, 1) (1, 2) (2, 3) (3, 0)
   ============== ====== ====== ====== ======
 
-  If the value associated with ``padding`` is the tuple ``(0,0)`` (the
+  If the value associated with ``'padding'`` is the tuple ``(0,0)`` (the
   default), this indicates the local array is not padded in this dimension.
 
-* ``periodic`` : ``bool``, optional.
+* ``'periodic'`` : ``bool``, optional.
 
   Indicates whether this dimension is periodic.  When not present, indicates
   this dimension is not periodic, equivalent to a value of ``False``.
+  
+  When ``'periodic'`` is ``True``, this implies that the dimension has
+  no boundaries, therefore all padding specified on a periodic dimension
+  is communication padding.
 
 cyclic (``dist_type`` is ``'c'``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* ``start`` : ``int``, greater than or equal to zero.
+* ``'start'`` : ``int``, greater than or equal to zero.
 
   The start index (inclusive, 0-based) of the global index space available on
   this process.
@@ -321,7 +329,7 @@ cyclic (``dist_type`` is ``'c'``)
   slice formed from the ``start``, ``size``, and ``proc_grid_size`` values
   selects the global indices that are owned by this local array.
 
-* ``block_size`` : ``int``, greater than or equal to one.  Optional.
+* ``'block_size'`` : ``int``, greater than or equal to one.  Optional.
 
   Indicates the size of contiguous blocks of indices for this dimension.  If
   absent, equivalent to the case when ``block_size`` is present and equal to
@@ -347,23 +355,23 @@ cyclic (``dist_type`` is ``'c'``)
 unstructured (``dist_type`` is ``'u'``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-* ``indices`` : buffer (or buffer-compatible) of ``int``.
+* ``'indices'`` : buffer (or buffer-compatible) of ``int``.
 
   Global indices available on this process.
 
-  The only constraint that applies to the ``indices`` buffer is that the values
+  The only constraint that applies to the ``'indices'`` buffer is that the values
   are locally unique.  The indices values are otherwise unconstrained: they can
   be negative, unordered, and non-contiguous.
 
-* ``one_to_one`` : ``bool``, optional.
+* ``'one_to_one'`` : ``bool``, optional.
 
   If not present, shall be equivalent to being present with a ``False`` value.
 
   If ``False``, indicates that some global indices may be duplicated in two or
-  more local ``indices`` buffers.
+  more local ``'indices'`` buffers.
 
-  If ``True``, a global index shall be located in exactly one local ``indices``
-  buffer.
+  If ``True``, all global indexes shall be located in exactly one local
+  ``'indices'`` buffer.
 
 
 Dimension dictionary aliases
@@ -417,7 +425,8 @@ A dimension with ``proc_grid_size == 1`` is essentially undistributed; it is
 "distributed" over a single process.  Block-distributed dimensions with
 ``proc_grid_size == 1`` and with the ``periodic`` and ``padding`` keys present
 are valid.  ``periodic == True`` and nonzero ``padding`` values indicate this
-array is periodic on one processor and has associated padding regions.
+array is periodic on one processor and has associated communication padding
+regions.
 
 Global array size
 ~~~~~~~~~~~~~~~~~
